@@ -41,7 +41,7 @@
             <h2 class="headline-utama">
                 Your brand doesn't<br>
                 need more content. It needs<br>
-                <span class="bottom">a sharper creative system.</span>
+                a sharper creative system.
             </h2>
         </div>
     </header>
@@ -50,11 +50,11 @@
         <div class="container">
             <p>REPUBLIK helps brands turn business problems into culture-sharp creative platforms, social campaigns, content systems & performance-ready ideas. We work where attention is crowded, audiences are restless, and brands need more than "posting consistently."</p>
             <p>We help you find the strategic angle, shape the creative idea, build the format system & make every touchpoint do its job.</p>
-            <p class="methodology">
-                <small>From big campaign thinking to daily content execution, we connect:</small><br>
-                <strong>Idea &rarr; Format &rarr; Behavior &rarr; Measurement</strong><br>
+            <div class="methodology">
+                <small>From big campaign thinking to daily content execution, we connect:</small>
+                <strong>Idea &rarr; Format &rarr; Behavior &rarr; Measurement</strong>
                 <small>So your brand doesn't just show up. It gets noticed, remembered, and acted on.</small>
-            </p>
+            </div>
         </div>
     </section>
 
@@ -66,25 +66,25 @@
             </div>
             
             <div id="portfolio-grid" class="portfolio-grid">
-                <div class="portfolio-item placeholder-brown">
-                    <img src="<?= base_url('assets/img/honda.webp') ?>" alt="HONDA AHM" loading="lazy">
+                <div class="portfolio-item video-trigger" data-video-src="https://www.youtube.com/watch?v=dQw4w9WgXcQ">
                     <div class="overlay-text">HONDA AHM</div>
+                    <div class="play-icon">▶</div>
                 </div>
-                <div class="portfolio-item placeholder-brown">
-                    <img src="<?= base_url('assets/img/honda.webp') ?>" alt="HONDA AHM" loading="lazy">
-                    <div class="overlay-text">HONDA AHM</div>
-                </div>
-                <div class="portfolio-item placeholder-brown">
-                    <img src="<?= base_url('assets/img/honda.webp') ?>" alt="HONDA AHM" loading="lazy">
-                    <div class="overlay-text">HONDA AHM</div>
-                </div>
-                <div class="portfolio-item placeholder-brown">
-                    <img src="<?= base_url('assets/img/honda.webp') ?>" alt="HONDA AHM" loading="lazy">
-                    <div class="overlay-text">HONDA AHM</div>
-                </div>
-                <div class="portfolio-item placeholder-brown">
-                    <img src="<?= base_url('assets/img/jergens.webp') ?>" alt="JERGENS" loading="lazy">
+                <div class="portfolio-item video-trigger" data-video-src="https://www.youtube.com/watch?v=dQw4w9WgXcQ">
                     <div class="overlay-text">JERGENS</div>
+                    <div class="play-icon">▶</div>
+                </div>
+                <div class="portfolio-item video-trigger" data-video-src="https://www.youtube.com/watch?v=dQw4w9WgXcQ">
+                    <div class="overlay-text">HONDA AHM</div>
+                    <div class="play-icon">▶</div>
+                </div>
+                <div class="portfolio-item video-trigger" data-video-src="<?= base_url('assets/video/honda.mp4') ?>">
+                    <div class="overlay-text">HONDA AHM</div>
+                    <div class="play-icon">▶</div>
+                </div>
+                <div class="portfolio-item video-trigger" data-video-src="https://www.youtube.com/watch?v=dQw4w9WgXcQ">
+                    <div class="overlay-text">JERGENS</div>
+                    <div class="play-icon">▶</div>
                 </div>
             </div>
         </div>
@@ -138,6 +138,14 @@
             </form>
         </div>
     </section>
+
+    <div id="videoModal" class="video-modal">
+        <div class="modal-overlay"></div>
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <div id="videoContainer"></div>
+        </div>
+    </div>
 
     <footer>
         <div class="container">

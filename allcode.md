@@ -198,7 +198,7 @@ class Leads_model extends CI_Model {
             <h2 class="headline-utama">
                 Your brand doesn't<br>
                 need more content. It needs<br>
-                <span class="bottom">a sharper creative system.</span>
+                a sharper creative system.
             </h2>
         </div>
     </header>
@@ -207,11 +207,11 @@ class Leads_model extends CI_Model {
         <div class="container">
             <p>REPUBLIK helps brands turn business problems into culture-sharp creative platforms, social campaigns, content systems & performance-ready ideas. We work where attention is crowded, audiences are restless, and brands need more than "posting consistently."</p>
             <p>We help you find the strategic angle, shape the creative idea, build the format system & make every touchpoint do its job.</p>
-            <p class="methodology">
-                <small>From big campaign thinking to daily content execution, we connect:</small><br>
-                <strong>Idea &rarr; Format &rarr; Behavior &rarr; Measurement</strong><br>
+            <div class="methodology">
+                <small>From big campaign thinking to daily content execution, we connect:</small>
+                <strong>Idea &rarr; Format &rarr; Behavior &rarr; Measurement</strong>
                 <small>So your brand doesn't just show up. It gets noticed, remembered, and acted on.</small>
-            </p>
+            </div>
         </div>
     </section>
 
@@ -223,25 +223,25 @@ class Leads_model extends CI_Model {
             </div>
             
             <div id="portfolio-grid" class="portfolio-grid">
-                <div class="portfolio-item placeholder-brown">
-                    <img src="<?= base_url('assets/img/honda.webp') ?>" alt="HONDA AHM" loading="lazy">
+                <div class="portfolio-item video-trigger" data-video-src="https://www.youtube.com/watch?v=dQw4w9WgXcQ">
                     <div class="overlay-text">HONDA AHM</div>
+                    <div class="play-icon">▶</div>
                 </div>
-                <div class="portfolio-item placeholder-brown">
-                    <img src="<?= base_url('assets/img/honda.webp') ?>" alt="HONDA AHM" loading="lazy">
-                    <div class="overlay-text">HONDA AHM</div>
-                </div>
-                <div class="portfolio-item placeholder-brown">
-                    <img src="<?= base_url('assets/img/honda.webp') ?>" alt="HONDA AHM" loading="lazy">
-                    <div class="overlay-text">HONDA AHM</div>
-                </div>
-                <div class="portfolio-item placeholder-brown">
-                    <img src="<?= base_url('assets/img/honda.webp') ?>" alt="HONDA AHM" loading="lazy">
-                    <div class="overlay-text">HONDA AHM</div>
-                </div>
-                <div class="portfolio-item placeholder-brown">
-                    <img src="<?= base_url('assets/img/jergens.webp') ?>" alt="JERGENS" loading="lazy">
+                <div class="portfolio-item video-trigger" data-video-src="https://www.youtube.com/watch?v=dQw4w9WgXcQ">
                     <div class="overlay-text">JERGENS</div>
+                    <div class="play-icon">▶</div>
+                </div>
+                <div class="portfolio-item video-trigger" data-video-src="https://www.youtube.com/watch?v=dQw4w9WgXcQ">
+                    <div class="overlay-text">HONDA AHM</div>
+                    <div class="play-icon">▶</div>
+                </div>
+                <div class="portfolio-item video-trigger" data-video-src="<?= base_url('assets/video/honda.mp4') ?>">
+                    <div class="overlay-text">HONDA AHM</div>
+                    <div class="play-icon">▶</div>
+                </div>
+                <div class="portfolio-item video-trigger" data-video-src="https://www.youtube.com/watch?v=dQw4w9WgXcQ">
+                    <div class="overlay-text">JERGENS</div>
+                    <div class="play-icon">▶</div>
                 </div>
             </div>
         </div>
@@ -296,6 +296,14 @@ class Leads_model extends CI_Model {
         </div>
     </section>
 
+    <div id="videoModal" class="video-modal">
+        <div class="modal-overlay"></div>
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <div id="videoContainer"></div>
+        </div>
+    </div>
+
     <footer>
         <div class="container">
             <p>Idea-first. System-led. Indonesia-native. Performance-aware.</p>
@@ -312,517 +320,180 @@ class Leads_model extends CI_Model {
 <!-- end file application/views/v_landing.php -->
 
 <!-- file assets/css/style.css -->
-/* ==========================================================================
-   CSS Reset & Base Styles (DRY Principle)
-   ========================================================================== */
 :root {
-    --bg-color: #0B0B0B; /* Sedikit lebih pekat mendekati desain */
+    --bg-color: #0B0B0B;
     --text-color: #ffffff;
     --text-muted: #cccccc;
     --accent-blue: #4A7AFF;
     --accent-blue-hover: #335ECC;
-    --placeholder-brown: #8C4E3A;
     --placeholder-gray: #333333;
     --placeholder-dark: #222222;
     --font-main: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background-color: var(--bg-color); color: var(--text-color); font-family: var(--font-main); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+.container { width: 90%; max-width: 1200px; margin: 0 auto; padding: 40px 0; }
 
-body {
-    background-color: var(--bg-color);
-    color: var(--text-color);
-    font-family: var(--font-main);
-    line-height: 1.6;
-    -webkit-font-smoothing: antialiased;
-}
-
-.container {
-    width: 90%;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 40px 0;
-}
-
-/* ==========================================================================
-   Hero Section & Collage Grid
-   ========================================================================== */
-.hero-section {
-    width: 100%;
-    overflow: hidden;
-}
-
-.hero-collage-container {
-    position: relative;
-    width: 100%;
-    max-width: 1600px;
-    margin: 0 auto;
-}
-
-/* Overlay Logo di Tengah Kolase */
-.hero-logo-overlay {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 10;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    pointer-events: none; /* Agar klik tembus ke gambar jika diperlukan */
-}
-
-/* Styling untuk Placeholder Logo sementara */
-.logo-placeholder-circle {
-    background-color: transparent;
-    text-align: center;
-    text-shadow: 2px 2px 10px rgba(0,0,0,0.8);
-}
-.logo-placeholder-circle h1 {
-    font-size: clamp(3rem, 6vw, 6rem);
-    font-weight: 900;
-    letter-spacing: -2px;
-    line-height: 1;
-}
-.logo-placeholder-circle p {
-    font-size: clamp(1rem, 2vw, 1.5rem);
-    font-weight: bold;
-    letter-spacing: 1px;
-}
-
-/* CSS Grid untuk Kolase Asimetris */
-.hero-collage-grid {
-    display: grid;
-    /* Rasio kolom: Kiri 30%, Tengah 45%, Kanan 25% */
-    grid-template-columns: 1.2fr 2fr 1fr; 
-    grid-template-rows: 300px 300px; /* Ketinggian baris */
-    gap: 0; /* Merapat seperti pada desain */
-}
-
-.collage-cell {
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-}
-
-.collage-img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    opacity: 0.8; /* Sedikit diredupkan jika tidak ada gambar asli */
-}
-
-/* Penempatan Posisi Item Kolase */
-.item-tall { grid-column: 1 / 2; grid-row: 1 / 3; } /* Kiri penuh */
-.item-wide-top { grid-column: 2 / 3; grid-row: 1 / 2; } /* Tengah Atas */
-.item-small-top { grid-column: 3 / 4; grid-row: 1 / 2; } /* Kanan Atas */
-.item-wide-bottom { grid-column: 2 / 3; grid-row: 2 / 3; } /* Tengah Bawah */
-.item-small-bottom { grid-column: 3 / 4; grid-row: 2 / 3; } /* Kanan Bawah */
-
-/* Warna Placeholder */
+/* --- HERO & COLLAGE --- */
+.hero-section { width: 100%; overflow: hidden; }
+.hero-collage-container { position: relative; width: 100%; max-width: 1600px; margin: 0 auto; }
+.hero-logo-overlay { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 10; pointer-events: none; }
+.logo-placeholder-circle h1 { font-size: clamp(3rem, 6vw, 6rem); font-weight: 900; letter-spacing: -2px; line-height: 1; }
+.logo-placeholder-circle p { font-size: clamp(0.8rem, 1.5vw, 1.2rem); font-weight: bold; letter-spacing: 1px; }
+.hero-collage-grid { display: grid; grid-template-columns: 1.2fr 2fr 1fr; grid-template-rows: 300px 300px; gap: 0; }
+.collage-cell { width: 100%; height: 100%; overflow: hidden; }
+.collage-img { width: 100%; height: 100%; object-fit: cover; opacity: 0.8; }
+.item-tall { grid-column: 1 / 2; grid-row: 1 / 3; }
+.item-wide-top { grid-column: 2 / 3; grid-row: 1 / 2; }
+.item-small-top { grid-column: 3 / 4; grid-row: 1 / 2; }
+.item-wide-bottom { grid-column: 2 / 3; grid-row: 2 / 3; }
+.item-small-bottom { grid-column: 3 / 4; grid-row: 2 / 3; }
 .placeholder-gray { background-color: var(--placeholder-gray); }
 .placeholder-dark { background-color: var(--placeholder-dark); }
+.headline-utama { font-size: clamp(2rem, 4vw, 3.5rem); text-align: center; max-width: 850px; margin: 60px auto 0 auto; letter-spacing: -0.03em; padding-right: 2%; font-weight: 700; line-height: 1.2; }
 
-/* ==========================================================================
-   Typography & Copywriting
-   ========================================================================== */
-h1, h2, h3 {
-    font-weight: 700;
-    line-height: 1.2;
-}
+/* --- NARRATIVE --- */
+.narrative-section p { text-align: center; max-width: 800px; margin: 0 auto 30px auto; font-size: 1.15rem; color: var(--text-muted); }
+.methodology { text-align: center; margin-top: 50px; }
+.methodology small { display: block; color: var(--text-muted); margin-bottom: 10px; }
+.methodology strong { font-size: 1.8rem; display: block; margin: 20px 0; color: var(--text-color); letter-spacing: 2px; }
 
-/* Penyesuaian Headline agar bergeser secara proporsional sesuai desain */
-.headline-utama {
-    font-size: clamp(2rem, 4vw, 3.5rem); 
-    text-align: center; /* Rata tengah namun diatur lebar box-nya */
-    max-width: 850px;
-    margin: 40px auto 0 0;
-    letter-spacing: -0.03em;
-    padding-right: 2%; /* Memberikan ilusi visual sedikit bergeser ke kiri */
-}
+/* --- PORTFOLIO 3-2 GRID --- */
+.portfolio-section { padding-top: 80px; }
+.section-title h3 { font-size: 2.2rem; text-align: center; margin-bottom: 20px; font-weight: 700; }
+.section-title p { text-align: center; max-width: 800px; margin: 0 auto 50px auto; color: var(--text-muted); }
+#portfolio-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 30px; margin-top: 40px; }
+.portfolio-item { grid-column: span 2; position: relative; background: #222; aspect-ratio: 16/9; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.3s; border: 1px solid #333; overflow: hidden; }
+.portfolio-item:nth-child(4) { grid-column: 2 / 4; }
+.portfolio-item:nth-child(5) { grid-column: 4 / 6; }
+.portfolio-item:hover { transform: scale(1.02); border-color: var(--accent-blue); }
+.play-icon { font-size: 3rem; opacity: 0.4; transition: 0.3s; z-index: 2; color: #fff; }
+.portfolio-item:hover .play-icon { opacity: 1; color: var(--accent-blue); }
+.overlay-text { position: absolute; bottom: 20px; left: 20px; font-weight: bold; font-size: 1rem; z-index: 3; color: #fff; text-transform: uppercase; }
 
-.headline-utama .bottom {
-    font-size: clamp(3rem, 5vw, 4.5rem); 
-}
+/* --- VIDEO MODAL --- */
+.video-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 9999; align-items: center; justify-content: center; }
+.modal-overlay { position: absolute; width: 100%; height: 100%; background: rgba(0,0,0,0.95); }
+.modal-content { position: relative; width: 85%; max-width: 1050px; aspect-ratio: 16/9; background: #000; z-index: 10; border: 1px solid #333; }
+.close-modal { position: absolute; top: -50px; right: 0; color: #fff; font-size: 3rem; cursor: pointer; }
+#videoContainer iframe, #videoContainer video { width: 100%; height: 100%; border: none; }
 
-.narrative-section p, .section-title p {
-    text-align: center;
-    max-width: 800px;
-    margin: 0 auto 20px auto;
-    font-size: 1.1rem;
-    color: var(--text-muted);
-}
+/* --- CONTACT FORM --- */
+.form-container { max-width: 900px; padding-top: 100px; }
+.form-header h2 { font-size: 2.8rem; text-align: center; margin-bottom: 20px; font-weight: 700; }
+.form-header p { text-align: center; margin-bottom: 50px; color: var(--text-muted); }
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 25px 40px; }
+.form-group { display: flex; flex-direction: column; }
+.textarea-group { grid-row: span 3; }
+label { font-size: 0.9rem; margin-bottom: 10px; color: var(--text-color); font-weight: bold; text-transform: uppercase; }
+input, textarea { width: 100%; padding: 15px; background-color: #ffffff; border: none; border-radius: 2px; color: #000000; font-family: var(--font-main); font-size: 1rem; }
+.form-submit { text-align: center; margin-top: 50px; }
+button#btnSubmit { background-color: var(--accent-blue); color: #ffffff; border: none; padding: 18px 50px; font-size: 1.1rem; font-weight: bold; border-radius: 40px; cursor: pointer; transition: 0.3s; text-transform: uppercase; letter-spacing: 1px; }
+button#btnSubmit:hover { background-color: var(--accent-blue-hover); transform: translateY(-2px); }
 
-.methodology {
-    margin-top: 40px !important;
-}
+/* --- FOOTER --- */
+footer { text-align: center; padding: 80px 0; border-top: 1px solid #222; margin-top: 100px; }
+footer p { font-size: 1rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+.footer-logo { margin-top: 40px; }
+.footer-logo h2 { font-size: 1.8rem; letter-spacing: 3px; font-weight: 900; }
+.footer-logo p { font-size: 0.85rem; font-weight: 400; letter-spacing: 1px; }
 
-.methodology strong {
-    font-size: 1.5rem;
-    display: block;
-    margin: 15px 0;
-    color: var(--text-color);
-}
-
-/* ==========================================================================
-   Portfolio Grid Section
-   ========================================================================== */
-.section-title h3 {
-    font-size: 2rem;
-    text-align: center;
-    margin-bottom: 15px;
-}
-
-#portfolio-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 30px;
-    margin-top: 40px;
-    justify-content: center;
-}
-
-.portfolio-item {
-    position: relative;
-    background-color: var(--placeholder-brown);
-    aspect-ratio: 4 / 3;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-    transition: transform 0.3s ease;
-}
-
-.portfolio-item:hover {
-    transform: scale(1.02);
-}
-
-.portfolio-item img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    opacity: 0; 
-}
-
-.overlay-text {
-    position: absolute;
-    font-size: 1.2rem;
-    font-weight: bold;
-    letter-spacing: 1px;
-}
-
-.portfolio-item:nth-child(4) {
-    grid-column: 1 / 3;
-    justify-self: end;
-    width: 66%;
-}
-.portfolio-item:nth-child(5) {
-    grid-column: 2 / 4;
-    justify-self: start;
-    width: 66%;
-}
-
-/* ==========================================================================
-   Form Section
-   ========================================================================== */
-.form-container {
-    max-width: 900px;
-}
-
-.form-header h2 {
-    font-size: 2.5rem;
-    text-align: center;
-    margin-bottom: 15px;
-}
-
-.form-header p {
-    text-align: center;
-    margin-bottom: 40px;
-    color: var(--text-muted);
-}
-
-.form-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px 40px;
-}
-
-.form-group {
-    display: flex;
-    flex-direction: column;
-}
-
-.textarea-group {
-    grid-row: span 3;
-}
-
-label {
-    font-size: 0.9rem;
-    margin-bottom: 8px;
-    color: var(--text-color);
-}
-
-input[type="text"],
-input[type="email"],
-textarea {
-    width: 100%;
-    padding: 12px;
-    background-color: #ffffff;
-    border: none;
-    border-radius: 2px;
-    color: #000000;
-    font-family: var(--font-main);
-    font-size: 1rem;
-}
-
-input:focus, textarea:focus {
-    outline: 2px solid var(--accent-blue);
-}
-
-.form-submit {
-    text-align: center;
-    margin-top: 40px;
-}
-
-button#btnSubmit {
-    background-color: var(--accent-blue);
-    color: #ffffff;
-    border: none;
-    padding: 15px 40px;
-    font-size: 1.1rem;
-    font-weight: bold;
-    border-radius: 30px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-button#btnSubmit:hover {
-    background-color: var(--accent-blue-hover);
-}
-
-button#btnSubmit:disabled {
-    background-color: #555555;
-    cursor: not-allowed;
-}
-
-/* ==========================================================================
-   Footer
-   ========================================================================== */
-footer {
-    text-align: center;
-    padding: 60px 0;
-    border-top: 1px solid #222;
-}
-
-footer p {
-    font-size: 0.9rem;
-    color: var(--text-muted);
-    font-weight: bold;
-}
-
-.footer-logo {
-    margin-top: 30px;
-}
-
-.footer-logo h2 {
-    font-size: 1.5rem;
-    letter-spacing: 2px;
-}
-
-.footer-logo p {
-    font-size: 0.8rem;
-    font-weight: normal;
-}
-
-/* ==========================================================================
-   Media Queries (Mobile Responsiveness)
-   ========================================================================== */
 @media (max-width: 768px) {
-    /* Merubah kolase menjadi 1 kolom yang ditumpuk di layar HP */
-    .hero-collage-grid {
-        grid-template-columns: 1fr;
-        grid-template-rows: auto;
-    }
-    .collage-cell {
-        grid-column: 1 / 2 !important;
-        grid-row: auto !important;
-        height: 200px;
-    }
-
-    #portfolio-grid {
-        grid-template-columns: 1fr; 
-    }
-    
-    .portfolio-item:nth-child(4),
-    .portfolio-item:nth-child(5) {
-        grid-column: 1 / -1;
-        width: 100%;
-    }
-
-    .form-grid {
-        grid-template-columns: 1fr; 
-    }
-
-    .textarea-group {
-        grid-row: auto;
-    }
+    .hero-collage-grid { grid-template-columns: 1fr; grid-template-rows: auto; }
+    .collage-cell { height: 200px; grid-column: auto !important; grid-row: auto !important; }
+    .form-grid, #portfolio-grid { grid-template-columns: 1fr; }
+    .portfolio-item { grid-column: auto !important; }
+    .textarea-group { grid-row: auto; }
 }
 <!-- end file assets/css/style.css -->
 
-<!-- file assets/js/main.css -->
+<!-- file assets/js/main.js -->
 document.addEventListener('DOMContentLoaded', function() {
-    // 1. Lazy Loading untuk Gambar Portofolio (Intersection Observer)
-    const lazyImages = document.querySelectorAll('img[loading="lazy"]');
     
-    if ('IntersectionObserver' in window) {
-        const imageObserver = new IntersectionObserver(function(entries, observer) {
-            entries.forEach(function(entry) {
-                if (entry.isIntersecting) {
-                    const img = entry.target;
-                    // Menambahkan class untuk animasi fade-in sederhana jika diperlukan
-                    img.style.transition = "opacity 0.5s ease-in";
-                    img.style.opacity = 1;
-                    imageObserver.unobserve(img);
-                }
-            });
-        });
+    // 1. VIDEO MODAL ENGINE
+    const modal = document.getElementById('videoModal');
+    const container = document.getElementById('videoContainer');
+    const triggers = document.querySelectorAll('.video-trigger');
+    const closeBtn = document.querySelector('.close-modal');
+    const overlay = document.querySelector('.modal-overlay');
 
-        lazyImages.forEach(function(img) {
-            imageObserver.observe(img);
-        });
-    } else {
-        // Fallback jika browser sangat jadul
-        lazyImages.forEach(function(img) {
-            img.style.opacity = 1;
-        });
-    }
+    triggers.forEach(trigger => {
+        trigger.addEventListener('click', function() {
+            const videoSrc = this.getAttribute('data-video-src');
+            let content = '';
 
-    // 2. Logika Form Submission & AJAX
+            // Detect YouTube vs Local Video
+            if (videoSrc.includes('youtube.com') || videoSrc.includes('youtu.be')) {
+                const videoId = videoSrc.split('v=')[1] || videoSrc.split('/').pop();
+                content = `<iframe src="https://www.youtube.com/embed/${videoId}?autoplay=1" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
+            } else {
+                content = `<video controls autoplay><source src="${videoSrc}" type="video/mp4"></video>`;
+            }
+
+            container.innerHTML = content;
+            modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden'; // Disable background scroll
+        });
+    });
+
+    const closeModal = () => {
+        modal.style.display = 'none';
+        container.innerHTML = ''; // Kill video process
+        document.body.style.overflow = 'auto';
+    };
+
+    if (closeBtn) closeBtn.addEventListener('click', closeModal);
+    if (overlay) overlay.addEventListener('click', closeModal);
+
+    // 2. AJAX FORM SUBMISSION
     const briefForm = document.getElementById('briefForm');
     const btnSubmit = document.getElementById('btnSubmit');
 
     if (briefForm) {
         briefForm.addEventListener('submit', function(e) {
-            e.preventDefault(); // Mencegah reload halaman
-
-            // Ubah state tombol menjadi loading
-            const originalBtnText = btnSubmit.innerHTML;
+            e.preventDefault();
+            const originalText = btnSubmit.innerHTML;
             btnSubmit.innerHTML = 'Sending...';
             btnSubmit.disabled = true;
 
-            // Hapus pesan error sebelumnya (Prinsip DRY)
-            clearErrors();
-
-            // Kumpulkan data form secara otomatis
-            const formData = new FormData(briefForm);
-
-            // Eksekusi Fetch API ke endpoint CI3
-            fetch('/republik/api/submit_brief', {
+            fetch('api/submit_brief', {
                 method: 'POST',
-                body: formData,
-                headers: {
-                    'Accept': 'application/json'
-                }
+                body: new FormData(briefForm),
+                credentials: 'same-origin'
             })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
+            .then(res => {
+                if (!res.ok) throw new Error('Server Error');
+                return res.json();
             })
             .then(data => {
-                // Update CSRF Token dari server untuk keamanan request selanjutnya
-                if (data.csrf_token) {
-                    const csrfInput = document.querySelector('input[name="republik_csrf"]');
-                    if (csrfInput) {
-                        csrfInput.value = data.csrf_token;
-                    }
-                }
-
-                if (data.status === false) {
-                    // Jika validasi gagal atau terdeteksi spam
-                    displayErrors(data.errors);
-                    btnSubmit.innerHTML = originalBtnText;
+                if (data.status) {
+                    // Success State
+                    briefForm.style.display = 'none';
+                    const success = document.createElement('div');
+                    success.innerHTML = `<div style="text-align:center; padding:60px; border:1px solid var(--accent-blue); background:#111; border-radius:8px;">
+                        <h3 style="color:var(--accent-blue); font-size:1.8rem; margin-bottom:10px;">Brief Received</h3>
+                        <p>${data.message}</p>
+                    </div>`;
+                    briefForm.parentNode.appendChild(success);
+                } else {
+                    // Error State
+                    alert('Please check your input fields.');
+                    btnSubmit.innerHTML = originalText;
                     btnSubmit.disabled = false;
-                } else if (data.status === true) {
-                    // Jika sukses menyimpan data
-                    showSuccessMessage(data.message);
+                    // Update CSRF token if provided
+                    if (data.csrf_token) document.querySelector('input[type="hidden"]').value = data.csrf_token;
                 }
             })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Terjadi kesalahan pada server. Silakan coba beberapa saat lagi.');
-                btnSubmit.innerHTML = originalBtnText;
+            .catch(() => {
+                alert('Connection error. Please try again.');
+                btnSubmit.innerHTML = originalText;
                 btnSubmit.disabled = false;
             });
         });
     }
-
-    // --- Fungsi Bantuan (Helper Functions - DRY Principle) ---
-
-    function displayErrors(errors) {
-        for (const [field, message] of Object.entries(errors)) {
-            // Jika error berasal dari input field
-            const inputElement = document.getElementById(field);
-            if (inputElement) {
-                inputElement.style.outline = "2px solid #ff4444"; // Highlight merah
-                
-                // Buat elemen teks error
-                const errorText = document.createElement('span');
-                errorText.className = 'error-message';
-                errorText.style.color = '#ff4444';
-                errorText.style.fontSize = '0.8rem';
-                errorText.style.marginTop = '5px';
-                errorText.style.display = 'block';
-                errorText.innerHTML = message;
-
-                // Sisipkan di bawah input yang bermasalah
-                inputElement.parentNode.appendChild(errorText);
-            } else if (field === 'email' || field === 'server') {
-                // Khusus untuk error duplikasi email / server logik
-                alert(message);
-            }
-        }
-    }
-
-    function clearErrors() {
-        const errorMessages = document.querySelectorAll('.error-message');
-        errorMessages.forEach(el => el.remove());
-
-        const errorInputs = document.querySelectorAll('input, textarea');
-        errorInputs.forEach(el => {
-            el.style.outline = "none";
-        });
-    }
-
-    function showSuccessMessage(message) {
-        // Sembunyikan form
-        briefForm.style.display = 'none';
-
-        // Buat dan tampilkan elemen sukses yang elegan
-        const successDiv = document.createElement('div');
-        successDiv.className = 'success-message';
-        successDiv.style.textAlign = 'center';
-        successDiv.style.padding = '40px 20px';
-        successDiv.style.backgroundColor = '#111';
-        successDiv.style.border = '1px solid #4A7AFF';
-        successDiv.style.borderRadius = '8px';
-        successDiv.style.marginTop = '20px';
-        
-        successDiv.innerHTML = `
-            <h3 style="color: #4A7AFF; margin-bottom: 10px; font-size: 1.5rem;">Brief Received</h3>
-            <p style="color: #fff;">${message}</p>
-        `;
-
-        // Sisipkan di tempat form sebelumnya berada
-        const formContainer = document.querySelector('.form-container');
-        formContainer.appendChild(successDiv);
-    }
 });
-<!-- end file assets/js/main.css -->
+<!-- end file assets/js/main.js -->
 
 <!-- file database/db_republik_landing.php -->
 CREATE TABLE `tb_leads` (
