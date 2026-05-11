@@ -1,0 +1,15 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /republik/
+
+    # Hapus trailing slash pada URL (Opsional tapi direkomendasikan untuk SEO)
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^(.*)/$ /$1 [L,R=301]
+
+    # Cek apakah file atau direktori asli tidak ada
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+
+    # Redirect semua request ke index.php
+    RewriteRule ^(.*)$ index.php/$1 [L]
+</IfModule>

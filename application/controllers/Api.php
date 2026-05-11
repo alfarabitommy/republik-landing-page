@@ -5,10 +5,10 @@ class Api extends CI_Controller {
 
     public function __construct() {
         parent::__construct();
-        // Memuat library dan model yang dibutuhkan
+        // Memuat library form validation dan model
         $this->load->library('form_validation');
-        $this->load->library('security');
         $this->load->model('Leads_model');
+        // Baris load library security DIHAPUS di sini juga
     }
 
     /**
