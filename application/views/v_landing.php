@@ -10,15 +10,38 @@
 <body>
 
     <header class="hero-section">
-        <div class="container">
-            <div class="logo">
-                <h1>REPUBLIK</h1>
-                <p>Creative Intelligence Agency</p>
+        <div class="hero-collage-container">
+            <div class="hero-logo-overlay">
+                <div class="logo-placeholder-circle">
+                    <h1>REPUBLIK</h1>
+                    <p>Creative Intelligence Agency</p>
+                </div>
             </div>
+
+            <div class="hero-collage-grid">
+                <div class="collage-cell item-tall placeholder-dark">
+                    <img src="<?= base_url('assets/img/hero-1-placeholder.webp') ?>" alt="Collage 1" class="collage-img" loading="lazy">
+                </div>
+                <div class="collage-cell item-wide-top placeholder-gray">
+                    <img src="<?= base_url('assets/img/hero-2-placeholder.webp') ?>" alt="Collage 2" class="collage-img" loading="lazy">
+                </div>
+                <div class="collage-cell item-small-top placeholder-dark">
+                    <img src="<?= base_url('assets/img/hero-3-placeholder.webp') ?>" alt="Collage 3" class="collage-img" loading="lazy">
+                </div>
+                <div class="collage-cell item-wide-bottom placeholder-gray">
+                    <img src="<?= base_url('assets/img/hero-4-placeholder.webp') ?>" alt="Collage 4" class="collage-img" loading="lazy">
+                </div>
+                <div class="collage-cell item-small-bottom placeholder-dark">
+                    <img src="<?= base_url('assets/img/hero-5-placeholder.webp') ?>" alt="Collage 5" class="collage-img" loading="lazy">
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
             <h2 class="headline-utama">
                 Your brand doesn't<br>
                 need more content. It needs<br>
-                <span class="highlight">a sharper creative system.</span>
+                <span class="bottom">a sharper creative system.</span>
             </h2>
         </div>
     </header>
