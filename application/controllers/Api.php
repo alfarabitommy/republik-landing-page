@@ -8,7 +8,6 @@ class Api extends CI_Controller {
         // Memuat library form validation dan model
         $this->load->library('form_validation');
         $this->load->model('Leads_model');
-        // Baris load library security DIHAPUS di sini juga
     }
 
     /**
@@ -27,16 +26,16 @@ class Api extends CI_Controller {
                 ]));
         }
 
-        // 2. Set Rules Form Validation bawaan CI3
-        $this->form_validation->set_rules('last_name', 'Last Name', 'required|trim|xss_clean');
-        $this->form_validation->set_rules('email', 'Email', 'required|trim|valid_email|xss_clean');
-        $this->form_validation->set_rules('organization', 'Organization', 'required|trim|xss_clean');
-        $this->form_validation->set_rules('position', 'Position', 'required|trim|xss_clean');
-        $this->form_validation->set_rules('messages', 'Messages', 'required|trim|xss_clean');
+        // 2. Set Rules Form Validation bawaan CI3 (xss_clean dihapus untuk efisiensi)
+        $this->form_validation->set_rules('last_name', 'Last Name', 'required|trim');
+        $this->form_validation->set_rules('email', 'Email', 'required|trim|valid_email');
+        $this->form_validation->set_rules('organization', 'Organization', 'required|trim');
+        $this->form_validation->set_rules('position', 'Position', 'required|trim');
+        $this->form_validation->set_rules('messages', 'Messages', 'required|trim');
 
-        // Opsional field (First Name, Country) tetap di-filter jika ada
-        $this->form_validation->set_rules('first_name', 'First Name', 'trim|xss_clean');
-        $this->form_validation->set_rules('country', 'Country', 'trim|xss_clean');
+        // Opsional field
+        $this->form_validation->set_rules('first_name', 'First Name', 'trim');
+        $this->form_validation->set_rules('country', 'Country', 'trim');
 
         // 3. Eksekusi Validasi
         if ($this->form_validation->run() == FALSE) {
@@ -47,7 +46,7 @@ class Api extends CI_Controller {
                 'csrf_token' => $this->security->get_csrf_hash() // Generate token baru
             ];
         } else {
-            // Jika validasi berhasil, tangkap input email
+            // Jika validasi berhasil, tangkap input email (parameter TRUE otomatis filter XSS)
             $email = $this->input->post('email', TRUE);
 
             // 4. Cek duplikasi email via Model (Mencegah Spam)
@@ -58,7 +57,7 @@ class Api extends CI_Controller {
                     'csrf_token' => $this->security->get_csrf_hash()
                 ];
             } else {
-                // 5. Susun array data sesuai struktur tb_leads
+                // 5. Susun array data (Semua input ditangkap dengan parameter TRUE untuk filter XSS)
                 $data_insert = [
                     'first_name'   => $this->input->post('first_name', TRUE),
                     'last_name'    => $this->input->post('last_name', TRUE),
@@ -78,7 +77,7 @@ class Api extends CI_Controller {
                     $response = [
                         'status' => true,
                         'message' => 'Thank you, your brief is received.',
-                        'csrf_token' => $this->security->get_csrf_hash() // Persiapan jika form tidak di-hide dan ingin submit ulang nanti
+                        'csrf_token' => $this->security->get_csrf_hash() 
                     ];
                 } else {
                     $response = [
