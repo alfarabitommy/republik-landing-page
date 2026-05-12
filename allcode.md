@@ -259,10 +259,9 @@ class Leads_model extends CI_Model {
                 
                 <div class="form-grid">
                     <div class="form-group">
-                        <label for="first_name">First Name*</label>
+                        <label for="first_name">First Name</label>
                         <input type="text" id="first_name" name="first_name">
                     </div>
-
                     <div class="form-group">
                         <label for="last_name">Last Name*</label>
                         <input type="text" id="last_name" name="last_name" required>
@@ -272,9 +271,8 @@ class Leads_model extends CI_Model {
                         <label for="email">email*</label>
                         <input type="email" id="email" name="email" required>
                     </div>
-
                     <div class="form-group">
-                        <label for="country">Country*</label>
+                        <label for="country">Country</label>
                         <input type="text" id="country" name="country">
                     </div>
 
@@ -283,14 +281,14 @@ class Leads_model extends CI_Model {
                         <input type="text" id="organization" name="organization" required>
                     </div>
                     
-                    <div class="form-group">
-                        <label for="position">Position*</label>
-                        <input type="text" id="position" name="position" required>
-                    </div>
-                    
                     <div class="form-group textarea-group">
                         <label for="messages">Messages*</label>
                         <textarea id="messages" name="messages" rows="6" required></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="position">Position*</label>
+                        <input type="text" id="position" name="position" required>
                     </div>
                 </div>
 
@@ -356,7 +354,7 @@ body { background-color: var(--bg-color); color: var(--text-color); font-family:
 .item-small-bottom { grid-column: 3 / 4; grid-row: 2 / 3; }
 .placeholder-gray { background-color: var(--placeholder-gray); }
 .placeholder-dark { background-color: var(--placeholder-dark); }
-.headline-utama { font-size: clamp(2rem, 4vw, 3.5rem); text-align: center; max-width: 1200px; margin: 60px auto 0 auto; letter-spacing: -0.03em; padding-right: 2%; font-weight: 700; line-height: 1.2; }
+.headline-utama { font-size: clamp(2rem, 4vw, 3.5rem); text-align: center; max-width: 1200px; margin: 60px auto 0 auto; letter-spacing: -0.03em; font-weight: 700; line-height: 1.2; }
 
 /* --- NARRATIVE --- */
 .narrative-section p { text-align: center; max-width: 800px; margin: 0 auto 30px auto; font-size: 1.15rem; color: var(--text-muted); }
@@ -384,15 +382,27 @@ body { background-color: var(--bg-color); color: var(--text-color); font-family:
 .close-modal { position: absolute; top: -50px; right: 0; color: #fff; font-size: 3rem; cursor: pointer; }
 #videoContainer iframe, #videoContainer video { width: 100%; height: 100%; border: none; }
 
-/* --- CONTACT FORM --- */
+/* --- UPDATED FORM GRID --- */
 .form-container { max-width: 900px; padding-top: 100px; }
 .form-header h2 { font-size: 2.8rem; text-align: center; margin-bottom: 20px; font-weight: 700; }
 .form-header p { text-align: center; margin-bottom: 50px; color: var(--text-muted); }
-.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 25px 40px; }
-.form-group { display: flex; flex-direction: column; }
-.textarea-group { grid-row: span 3; }
+
+.form-grid { 
+    display: grid; 
+    grid-template-columns: 1fr 1fr; 
+    gap: 25px 40px; 
+}
+
+/* Kolom Kanan (Messages) memanjang dari baris 3 ke baris 4 */
+.textarea-group { 
+    grid-column: 2;
+    grid-row: 3 / span 2; 
+}
+
 label { font-size: 0.9rem; margin-bottom: 10px; color: var(--text-color); font-weight: bold; text-transform: uppercase; }
 input, textarea { width: 100%; padding: 15px; background-color: #ffffff; border: none; border-radius: 2px; color: #000000; font-family: var(--font-main); font-size: 1rem; }
+textarea { height: 80%; min-height: 160px; resize: none; }
+
 .form-submit { text-align: center; margin-top: 50px; }
 button#btnSubmit { background-color: var(--accent-blue); color: #ffffff; border: none; padding: 18px 50px; font-size: 1.1rem; font-weight: bold; border-radius: 40px; cursor: pointer; transition: 0.3s; text-transform: uppercase; letter-spacing: 1px; }
 button#btnSubmit:hover { background-color: var(--accent-blue-hover); transform: translateY(-2px); }
@@ -408,8 +418,8 @@ footer p { font-size: 1rem; color: var(--text-muted); font-weight: 700; text-tra
     .hero-collage-grid { grid-template-columns: 1fr; grid-template-rows: auto; }
     .collage-cell { height: 200px; grid-column: auto !important; grid-row: auto !important; }
     .form-grid, #portfolio-grid { grid-template-columns: 1fr; }
+    .textarea-group { grid-column: auto; grid-row: auto; }
     .portfolio-item { grid-column: auto !important; }
-    .textarea-group { grid-row: auto; }
 }
 <!-- end file assets/css/style.css -->
 
