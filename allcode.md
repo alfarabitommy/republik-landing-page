@@ -177,26 +177,26 @@ class Leads_model extends CI_Model {
 
             <div class="hero-collage-grid">
                 <div class="collage-cell item-tall placeholder-dark">
-                    <img src="<?= base_url('assets/img/hero-1-placeholder.webp') ?>" alt="Collage 1" class="collage-img" loading="lazy">
+                    <img src="<?= base_url('assets/img/college1.png') ?>" alt="Collage 1" class="collage-img" loading="lazy">
                 </div>
                 <div class="collage-cell item-wide-top placeholder-gray">
-                    <img src="<?= base_url('assets/img/hero-2-placeholder.webp') ?>" alt="Collage 2" class="collage-img" loading="lazy">
+                    <img src="<?= base_url('assets/img/college2.png') ?>" alt="Collage 2" class="collage-img" loading="lazy">
                 </div>
                 <div class="collage-cell item-small-top placeholder-dark">
-                    <img src="<?= base_url('assets/img/hero-3-placeholder.webp') ?>" alt="Collage 3" class="collage-img" loading="lazy">
+                    <img src="<?= base_url('assets/img/college3.png') ?>" alt="Collage 3" class="collage-img" loading="lazy">
                 </div>
                 <div class="collage-cell item-wide-bottom placeholder-gray">
-                    <img src="<?= base_url('assets/img/hero-4-placeholder.webp') ?>" alt="Collage 4" class="collage-img" loading="lazy">
+                    <img src="<?= base_url('assets/img/college4.png') ?>" alt="Collage 4" class="collage-img" loading="lazy">
                 </div>
                 <div class="collage-cell item-small-bottom placeholder-dark">
-                    <img src="<?= base_url('assets/img/hero-5-placeholder.webp') ?>" alt="Collage 5" class="collage-img" loading="lazy">
+                    <img src="<?= base_url('assets/img/college5.png') ?>" alt="Collage 5" class="collage-img" loading="lazy">
                 </div>
             </div>
         </div>
 
         <div class="container">
             <h2 class="headline-utama">
-                Your brand doesn't<br>
+                Your brand doesn't
                 need more content. It needs<br>
                 a sharper creative system.
             </h2>
@@ -262,27 +262,32 @@ class Leads_model extends CI_Model {
                         <label for="first_name">First Name*</label>
                         <input type="text" id="first_name" name="first_name">
                     </div>
-                    <div class="form-group">
-                        <label for="email">email*</label>
-                        <input type="email" id="email" name="email" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="organization">Organization*</label>
-                        <input type="text" id="organization" name="organization" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="position">Position*</label>
-                        <input type="text" id="position" name="position" required>
-                    </div>
 
                     <div class="form-group">
                         <label for="last_name">Last Name*</label>
                         <input type="text" id="last_name" name="last_name" required>
                     </div>
+
+                    <div class="form-group">
+                        <label for="email">email*</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+
                     <div class="form-group">
                         <label for="country">Country*</label>
                         <input type="text" id="country" name="country">
                     </div>
+
+                    <div class="form-group">
+                        <label for="organization">Organization*</label>
+                        <input type="text" id="organization" name="organization" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="position">Position*</label>
+                        <input type="text" id="position" name="position" required>
+                    </div>
+                    
                     <div class="form-group textarea-group">
                         <label for="messages">Messages*</label>
                         <textarea id="messages" name="messages" rows="6" required></textarea>
@@ -351,7 +356,7 @@ body { background-color: var(--bg-color); color: var(--text-color); font-family:
 .item-small-bottom { grid-column: 3 / 4; grid-row: 2 / 3; }
 .placeholder-gray { background-color: var(--placeholder-gray); }
 .placeholder-dark { background-color: var(--placeholder-dark); }
-.headline-utama { font-size: clamp(2rem, 4vw, 3.5rem); text-align: center; max-width: 850px; margin: 60px auto 0 auto; letter-spacing: -0.03em; padding-right: 2%; font-weight: 700; line-height: 1.2; }
+.headline-utama { font-size: clamp(2rem, 4vw, 3.5rem); text-align: center; max-width: 1200px; margin: 60px auto 0 auto; letter-spacing: -0.03em; padding-right: 2%; font-weight: 700; line-height: 1.2; }
 
 /* --- NARRATIVE --- */
 .narrative-section p { text-align: center; max-width: 800px; margin: 0 auto 30px auto; font-size: 1.15rem; color: var(--text-muted); }
