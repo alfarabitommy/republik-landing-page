@@ -920,118 +920,138 @@ class Leads_model extends CI_Model {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0B0B0B">
+    
     <title>REPUBLIK | Creative Intelligence Agency</title>
-    <meta name="description" content="Your brand doesn't need more content. It needs a sharper creative system.">
+    <meta name="title" content="REPUBLIK | Creative Intelligence Agency">
+    <meta name="description" content="Your brand doesn't need more content. It needs a sharper creative system. We help brands turn business problems into culture-sharp creative platforms.">
+    <meta name="keywords" content="Creative Agency, Intelligence Agency, Brand Strategy, B2B Marketing, Content System, Indonesia Agency, REPUBLIK">
+    <meta name="author" content="REPUBLIK">
+    
+    <link rel="canonical" href="<?= base_url() ?>">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="<?= base_url() ?>">
+    <meta property="og:title" content="REPUBLIK | Creative Intelligence Agency">
+    <meta property="og:description" content="Your brand doesn't need more content. It needs a sharper creative system. We help brands turn business problems into culture-sharp creative platforms.">
+    <meta property="og:image" content="<?= base_url('assets/img/college1.png') ?>">
+
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="<?= base_url() ?>">
+    <meta property="twitter:title" content="REPUBLIK | Creative Intelligence Agency">
+    <meta property="twitter:description" content="Your brand doesn't need more content. It needs a sharper creative system.">
+    <meta property="twitter:image" content="<?= base_url('assets/img/college1.png') ?>">
+
+    <link rel="preload" href="<?= base_url('assets/css/style.css') ?>" as="style">
     <link rel="stylesheet" href="<?= base_url('assets/css/style.css') ?>">
 </head>
 <body>
 
-    <header class="hero-section">
-        <div class="hero-collage-container">
-            <div class="hero-logo-overlay">
-                <div class="logo-placeholder-circle">
-                    <h1>REPUBLIK</h1>
-                    <p>Creative Intelligence Agency</p>
+    <main>
+        <header class="hero-section">
+            <div class="hero-collage-container">
+                <div class="hero-logo-overlay">
+                    <img src="<?= base_url('assets/img/re-logo-2026.png') ?>" alt="REPUBLIK Creative Intelligence Agency Logo" class="hero-logo-img">
+                </div>
+
+                <div class="hero-collage-grid">
+                    <div class="collage-cell item-tall placeholder-dark"><img src="<?= base_url('assets/img/college1.png') ?>" alt="REPUBLIK Creative Work 1" class="collage-img" fetchpriority="high"></div>
+                    <div class="collage-cell item-wide-top placeholder-gray"><img src="<?= base_url('assets/img/college2.png') ?>" alt="REPUBLIK Creative Work 2" class="collage-img" fetchpriority="high"></div>
+                    <div class="collage-cell item-small-top placeholder-dark"><img src="<?= base_url('assets/img/college3.png') ?>" alt="REPUBLIK Creative Work 3" class="collage-img"></div>
+                    <div class="collage-cell item-wide-bottom placeholder-gray"><img src="<?= base_url('assets/img/college4.png') ?>" alt="REPUBLIK Creative Work 4" class="collage-img"></div>
+                    <div class="collage-cell item-small-bottom placeholder-dark"><img src="<?= base_url('assets/img/college5.png') ?>" alt="REPUBLIK Creative Work 5" class="collage-img"></div>
                 </div>
             </div>
 
-            <div class="hero-collage-grid">
-                <div class="collage-cell item-tall placeholder-dark"><img src="<?= base_url('assets/img/college1.png') ?>" alt="Collage 1" class="collage-img" loading="lazy"></div>
-                <div class="collage-cell item-wide-top placeholder-gray"><img src="<?= base_url('assets/img/college2.png') ?>" alt="Collage 2" class="collage-img" loading="lazy"></div>
-                <div class="collage-cell item-small-top placeholder-dark"><img src="<?= base_url('assets/img/college3.png') ?>" alt="Collage 3" class="collage-img" loading="lazy"></div>
-                <div class="collage-cell item-wide-bottom placeholder-gray"><img src="<?= base_url('assets/img/college4.png') ?>" alt="Collage 4" class="collage-img" loading="lazy"></div>
-                <div class="collage-cell item-small-bottom placeholder-dark"><img src="<?= base_url('assets/img/college5.png') ?>" alt="Collage 5" class="collage-img" loading="lazy"></div>
+            <div class="container">
+                <h2 class="headline-utama">
+                    <?= nl2br(html_escape($settings['headline_main'] ?? 'Your brand doesn\'t need more content. It needs a sharper creative system.')) ?>
+                </h2>
             </div>
-        </div>
+        </header>
 
-        <div class="container">
-            <h2 class="headline-utama">
-                <?= nl2br(html_escape($settings['headline_main'] ?? 'Your brand doesn\'t need more content. It needs a sharper creative system.')) ?>
-            </h2>
-        </div>
-    </header>
-
-    <section class="narrative-section">
-        <div class="container">
-            <p>REPUBLIK helps brands turn business problems into culture-sharp creative platforms, social campaigns, content systems & performance-ready ideas. We work where attention is crowded, audiences are restless, and brands need more than "posting consistently."</p>
-            <p>We help you find the strategic angle, shape the creative idea, build the format system & make every touchpoint do its job.</p>
-            <div class="methodology">
-                <small>From big campaign thinking to daily content execution, we connect:</small>
-                <strong>Idea &rarr; Format &rarr; Behavior &rarr; Measurement</strong>
-                <small>So your brand doesn't just show up. It gets noticed, remembered, and acted on.</small>
+        <section class="narrative-section">
+            <div class="container">
+                <p>REPUBLIK helps brands turn business problems into culture-sharp creative platforms, social campaigns, content systems & performance-ready ideas. We work where attention is crowded, audiences are restless, and brands need more than "posting consistently."</p>
+                <p>We help you find the strategic angle, shape the creative idea, build the format system & make every touchpoint do its job.</p>
+                <div class="methodology">
+                    <small>From big campaign thinking to daily content execution, we connect:</small>
+                    <strong>Idea &rarr; Format &rarr; Behavior &rarr; Measurement</strong>
+                    <small>So your brand doesn't just show up. It gets noticed, remembered, and acted on.</small>
+                </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <section id="work" class="portfolio-section">
-        <div class="container">
-            <div class="section-title">
-                <h3>Our Work</h3>
-                <p>A selection of work across FMCG, beauty, automotive, lifestyle, and youth culture. Each one built to solve a real brand challenge through sharp strategy, strong creative and formats that move across platforms.</p>
+        <section id="work" class="portfolio-section">
+            <div class="container">
+                <div class="section-title">
+                    <h3>Our Work</h3>
+                    <p>A selection of work across FMCG, beauty, automotive, lifestyle, and youth culture. Each one built to solve a real brand challenge through sharp strategy, strong creative and formats that move across platforms.</p>
+                </div>
+                
+                <div id="portfolio-grid" class="portfolio-grid">
+                    
+                    <div class="portfolio-item video-trigger" aria-label="Play <?= html_escape($settings['video_title_1'] ?? 'Video 1') ?>" data-video-src="<?= $settings['video_1'] ?? 'https://www.youtube.com/watch?v=dQw4w9WgXcQ' ?>" style="background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.6) 100%), url('<?= !empty($settings['video_thumb_1']) ? base_url($settings['video_thumb_1']) : '' ?>') center/cover no-repeat #222;">
+                        <div class="overlay-text"><?= html_escape($settings['video_title_1'] ?? 'HONDA AHM') ?></div>
+                        <div class="play-icon" aria-hidden="true">▶</div>
+                    </div>
+                    
+                    <div class="portfolio-item video-trigger" aria-label="Play <?= html_escape($settings['video_title_2'] ?? 'Video 2') ?>" data-video-src="<?= $settings['video_2'] ?? 'https://www.youtube.com/watch?v=dQw4w9WgXcQ' ?>" style="background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.6) 100%), url('<?= !empty($settings['video_thumb_2']) ? base_url($settings['video_thumb_2']) : '' ?>') center/cover no-repeat #222;">
+                        <div class="overlay-text"><?= html_escape($settings['video_title_2'] ?? 'JERGENS') ?></div>
+                        <div class="play-icon" aria-hidden="true">▶</div>
+                    </div>
+                    
+                    <div class="portfolio-item video-trigger" aria-label="Play <?= html_escape($settings['video_title_3'] ?? 'Video 3') ?>" data-video-src="<?= $settings['video_3'] ?? 'https://www.youtube.com/watch?v=dQw4w9WgXcQ' ?>" style="background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.6) 100%), url('<?= !empty($settings['video_thumb_3']) ? base_url($settings['video_thumb_3']) : '' ?>') center/cover no-repeat #222;">
+                        <div class="overlay-text"><?= html_escape($settings['video_title_3'] ?? 'HONDA AHM') ?></div>
+                        <div class="play-icon" aria-hidden="true">▶</div>
+                    </div>
+                    
+                    <div class="portfolio-item video-trigger" aria-label="Play <?= html_escape($settings['video_title_4'] ?? 'Video 4') ?>" data-video-src="<?= $settings['video_4'] ?? base_url('assets/video/honda.mp4') ?>" style="background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.6) 100%), url('<?= !empty($settings['video_thumb_4']) ? base_url($settings['video_thumb_4']) : '' ?>') center/cover no-repeat #222;">
+                        <div class="overlay-text"><?= html_escape($settings['video_title_4'] ?? 'HONDA AHM') ?></div>
+                        <div class="play-icon" aria-hidden="true">▶</div>
+                    </div>
+                    
+                    <div class="portfolio-item video-trigger" aria-label="Play <?= html_escape($settings['video_title_5'] ?? 'Video 5') ?>" data-video-src="<?= $settings['video_5'] ?? 'https://www.youtube.com/watch?v=dQw4w9WgXcQ' ?>" style="background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.6) 100%), url('<?= !empty($settings['video_thumb_5']) ? base_url($settings['video_thumb_5']) : '' ?>') center/cover no-repeat #222;">
+                        <div class="overlay-text"><?= html_escape($settings['video_title_5'] ?? 'JERGENS') ?></div>
+                        <div class="play-icon" aria-hidden="true">▶</div>
+                    </div>
+
+                </div>
             </div>
-            
-            <div id="portfolio-grid" class="portfolio-grid">
-                
-                <div class="portfolio-item video-trigger" data-video-src="<?= $settings['video_1'] ?? 'https://www.youtube.com/watch?v=dQw4w9WgXcQ' ?>" style="background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.6) 100%), url('<?= !empty($settings['video_thumb_1']) ? base_url($settings['video_thumb_1']) : '' ?>') center/cover no-repeat #222;">
-                    <div class="overlay-text"><?= html_escape($settings['video_title_1'] ?? 'HONDA AHM') ?></div>
-                    <div class="play-icon">▶</div>
-                </div>
-                
-                <div class="portfolio-item video-trigger" data-video-src="<?= $settings['video_2'] ?? 'https://www.youtube.com/watch?v=dQw4w9WgXcQ' ?>" style="background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.6) 100%), url('<?= !empty($settings['video_thumb_2']) ? base_url($settings['video_thumb_2']) : '' ?>') center/cover no-repeat #222;">
-                    <div class="overlay-text"><?= html_escape($settings['video_title_2'] ?? 'JERGENS') ?></div>
-                    <div class="play-icon">▶</div>
-                </div>
-                
-                <div class="portfolio-item video-trigger" data-video-src="<?= $settings['video_3'] ?? 'https://www.youtube.com/watch?v=dQw4w9WgXcQ' ?>" style="background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.6) 100%), url('<?= !empty($settings['video_thumb_3']) ? base_url($settings['video_thumb_3']) : '' ?>') center/cover no-repeat #222;">
-                    <div class="overlay-text"><?= html_escape($settings['video_title_3'] ?? 'HONDA AHM') ?></div>
-                    <div class="play-icon">▶</div>
-                </div>
-                
-                <div class="portfolio-item video-trigger" data-video-src="<?= $settings['video_4'] ?? base_url('assets/video/honda.mp4') ?>" style="background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.6) 100%), url('<?= !empty($settings['video_thumb_4']) ? base_url($settings['video_thumb_4']) : '' ?>') center/cover no-repeat #222;">
-                    <div class="overlay-text"><?= html_escape($settings['video_title_4'] ?? 'HONDA AHM') ?></div>
-                    <div class="play-icon">▶</div>
-                </div>
-                
-                <div class="portfolio-item video-trigger" data-video-src="<?= $settings['video_5'] ?? 'https://www.youtube.com/watch?v=dQw4w9WgXcQ' ?>" style="background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.6) 100%), url('<?= !empty($settings['video_thumb_5']) ? base_url($settings['video_thumb_5']) : '' ?>') center/cover no-repeat #222;">
-                    <div class="overlay-text"><?= html_escape($settings['video_title_5'] ?? 'JERGENS') ?></div>
-                    <div class="play-icon">▶</div>
+        </section>
+
+        <section id="contact" class="form-section">
+            <div class="container form-container">
+                <div class="form-header">
+                    <h2>Let's build something that moves.</h2>
+                    <p>Tell us what you're trying to change, launch, grow, fix, or make impossible to ignore. Bring the business challenge. We'll help build the creative system.</p>
                 </div>
 
+                <form id="briefForm" action="#" method="POST">
+                    <input type="hidden" name="<?= $this->security->get_csrf_token_name(); ?>" value="<?= $this->security->get_csrf_hash(); ?>">
+                    
+                    <div class="form-grid">
+                        <div class="form-group"><label for="first_name">First Name</label><input type="text" id="first_name" name="first_name" autocomplete="given-name"></div>
+                        <div class="form-group"><label for="last_name">Last Name*</label><input type="text" id="last_name" name="last_name" required autocomplete="family-name"></div>
+                        <div class="form-group"><label for="email">email*</label><input type="email" id="email" name="email" required autocomplete="email"></div>
+                        <div class="form-group"><label for="country">Country</label><input type="text" id="country" name="country" autocomplete="country-name"></div>
+                        <div class="form-group"><label for="organization">Organization*</label><input type="text" id="organization" name="organization" required autocomplete="organization"></div>
+                        <div class="form-group textarea-group"><label for="messages">Messages*</label><textarea id="messages" name="messages" rows="6" required></textarea></div>
+                        <div class="form-group"><label for="position">Position*</label><input type="text" id="position" name="position" required autocomplete="organization-title"></div>
+                    </div>
+
+                    <div class="form-submit">
+                        <button type="submit" id="btnSubmit" aria-label="Send your business brief">Send Brief</button>
+                    </div>
+                </form>
             </div>
-        </div>
-    </section>
+        </section>
+    </main>
 
-    <section id="contact" class="form-section">
-        <div class="container form-container">
-            <div class="form-header">
-                <h2>Let's build something that moves.</h2>
-                <p>Tell us what you're trying to change, launch, grow, fix, or make impossible to ignore. Bring the business challenge. We'll help build the creative system.</p>
-            </div>
-
-            <form id="briefForm" action="#" method="POST">
-                <input type="hidden" name="<?= $this->security->get_csrf_token_name(); ?>" value="<?= $this->security->get_csrf_hash(); ?>">
-                
-                <div class="form-grid">
-                    <div class="form-group"><label for="first_name">First Name</label><input type="text" id="first_name" name="first_name"></div>
-                    <div class="form-group"><label for="last_name">Last Name*</label><input type="text" id="last_name" name="last_name" required></div>
-                    <div class="form-group"><label for="email">email*</label><input type="email" id="email" name="email" required></div>
-                    <div class="form-group"><label for="country">Country</label><input type="text" id="country" name="country"></div>
-                    <div class="form-group"><label for="organization">Organization*</label><input type="text" id="organization" name="organization" required></div>
-                    <div class="form-group textarea-group"><label for="messages">Messages*</label><textarea id="messages" name="messages" rows="6" required></textarea></div>
-                    <div class="form-group"><label for="position">Position*</label><input type="text" id="position" name="position" required></div>
-                </div>
-
-                <div class="form-submit">
-                    <button type="submit" id="btnSubmit">Send Brief</button>
-                </div>
-            </form>
-        </div>
-    </section>
-
-    <div id="videoModal" class="video-modal">
-        <div class="modal-overlay"></div>
+    <div id="videoModal" class="video-modal" role="dialog" aria-modal="true" aria-label="Video Player">
+        <div class="modal-overlay" aria-hidden="true"></div>
         <div class="modal-content">
-            <span class="close-modal">&times;</span>
+            <button class="close-modal" aria-label="Close Video">&times;</button>
             <div id="videoContainer"></div>
         </div>
     </div>
@@ -1046,7 +1066,7 @@ class Leads_model extends CI_Model {
         </div>
     </footer>
 
-    <script src="<?= base_url('assets/js/main.js') ?>"></script>
+    <script src="<?= base_url('assets/js/main.js') ?>" defer></script>
 </body>
 </html>
 <!-- end file application/views/v_landing.php -->
@@ -1210,6 +1230,7 @@ class Leads_model extends CI_Model {
 <!-- end file application/views/v_login.php -->
 
 <!-- file assets/css/style.css -->
+/* file: assets/css/style.css */
 :root {
     --bg-color: #0B0B0B;
     --text-color: #ffffff;
@@ -1228,9 +1249,25 @@ body { background-color: var(--bg-color); color: var(--text-color); font-family:
 /* --- HERO & COLLAGE --- */
 .hero-section { width: 100%; overflow: hidden; }
 .hero-collage-container { position: relative; width: 100%; max-width: 1600px; margin: 0 auto; }
-.hero-logo-overlay { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 10; pointer-events: none; }
-.logo-placeholder-circle h1 { font-size: clamp(3rem, 6vw, 6rem); font-weight: 900; letter-spacing: -2px; line-height: 1; }
-.logo-placeholder-circle p { font-size: clamp(0.8rem, 1.5vw, 1.2rem); font-weight: bold; letter-spacing: 1px; }
+
+/* REVISI LOGO: Posisi overlay logo tetap sama (sentral), tetapi gaya typography lama dihapus */
+.hero-logo-overlay { 
+    position: absolute; 
+    top: 50%; 
+    left: 50%; 
+    transform: translate(-50%, -50%); 
+    z-index: 10; 
+    pointer-events: none; 
+}
+
+/* REVISI LOGO: Gaya baru untuk gambar logo */
+.hero-logo-img {
+    display: block;
+    max-width: 700px; /* Ukuran maksimal logo di desktop */
+    height: auto;
+    filter: brightness(1); /* Memastikan putih sempurna seperti di gambar */
+}
+
 .hero-collage-grid { display: grid; grid-template-columns: 1.2fr 2fr 1fr; grid-template-rows: 300px 300px; gap: 0; }
 .collage-cell { width: 100%; height: 100%; overflow: hidden; }
 .collage-img { width: 100%; height: 100%; object-fit: cover; opacity: 0.8; }
@@ -1273,7 +1310,7 @@ body { background-color: var(--bg-color); color: var(--text-color); font-family:
     background: #000; 
     z-index: 10; 
     border: 1px solid #333; 
-    border-radius: 8px; /* Sudut sedikit membulat agar lebih estetik */
+    border-radius: 8px;
     box-shadow: 0 20px 50px rgba(0,0,0,0.8);
 }
 
@@ -1300,7 +1337,6 @@ body { background-color: var(--bg-color); color: var(--text-color); font-family:
     transform: scale(1.1);
 }
 
-/* Memaksa kontainer dan video di dalamnya untuk mengambil ruang 100% */
 #videoContainer { 
     width: 100%; 
     height: 100%; 
@@ -1356,11 +1392,11 @@ footer p { font-size: 1rem; color: var(--text-muted); font-weight: 700; text-tra
         grid-template-columns: 1fr 1fr; 
         grid-template-rows: repeat(3, 250px); 
     }
-    .item-tall { grid-column: 1 / 2; grid-row: 1 / 3; } /* Kiri, merentang 2 baris */
-    .item-wide-top { grid-column: 2 / 3; grid-row: 1 / 2; } /* Kanan Atas */
-    .item-small-top { grid-column: 2 / 3; grid-row: 2 / 3; } /* Kanan Tengah */
-    .item-wide-bottom { grid-column: 1 / 2; grid-row: 3 / 4; } /* Kiri Bawah */
-    .item-small-bottom { grid-column: 2 / 3; grid-row: 3 / 4; } /* Kanan Bawah */
+    .item-tall { grid-column: 1 / 2; grid-row: 1 / 3; }
+    .item-wide-top { grid-column: 2 / 3; grid-row: 1 / 2; }
+    .item-small-top { grid-column: 2 / 3; grid-row: 2 / 3; }
+    .item-wide-bottom { grid-column: 1 / 2; grid-row: 3 / 4; }
+    .item-small-bottom { grid-column: 2 / 3; grid-row: 3 / 4; }
 
     /* Portfolio Section: Ubah menjadi 2 Kolom seragam */
     #portfolio-grid { 
@@ -1369,7 +1405,7 @@ footer p { font-size: 1rem; color: var(--text-muted); font-weight: 700; text-tra
     }
     .portfolio-item { grid-column: span 1 !important; }
     .portfolio-item:nth-child(4), .portfolio-item:nth-child(5) { 
-        grid-column: span 1 !important; /* Reset formasi rata tengah */
+        grid-column: span 1 !important;
     }
 
     /* Form Section: Rapatkan celah */
@@ -1382,6 +1418,11 @@ footer p { font-size: 1rem; color: var(--text-muted); font-weight: 700; text-tra
     .headline-utama { 
         font-size: clamp(1.8rem, 6vw, 2.5rem); 
         margin-top: 40px; 
+    }
+
+    /* REVISI LOGO: Gaya responsif untuk logo baru di perangkat seluler */
+    .hero-logo-img {
+        max-width: 200px; /* Ukuran maksimal logo di mobile */
     }
 
     /* Hero Collage: 1 Kolom penuh, tinggi dibatasi agar tidak scroll terlalu jauh */

@@ -8,7 +8,7 @@
     <title>REPUBLIK | Creative Intelligence Agency</title>
     <meta name="title" content="REPUBLIK | Creative Intelligence Agency">
     <meta name="description" content="Your brand doesn't need more content. It needs a sharper creative system. We help brands turn business problems into culture-sharp creative platforms.">
-    <meta name="keywords" content="Creative Agency, Intelligence Agency, Brand Strategy, B2B Marketing, Content System, Indonesia Agency">
+    <meta name="keywords" content="Creative Agency, Intelligence Agency, Brand Strategy, B2B Marketing, Content System, Indonesia Agency, REPUBLIK">
     <meta name="author" content="REPUBLIK">
     
     <link rel="canonical" href="<?= base_url() ?>">
@@ -34,10 +34,7 @@
         <header class="hero-section">
             <div class="hero-collage-container">
                 <div class="hero-logo-overlay">
-                    <div class="logo-placeholder-circle">
-                        <h1>REPUBLIK</h1>
-                        <p>Creative Intelligence Agency</p>
-                    </div>
+                    <img src="<?= base_url('assets/img/re-logo-2026.png') ?>" alt="REPUBLIK Creative Intelligence Agency Logo" class="hero-logo-img">
                 </div>
 
                 <div class="hero-collage-grid">

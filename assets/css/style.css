@@ -1,3 +1,4 @@
+/* file: assets/css/style.css */
 :root {
     --bg-color: #0B0B0B;
     --text-color: #ffffff;
@@ -16,9 +17,25 @@ body { background-color: var(--bg-color); color: var(--text-color); font-family:
 /* --- HERO & COLLAGE --- */
 .hero-section { width: 100%; overflow: hidden; }
 .hero-collage-container { position: relative; width: 100%; max-width: 1600px; margin: 0 auto; }
-.hero-logo-overlay { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 10; pointer-events: none; }
-.logo-placeholder-circle h1 { font-size: clamp(3rem, 6vw, 6rem); font-weight: 900; letter-spacing: -2px; line-height: 1; }
-.logo-placeholder-circle p { font-size: clamp(0.8rem, 1.5vw, 1.2rem); font-weight: bold; letter-spacing: 1px; }
+
+/* REVISI LOGO: Posisi overlay logo tetap sama (sentral), tetapi gaya typography lama dihapus */
+.hero-logo-overlay { 
+    position: absolute; 
+    top: 50%; 
+    left: 50%; 
+    transform: translate(-50%, -50%); 
+    z-index: 10; 
+    pointer-events: none; 
+}
+
+/* REVISI LOGO: Gaya baru untuk gambar logo */
+.hero-logo-img {
+    display: block;
+    max-width: 700px; /* Ukuran maksimal logo di desktop */
+    height: auto;
+    filter: brightness(1); /* Memastikan putih sempurna seperti di gambar */
+}
+
 .hero-collage-grid { display: grid; grid-template-columns: 1.2fr 2fr 1fr; grid-template-rows: 300px 300px; gap: 0; }
 .collage-cell { width: 100%; height: 100%; overflow: hidden; }
 .collage-img { width: 100%; height: 100%; object-fit: cover; opacity: 0.8; }
@@ -61,7 +78,7 @@ body { background-color: var(--bg-color); color: var(--text-color); font-family:
     background: #000; 
     z-index: 10; 
     border: 1px solid #333; 
-    border-radius: 8px; /* Sudut sedikit membulat agar lebih estetik */
+    border-radius: 8px;
     box-shadow: 0 20px 50px rgba(0,0,0,0.8);
 }
 
@@ -88,7 +105,6 @@ body { background-color: var(--bg-color); color: var(--text-color); font-family:
     transform: scale(1.1);
 }
 
-/* Memaksa kontainer dan video di dalamnya untuk mengambil ruang 100% */
 #videoContainer { 
     width: 100%; 
     height: 100%; 
@@ -144,11 +160,11 @@ footer p { font-size: 1rem; color: var(--text-muted); font-weight: 700; text-tra
         grid-template-columns: 1fr 1fr; 
         grid-template-rows: repeat(3, 250px); 
     }
-    .item-tall { grid-column: 1 / 2; grid-row: 1 / 3; } /* Kiri, merentang 2 baris */
-    .item-wide-top { grid-column: 2 / 3; grid-row: 1 / 2; } /* Kanan Atas */
-    .item-small-top { grid-column: 2 / 3; grid-row: 2 / 3; } /* Kanan Tengah */
-    .item-wide-bottom { grid-column: 1 / 2; grid-row: 3 / 4; } /* Kiri Bawah */
-    .item-small-bottom { grid-column: 2 / 3; grid-row: 3 / 4; } /* Kanan Bawah */
+    .item-tall { grid-column: 1 / 2; grid-row: 1 / 3; }
+    .item-wide-top { grid-column: 2 / 3; grid-row: 1 / 2; }
+    .item-small-top { grid-column: 2 / 3; grid-row: 2 / 3; }
+    .item-wide-bottom { grid-column: 1 / 2; grid-row: 3 / 4; }
+    .item-small-bottom { grid-column: 2 / 3; grid-row: 3 / 4; }
 
     /* Portfolio Section: Ubah menjadi 2 Kolom seragam */
     #portfolio-grid { 
@@ -157,7 +173,7 @@ footer p { font-size: 1rem; color: var(--text-muted); font-weight: 700; text-tra
     }
     .portfolio-item { grid-column: span 1 !important; }
     .portfolio-item:nth-child(4), .portfolio-item:nth-child(5) { 
-        grid-column: span 1 !important; /* Reset formasi rata tengah */
+        grid-column: span 1 !important;
     }
 
     /* Form Section: Rapatkan celah */
@@ -170,6 +186,11 @@ footer p { font-size: 1rem; color: var(--text-muted); font-weight: 700; text-tra
     .headline-utama { 
         font-size: clamp(1.8rem, 6vw, 2.5rem); 
         margin-top: 40px; 
+    }
+
+    /* REVISI LOGO: Gaya responsif untuk logo baru di perangkat seluler */
+    .hero-logo-img {
+        max-width: 200px; /* Ukuran maksimal logo di mobile */
     }
 
     /* Hero Collage: 1 Kolom penuh, tinggi dibatasi agar tidak scroll terlalu jauh */
