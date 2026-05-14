@@ -53,9 +53,54 @@ body { background-color: var(--bg-color); color: var(--text-color); font-family:
 /* --- VIDEO MODAL --- */
 .video-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 9999; align-items: center; justify-content: center; }
 .modal-overlay { position: absolute; width: 100%; height: 100%; background: rgba(0,0,0,0.95); }
-.modal-content { position: relative; width: 85%; max-width: 1050px; aspect-ratio: 16/9; background: #000; z-index: 10; border: 1px solid #333; }
-.close-modal { position: absolute; top: -50px; right: 0; color: #fff; font-size: 3rem; cursor: pointer; }
-#videoContainer iframe, #videoContainer video { width: 100%; height: 100%; border: none; }
+.modal-content { 
+    position: relative; 
+    width: 90%; 
+    max-width: 1000px; 
+    aspect-ratio: 16/9; 
+    background: #000; 
+    z-index: 10; 
+    border: 1px solid #333; 
+    border-radius: 8px; /* Sudut sedikit membulat agar lebih estetik */
+    box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+}
+
+.close-modal { 
+    position: absolute; 
+    top: -20px; 
+    right: -50px; 
+    color: #fff; 
+    font-size: 2rem; 
+    cursor: pointer; 
+    line-height: 1; 
+    width: 45px;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+    z-index: 11;
+}
+.close-modal:hover { 
+    background-color: var(--accent-blue);
+    transform: scale(1.1);
+}
+
+/* Memaksa kontainer dan video di dalamnya untuk mengambil ruang 100% */
+#videoContainer { 
+    width: 100%; 
+    height: 100%; 
+    border-radius: 8px; 
+    overflow: hidden; 
+}
+#videoContainer iframe, #videoContainer video { 
+    width: 100%; 
+    height: 100%; 
+    border: none; 
+    display: block; 
+}
 
 /* --- UPDATED FORM GRID --- */
 .form-container { max-width: 900px; padding-top: 100px; }
@@ -68,7 +113,6 @@ body { background-color: var(--bg-color); color: var(--text-color); font-family:
     gap: 25px 40px; 
 }
 
-/* Kolom Kanan (Messages) memanjang dari baris 3 ke baris 4 */
 .textarea-group { 
     grid-column: 2;
     grid-row: 3 / span 2; 
@@ -95,4 +139,6 @@ footer p { font-size: 1rem; color: var(--text-muted); font-weight: 700; text-tra
     .form-grid, #portfolio-grid { grid-template-columns: 1fr; }
     .textarea-group { grid-column: auto; grid-row: auto; }
     .portfolio-item { grid-column: auto !important; }
+    /* Penyesuaian tombol close di layar HP */
+    .close-modal { top: -60px; right: 0; }
 }
