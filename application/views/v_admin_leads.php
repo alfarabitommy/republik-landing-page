@@ -183,7 +183,7 @@
                 <a href="<?= base_url('Admin') ?>" class="nav-link active">Leads Inbox</a>
             </li>
             <li class="nav-item">
-                <a href="#" class="nav-link">Settings</a>
+                <a href="<?= base_url('Admin/settings') ?>" class="nav-link">Settings</a>
             </li>
         </ul>
 
@@ -255,7 +255,6 @@
     
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Inisialisasi Vanilla JS DataTables
             const myTable = document.getElementById("leadsTable");
             if (myTable) {
                 new simpleDatatables.DataTable(myTable, {
@@ -266,23 +265,19 @@
             }
         });
 
-        // Fungsi AJAX murni Vanilla JS (Sesuai Aturan Blueprint)
         function updateLeadStatus(selectElement, idLead) {
             const newStatus = selectElement.value;
             const csrfInput = document.getElementById('csrf_token');
             const csrfName = csrfInput.getAttribute('name');
             const csrfValue = csrfInput.value;
 
-            // Membangun FormData
             const formData = new FormData();
             formData.append('id_lead', idLead);
             formData.append('status', newStatus);
             formData.append(csrfName, csrfValue);
 
-            // Menonaktifkan select sementara saat proses
             selectElement.disabled = true;
 
-            // Eksekusi Fetch API
             fetch('<?= base_url("Admin/update_status") ?>', {
                 method: 'POST',
                 body: formData,
@@ -293,12 +288,9 @@
                 return response.json();
             })
             .then(data => {
-                selectElement.disabled = false; // Aktifkan kembali
+                selectElement.disabled = false;
                 if(data.status) {
-                    // Update CSRF token di DOM dengan yang baru dari server
                     csrfInput.value = data.csrf_token;
-                    
-                    // Tampilkan Toast Sukses
                     showToast(data.message);
                 } else {
                     alert('Gagal: ' + data.message);
@@ -311,7 +303,6 @@
             });
         }
 
-        // Fungsi kontrol animasi Toast Minimalis
         function showToast(msg) {
             const toast = document.getElementById("toast");
             toast.innerText = msg;

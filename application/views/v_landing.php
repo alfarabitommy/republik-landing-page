@@ -19,29 +19,17 @@
             </div>
 
             <div class="hero-collage-grid">
-                <div class="collage-cell item-tall placeholder-dark">
-                    <img src="<?= base_url('assets/img/college1.png') ?>" alt="Collage 1" class="collage-img" loading="lazy">
-                </div>
-                <div class="collage-cell item-wide-top placeholder-gray">
-                    <img src="<?= base_url('assets/img/college2.png') ?>" alt="Collage 2" class="collage-img" loading="lazy">
-                </div>
-                <div class="collage-cell item-small-top placeholder-dark">
-                    <img src="<?= base_url('assets/img/college3.png') ?>" alt="Collage 3" class="collage-img" loading="lazy">
-                </div>
-                <div class="collage-cell item-wide-bottom placeholder-gray">
-                    <img src="<?= base_url('assets/img/college4.png') ?>" alt="Collage 4" class="collage-img" loading="lazy">
-                </div>
-                <div class="collage-cell item-small-bottom placeholder-dark">
-                    <img src="<?= base_url('assets/img/college5.png') ?>" alt="Collage 5" class="collage-img" loading="lazy">
-                </div>
+                <div class="collage-cell item-tall placeholder-dark"><img src="<?= base_url('assets/img/college1.png') ?>" alt="Collage 1" class="collage-img" loading="lazy"></div>
+                <div class="collage-cell item-wide-top placeholder-gray"><img src="<?= base_url('assets/img/college2.png') ?>" alt="Collage 2" class="collage-img" loading="lazy"></div>
+                <div class="collage-cell item-small-top placeholder-dark"><img src="<?= base_url('assets/img/college3.png') ?>" alt="Collage 3" class="collage-img" loading="lazy"></div>
+                <div class="collage-cell item-wide-bottom placeholder-gray"><img src="<?= base_url('assets/img/college4.png') ?>" alt="Collage 4" class="collage-img" loading="lazy"></div>
+                <div class="collage-cell item-small-bottom placeholder-dark"><img src="<?= base_url('assets/img/college5.png') ?>" alt="Collage 5" class="collage-img" loading="lazy"></div>
             </div>
         </div>
 
         <div class="container">
             <h2 class="headline-utama">
-                Your brand doesn't
-                need more content. It needs<br>
-                a sharper creative system.
+                <?= nl2br(html_escape($settings['headline_main'] ?? 'Your brand doesn\'t need more content. It needs a sharper creative system.')) ?>
             </h2>
         </div>
     </header>
@@ -66,23 +54,23 @@
             </div>
             
             <div id="portfolio-grid" class="portfolio-grid">
-                <div class="portfolio-item video-trigger" data-video-src="https://www.youtube.com/watch?v=dQw4w9WgXcQ">
+                <div class="portfolio-item video-trigger" data-video-src="<?= $settings['video_1'] ?? 'https://www.youtube.com/watch?v=dQw4w9WgXcQ' ?>">
                     <div class="overlay-text">HONDA AHM</div>
                     <div class="play-icon">▶</div>
                 </div>
-                <div class="portfolio-item video-trigger" data-video-src="https://www.youtube.com/watch?v=dQw4w9WgXcQ">
+                <div class="portfolio-item video-trigger" data-video-src="<?= $settings['video_2'] ?? 'https://www.youtube.com/watch?v=dQw4w9WgXcQ' ?>">
                     <div class="overlay-text">JERGENS</div>
                     <div class="play-icon">▶</div>
                 </div>
-                <div class="portfolio-item video-trigger" data-video-src="https://www.youtube.com/watch?v=dQw4w9WgXcQ">
+                <div class="portfolio-item video-trigger" data-video-src="<?= $settings['video_3'] ?? 'https://www.youtube.com/watch?v=dQw4w9WgXcQ' ?>">
                     <div class="overlay-text">HONDA AHM</div>
                     <div class="play-icon">▶</div>
                 </div>
-                <div class="portfolio-item video-trigger" data-video-src="<?= base_url('assets/video/honda.mp4') ?>">
+                <div class="portfolio-item video-trigger" data-video-src="<?= $settings['video_4'] ?? base_url('assets/video/honda.mp4') ?>">
                     <div class="overlay-text">HONDA AHM</div>
                     <div class="play-icon">▶</div>
                 </div>
-                <div class="portfolio-item video-trigger" data-video-src="https://www.youtube.com/watch?v=dQw4w9WgXcQ">
+                <div class="portfolio-item video-trigger" data-video-src="<?= $settings['video_5'] ?? 'https://www.youtube.com/watch?v=dQw4w9WgXcQ' ?>">
                     <div class="overlay-text">JERGENS</div>
                     <div class="play-icon">▶</div>
                 </div>
@@ -101,38 +89,13 @@
                 <input type="hidden" name="<?= $this->security->get_csrf_token_name(); ?>" value="<?= $this->security->get_csrf_hash(); ?>">
                 
                 <div class="form-grid">
-                    <div class="form-group">
-                        <label for="first_name">First Name</label>
-                        <input type="text" id="first_name" name="first_name">
-                    </div>
-                    <div class="form-group">
-                        <label for="last_name">Last Name*</label>
-                        <input type="text" id="last_name" name="last_name" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="email">email*</label>
-                        <input type="email" id="email" name="email" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="country">Country</label>
-                        <input type="text" id="country" name="country">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="organization">Organization*</label>
-                        <input type="text" id="organization" name="organization" required>
-                    </div>
-                    
-                    <div class="form-group textarea-group">
-                        <label for="messages">Messages*</label>
-                        <textarea id="messages" name="messages" rows="6" required></textarea>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="position">Position*</label>
-                        <input type="text" id="position" name="position" required>
-                    </div>
+                    <div class="form-group"><label for="first_name">First Name</label><input type="text" id="first_name" name="first_name"></div>
+                    <div class="form-group"><label for="last_name">Last Name*</label><input type="text" id="last_name" name="last_name" required></div>
+                    <div class="form-group"><label for="email">email*</label><input type="email" id="email" name="email" required></div>
+                    <div class="form-group"><label for="country">Country</label><input type="text" id="country" name="country"></div>
+                    <div class="form-group"><label for="organization">Organization*</label><input type="text" id="organization" name="organization" required></div>
+                    <div class="form-group textarea-group"><label for="messages">Messages*</label><textarea id="messages" name="messages" rows="6" required></textarea></div>
+                    <div class="form-group"><label for="position">Position*</label><input type="text" id="position" name="position" required></div>
                 </div>
 
                 <div class="form-submit">

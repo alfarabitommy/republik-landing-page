@@ -9,9 +9,9 @@ class Admin extends CI_Controller {
         $this->load->library('session');
         $this->load->helper('url');
         $this->load->model('Leads_model');
+        $this->load->database();
 
         // Middleware Proteksi Akses CMS
-        // Jika tidak ada sesi logged_in, tendang ke halaman login
         if (!$this->session->userdata('logged_in')) {
             redirect('Auth/login');
         }
@@ -21,61 +21,89 @@ class Admin extends CI_Controller {
      * Halaman Utama Dashboard (Menampilkan Tabel Leads)
      */
     public function index() {
-        // Mengambil data leads yang aktif (is_deleted = 0)
         $data['leads'] = $this->Leads_model->get_active_leads();
-        
         $this->load->view('v_admin_leads', $data);
     }
 
     /**
      * Fungsi AJAX untuk memperbarui status penanganan Lead
-     * Method: POST
      */
     public function update_status() {
-        // Validasi metode HTTP
         if ($this->input->server('REQUEST_METHOD') !== 'POST') {
-            return $this->output
-                ->set_status_header(403)
-                ->set_content_type('application/json')
-                ->set_output(json_encode(['status' => false, 'message' => 'Forbidden']));
+            return $this->output->set_status_header(403)->set_content_type('application/json')->set_output(json_encode(['status' => false, 'message' => 'Forbidden']));
         }
 
-        // Tangkap input dengan filter XSS (TRUE)
         $id_lead = $this->input->post('id_lead', TRUE);
         $new_status = $this->input->post('status', TRUE);
 
-        // Ambil status lama terlebih dahulu untuk dicatat di log
         $this->db->select('status');
         $this->db->where('id_lead', $id_lead);
         $old_lead = $this->db->get('tb_leads')->row_array();
         $old_status = $old_lead ? $old_lead['status'] : 'unknown';
 
-        // Update status di tabel utama (tb_leads)
         $this->db->where('id_lead', $id_lead);
-        $this->db->update('tb_leads', [
-            'status' => $new_status,
-            'updated_at' => date('Y-m-d H:i:s')
-        ]);
+        $this->db->update('tb_leads', ['status' => $new_status, 'updated_at' => date('Y-m-d H:i:s')]);
 
-        // Catat jejak audit ke tabel log (tb_lead_status_logs)
         $log_data = [
             'lead_id'    => $id_lead,
             'user_id'    => $this->session->userdata('id_user'),
             'old_status' => $old_status,
             'new_status' => $new_status,
-            'notes'      => 'Status updated via AJAX Dashboard',
+            'notes'      => 'Status updated via AJAX',
             'changed_at' => date('Y-m-d H:i:s')
         ];
         $this->db->insert('tb_lead_status_logs', $log_data);
 
-        // Kembalikan response JSON beserta token CSRF baru untuk keamanan beruntun
-        return $this->output
-            ->set_content_type('application/json')
-            ->set_output(json_encode([
-                'status' => true,
-                'message' => 'Status berhasil diperbarui!',
-                'csrf_token' => $this->security->get_csrf_hash()
-            ]));
+        return $this->output->set_content_type('application/json')->set_output(json_encode([
+            'status' => true,
+            'message' => 'Status berhasil diperbarui!',
+            'csrf_token' => $this->security->get_csrf_hash()
+        ]));
+    }
+
+    /**
+     * Halaman Pengaturan Konten Dinamis (CMS Editor)
+     */
+    public function settings() {
+        // Ambil semua data dari tb_system_settings
+        $query = $this->db->get('tb_system_settings')->result_array();
+        
+        // Ubah menjadi Associative Array (Key => Value)
+        $settings = [];
+        foreach ($query as $row) {
+            $settings[$row['setting_key']] = $row['setting_value'];
+        }
+        
+        $data['settings'] = $settings;
+        $this->load->view('v_admin_settings', $data);
+    }
+
+    /**
+     * Menyimpan perubahan dari Editor Konten
+     */
+    public function save_settings() {
+        if ($this->input->server('REQUEST_METHOD') === 'POST') {
+            // Tangkap semua input POST yang sudah di-filter XSS
+            $post_data = $this->input->post(NULL, TRUE);
+            
+            // Singkirkan input token CSRF agar tidak ikut terproses ke database
+            unset($post_data[$this->security->get_csrf_token_name()]);
+
+            // Looping Batch Update (Update jika ada, Insert jika belum ada)
+            foreach ($post_data as $key => $value) {
+                $exists = $this->db->where('setting_key', $key)->get('tb_system_settings')->num_rows();
+                
+                if ($exists > 0) {
+                    $this->db->where('setting_key', $key)->update('tb_system_settings', ['setting_value' => $value]);
+                } else {
+                    $this->db->insert('tb_system_settings', ['setting_key' => $key, 'setting_value' => $value]);
+                }
+            }
+
+            // Set flashdata sukses dan kembali ke halaman settings
+            $this->session->set_flashdata('success', 'Konten website berhasil diperbarui secara instan!');
+            redirect('Admin/settings');
+        }
     }
 }
 <!-- end file application/controllers/Admin.php -->
@@ -256,15 +284,24 @@ class Landing extends CI_Controller {
 
     public function __construct() {
         parent::__construct();
-        // Memuat helper URL dan form
-        $this->load->helper('url');
-        $this->load->helper('form');
-        // Baris load library security DIHAPUS karena class Security sudah otomatis dimuat oleh Core CI3
+        $this->load->helper(['url', 'form']);
+        $this->load->database(); // Memastikan database dimuat agar query dinamis berfungsi
     }
 
     public function index() {
-        // Memuat file view application/views/v_landing.php
-        $this->load->view('v_landing');
+        // Tarik semua konfigurasi dari database
+        $query = $this->db->get('tb_system_settings')->result_array();
+        
+        // Ubah menjadi array asosiatif untuk mempermudah pemanggilan di View
+        $settings = [];
+        foreach ($query as $row) {
+            $settings[$row['setting_key']] = $row['setting_value'];
+        }
+        
+        // Passing data dinamis ke Front-End
+        $data['settings'] = $settings;
+
+        $this->load->view('v_landing', $data);
     }
 }
 <!-- end file application/controllers/Landing.php -->
@@ -532,7 +569,7 @@ class Leads_model extends CI_Model {
                 <a href="<?= base_url('Admin') ?>" class="nav-link active">Leads Inbox</a>
             </li>
             <li class="nav-item">
-                <a href="#" class="nav-link">Settings</a>
+                <a href="<?= base_url('Admin/settings') ?>" class="nav-link">Settings</a>
             </li>
         </ul>
 
@@ -604,7 +641,6 @@ class Leads_model extends CI_Model {
     
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Inisialisasi Vanilla JS DataTables
             const myTable = document.getElementById("leadsTable");
             if (myTable) {
                 new simpleDatatables.DataTable(myTable, {
@@ -615,23 +651,19 @@ class Leads_model extends CI_Model {
             }
         });
 
-        // Fungsi AJAX murni Vanilla JS (Sesuai Aturan Blueprint)
         function updateLeadStatus(selectElement, idLead) {
             const newStatus = selectElement.value;
             const csrfInput = document.getElementById('csrf_token');
             const csrfName = csrfInput.getAttribute('name');
             const csrfValue = csrfInput.value;
 
-            // Membangun FormData
             const formData = new FormData();
             formData.append('id_lead', idLead);
             formData.append('status', newStatus);
             formData.append(csrfName, csrfValue);
 
-            // Menonaktifkan select sementara saat proses
             selectElement.disabled = true;
 
-            // Eksekusi Fetch API
             fetch('<?= base_url("Admin/update_status") ?>', {
                 method: 'POST',
                 body: formData,
@@ -642,12 +674,9 @@ class Leads_model extends CI_Model {
                 return response.json();
             })
             .then(data => {
-                selectElement.disabled = false; // Aktifkan kembali
+                selectElement.disabled = false;
                 if(data.status) {
-                    // Update CSRF token di DOM dengan yang baru dari server
                     csrfInput.value = data.csrf_token;
-                    
-                    // Tampilkan Toast Sukses
                     showToast(data.message);
                 } else {
                     alert('Gagal: ' + data.message);
@@ -660,7 +689,6 @@ class Leads_model extends CI_Model {
             });
         }
 
-        // Fungsi kontrol animasi Toast Minimalis
         function showToast(msg) {
             const toast = document.getElementById("toast");
             toast.innerText = msg;
@@ -671,6 +699,127 @@ class Leads_model extends CI_Model {
 </body>
 </html>
 <!-- end file application/views/v_admin_leads.php -->
+
+<!-- file application/views/v_admin_settings.php -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>REPUBLIK | Content Editor</title>
+    <style>
+        /* Standalone Dark Mode CSS (Mewarisi Layout Admin) */
+        :root {
+            --bg-dark: #0B0B0B;
+            --bg-panel: #151515;
+            --bg-hover: #222222;
+            --accent-blue: #4A7AFF;
+            --accent-blue-hover: #335ECC;
+            --accent-gold: #D4AF37;
+            --text-main: #ffffff;
+            --text-muted: #888888;
+            --border-color: #333333;
+            --success-green: #00C851;
+            --font-main: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background-color: var(--bg-dark); color: var(--text-main); font-family: var(--font-main); display: flex; min-height: 100vh; }
+
+        .sidebar { width: 260px; background-color: var(--bg-panel); border-right: 1px solid var(--border-color); padding: 30px 20px; display: flex; flex-direction: column; }
+        .brand-logo { font-size: 1.5rem; font-weight: 900; letter-spacing: 2px; color: var(--text-main); margin-bottom: 40px; text-decoration: none; }
+        .brand-logo span { color: var(--accent-blue); }
+        .nav-menu { list-style: none; flex-grow: 1; }
+        .nav-item { margin-bottom: 10px; }
+        .nav-link { display: block; padding: 12px 15px; color: var(--text-muted); text-decoration: none; font-weight: bold; border-radius: 4px; transition: 0.3s; }
+        .nav-link:hover, .nav-link.active { background-color: var(--accent-blue); color: #ffffff; }
+        .user-panel { padding-top: 20px; border-top: 1px solid var(--border-color); font-size: 0.9rem; color: var(--text-muted); }
+        .logout-btn { display: block; margin-top: 10px; color: #ff4444; text-decoration: none; font-weight: bold; }
+
+        .main-content { flex-grow: 1; padding: 40px; overflow-y: auto; }
+        .page-header { margin-bottom: 30px; }
+        .page-header h2 { font-size: 2rem; }
+
+        .editor-wrapper { background-color: var(--bg-panel); padding: 30px; border-radius: 8px; border: 1px solid var(--border-color); max-width: 800px; }
+        .form-group { margin-bottom: 25px; }
+        label { display: block; margin-bottom: 10px; font-weight: bold; color: var(--text-muted); text-transform: uppercase; font-size: 0.85rem; letter-spacing: 1px; }
+        input[type="text"], textarea { width: 100%; padding: 15px; background-color: var(--bg-dark); border: 1px solid var(--border-color); border-radius: 4px; color: var(--text-main); font-family: var(--font-main); font-size: 1rem; }
+        input[type="text"]:focus, textarea:focus { outline: none; border-color: var(--accent-blue); }
+        textarea { height: 120px; resize: vertical; }
+
+        .btn-save { background-color: var(--accent-blue); color: #fff; border: none; padding: 15px 30px; font-size: 1rem; font-weight: bold; border-radius: 4px; cursor: pointer; text-transform: uppercase; transition: 0.3s; }
+        .btn-save:hover { background-color: var(--accent-blue-hover); }
+
+        .alert-success { background-color: rgba(0, 200, 81, 0.1); border-left: 4px solid var(--success-green); color: var(--success-green); padding: 15px; margin-bottom: 25px; font-size: 0.95rem; font-weight: bold; border-radius: 2px; }
+    </style>
+</head>
+<body>
+
+    <aside class="sidebar">
+        <a href="<?= base_url('Admin') ?>" class="brand-logo">REP<span>.</span></a>
+        <ul class="nav-menu">
+            <li class="nav-item"><a href="<?= base_url('Admin') ?>" class="nav-link">Leads Inbox</a></li>
+            <li class="nav-item"><a href="<?= base_url('Admin/settings') ?>" class="nav-link active">Settings</a></li>
+        </ul>
+        <div class="user-panel">
+            Logged in as:<br><strong style="color:var(--text-main)"><?= $this->session->userdata('username'); ?></strong>
+            <a href="<?= base_url('Auth/logout') ?>" class="logout-btn">Log Out &rarr;</a>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <div class="page-header">
+            <h2>Dynamic Content Editor</h2>
+        </div>
+
+        <div class="editor-wrapper">
+            <?php if($this->session->flashdata('success')): ?>
+                <div class="alert-success"><?= $this->session->flashdata('success') ?></div>
+            <?php endif; ?>
+
+            <form action="<?= base_url('Admin/save_settings') ?>" method="POST">
+                <input type="hidden" name="<?= $this->security->get_csrf_token_name(); ?>" value="<?= $this->security->get_csrf_hash(); ?>">
+
+                <div class="form-group">
+                    <label for="headline_main">Hero Main Headline</label>
+                    <textarea id="headline_main" name="headline_main" required><?= $settings['headline_main'] ?? '' ?></textarea>
+                </div>
+
+                <hr style="border: 0; border-top: 1px solid #333; margin: 30px 0;">
+
+                <div class="form-group">
+                    <label>Portfolio Video URL 1 (Top Left)</label>
+                    <input type="text" name="video_1" value="<?= $settings['video_1'] ?? 'https://www.youtube.com/watch?v=dQw4w9WgXcQ' ?>" placeholder="YouTube URL or local.mp4">
+                </div>
+                
+                <div class="form-group">
+                    <label>Portfolio Video URL 2 (Top Middle)</label>
+                    <input type="text" name="video_2" value="<?= $settings['video_2'] ?? 'https://www.youtube.com/watch?v=dQw4w9WgXcQ' ?>">
+                </div>
+
+                <div class="form-group">
+                    <label>Portfolio Video URL 3 (Top Right)</label>
+                    <input type="text" name="video_3" value="<?= $settings['video_3'] ?? 'https://www.youtube.com/watch?v=dQw4w9WgXcQ' ?>">
+                </div>
+
+                <div class="form-group">
+                    <label>Portfolio Video URL 4 (Bottom Left-Center)</label>
+                    <input type="text" name="video_4" value="<?= $settings['video_4'] ?? 'https://www.youtube.com/watch?v=dQw4w9WgXcQ' ?>">
+                </div>
+
+                <div class="form-group">
+                    <label>Portfolio Video URL 5 (Bottom Right-Center)</label>
+                    <input type="text" name="video_5" value="<?= $settings['video_5'] ?? 'https://www.youtube.com/watch?v=dQw4w9WgXcQ' ?>">
+                </div>
+
+                <button type="submit" class="btn-save">Save Changes</button>
+            </form>
+        </div>
+    </main>
+
+</body>
+</html>
+<!-- end file application/views/v_admin_settings.php -->
 
 <!-- file application/views/v_landing.php -->
 <!DOCTYPE html>
@@ -694,29 +843,17 @@ class Leads_model extends CI_Model {
             </div>
 
             <div class="hero-collage-grid">
-                <div class="collage-cell item-tall placeholder-dark">
-                    <img src="<?= base_url('assets/img/college1.png') ?>" alt="Collage 1" class="collage-img" loading="lazy">
-                </div>
-                <div class="collage-cell item-wide-top placeholder-gray">
-                    <img src="<?= base_url('assets/img/college2.png') ?>" alt="Collage 2" class="collage-img" loading="lazy">
-                </div>
-                <div class="collage-cell item-small-top placeholder-dark">
-                    <img src="<?= base_url('assets/img/college3.png') ?>" alt="Collage 3" class="collage-img" loading="lazy">
-                </div>
-                <div class="collage-cell item-wide-bottom placeholder-gray">
-                    <img src="<?= base_url('assets/img/college4.png') ?>" alt="Collage 4" class="collage-img" loading="lazy">
-                </div>
-                <div class="collage-cell item-small-bottom placeholder-dark">
-                    <img src="<?= base_url('assets/img/college5.png') ?>" alt="Collage 5" class="collage-img" loading="lazy">
-                </div>
+                <div class="collage-cell item-tall placeholder-dark"><img src="<?= base_url('assets/img/college1.png') ?>" alt="Collage 1" class="collage-img" loading="lazy"></div>
+                <div class="collage-cell item-wide-top placeholder-gray"><img src="<?= base_url('assets/img/college2.png') ?>" alt="Collage 2" class="collage-img" loading="lazy"></div>
+                <div class="collage-cell item-small-top placeholder-dark"><img src="<?= base_url('assets/img/college3.png') ?>" alt="Collage 3" class="collage-img" loading="lazy"></div>
+                <div class="collage-cell item-wide-bottom placeholder-gray"><img src="<?= base_url('assets/img/college4.png') ?>" alt="Collage 4" class="collage-img" loading="lazy"></div>
+                <div class="collage-cell item-small-bottom placeholder-dark"><img src="<?= base_url('assets/img/college5.png') ?>" alt="Collage 5" class="collage-img" loading="lazy"></div>
             </div>
         </div>
 
         <div class="container">
             <h2 class="headline-utama">
-                Your brand doesn't
-                need more content. It needs<br>
-                a sharper creative system.
+                <?= nl2br(html_escape($settings['headline_main'] ?? 'Your brand doesn\'t need more content. It needs a sharper creative system.')) ?>
             </h2>
         </div>
     </header>
@@ -741,23 +878,23 @@ class Leads_model extends CI_Model {
             </div>
             
             <div id="portfolio-grid" class="portfolio-grid">
-                <div class="portfolio-item video-trigger" data-video-src="https://www.youtube.com/watch?v=dQw4w9WgXcQ">
+                <div class="portfolio-item video-trigger" data-video-src="<?= $settings['video_1'] ?? 'https://www.youtube.com/watch?v=dQw4w9WgXcQ' ?>">
                     <div class="overlay-text">HONDA AHM</div>
                     <div class="play-icon">▶</div>
                 </div>
-                <div class="portfolio-item video-trigger" data-video-src="https://www.youtube.com/watch?v=dQw4w9WgXcQ">
+                <div class="portfolio-item video-trigger" data-video-src="<?= $settings['video_2'] ?? 'https://www.youtube.com/watch?v=dQw4w9WgXcQ' ?>">
                     <div class="overlay-text">JERGENS</div>
                     <div class="play-icon">▶</div>
                 </div>
-                <div class="portfolio-item video-trigger" data-video-src="https://www.youtube.com/watch?v=dQw4w9WgXcQ">
+                <div class="portfolio-item video-trigger" data-video-src="<?= $settings['video_3'] ?? 'https://www.youtube.com/watch?v=dQw4w9WgXcQ' ?>">
                     <div class="overlay-text">HONDA AHM</div>
                     <div class="play-icon">▶</div>
                 </div>
-                <div class="portfolio-item video-trigger" data-video-src="<?= base_url('assets/video/honda.mp4') ?>">
+                <div class="portfolio-item video-trigger" data-video-src="<?= $settings['video_4'] ?? base_url('assets/video/honda.mp4') ?>">
                     <div class="overlay-text">HONDA AHM</div>
                     <div class="play-icon">▶</div>
                 </div>
-                <div class="portfolio-item video-trigger" data-video-src="https://www.youtube.com/watch?v=dQw4w9WgXcQ">
+                <div class="portfolio-item video-trigger" data-video-src="<?= $settings['video_5'] ?? 'https://www.youtube.com/watch?v=dQw4w9WgXcQ' ?>">
                     <div class="overlay-text">JERGENS</div>
                     <div class="play-icon">▶</div>
                 </div>
@@ -776,38 +913,13 @@ class Leads_model extends CI_Model {
                 <input type="hidden" name="<?= $this->security->get_csrf_token_name(); ?>" value="<?= $this->security->get_csrf_hash(); ?>">
                 
                 <div class="form-grid">
-                    <div class="form-group">
-                        <label for="first_name">First Name</label>
-                        <input type="text" id="first_name" name="first_name">
-                    </div>
-                    <div class="form-group">
-                        <label for="last_name">Last Name*</label>
-                        <input type="text" id="last_name" name="last_name" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="email">email*</label>
-                        <input type="email" id="email" name="email" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="country">Country</label>
-                        <input type="text" id="country" name="country">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="organization">Organization*</label>
-                        <input type="text" id="organization" name="organization" required>
-                    </div>
-                    
-                    <div class="form-group textarea-group">
-                        <label for="messages">Messages*</label>
-                        <textarea id="messages" name="messages" rows="6" required></textarea>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="position">Position*</label>
-                        <input type="text" id="position" name="position" required>
-                    </div>
+                    <div class="form-group"><label for="first_name">First Name</label><input type="text" id="first_name" name="first_name"></div>
+                    <div class="form-group"><label for="last_name">Last Name*</label><input type="text" id="last_name" name="last_name" required></div>
+                    <div class="form-group"><label for="email">email*</label><input type="email" id="email" name="email" required></div>
+                    <div class="form-group"><label for="country">Country</label><input type="text" id="country" name="country"></div>
+                    <div class="form-group"><label for="organization">Organization*</label><input type="text" id="organization" name="organization" required></div>
+                    <div class="form-group textarea-group"><label for="messages">Messages*</label><textarea id="messages" name="messages" rows="6" required></textarea></div>
+                    <div class="form-group"><label for="position">Position*</label><input type="text" id="position" name="position" required></div>
                 </div>
 
                 <div class="form-submit">
