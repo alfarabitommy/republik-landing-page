@@ -29,4 +29,19 @@ class Leads_model extends CI_Model {
         
         return $query->num_rows() > 0;
     }
+
+    /**
+     * MENGAMBIL DATA LEADS UNTUK DASHBOARD ADMIN (FUNGSI BARU)
+     * Menarik semua data prospek yang belum dihapus (is_deleted = 0)
+     * Diurutkan dari yang paling baru masuk (DESC)
+     */
+    public function get_active_leads() {
+        $this->db->select('*');
+        $this->db->from('tb_leads');
+        $this->db->where('is_deleted', 0); // Hanya ambil yang tidak di-soft-delete
+        $this->db->order_by('created_at', 'DESC');
+        $query = $this->db->get();
+        
+        return $query->result_array();
+    }
 }

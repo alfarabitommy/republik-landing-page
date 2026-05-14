@@ -1,3 +1,85 @@
+<!-- file application/controllers/Admin.php -->
+<?php
+defined('BASEPATH') OR exit('No direct script access allowed');
+
+class Admin extends CI_Controller {
+
+    public function __construct() {
+        parent::__construct();
+        $this->load->library('session');
+        $this->load->helper('url');
+        $this->load->model('Leads_model');
+
+        // Middleware Proteksi Akses CMS
+        // Jika tidak ada sesi logged_in, tendang ke halaman login
+        if (!$this->session->userdata('logged_in')) {
+            redirect('Auth/login');
+        }
+    }
+
+    /**
+     * Halaman Utama Dashboard (Menampilkan Tabel Leads)
+     */
+    public function index() {
+        // Mengambil data leads yang aktif (is_deleted = 0)
+        $data['leads'] = $this->Leads_model->get_active_leads();
+        
+        $this->load->view('v_admin_leads', $data);
+    }
+
+    /**
+     * Fungsi AJAX untuk memperbarui status penanganan Lead
+     * Method: POST
+     */
+    public function update_status() {
+        // Validasi metode HTTP
+        if ($this->input->server('REQUEST_METHOD') !== 'POST') {
+            return $this->output
+                ->set_status_header(403)
+                ->set_content_type('application/json')
+                ->set_output(json_encode(['status' => false, 'message' => 'Forbidden']));
+        }
+
+        // Tangkap input dengan filter XSS (TRUE)
+        $id_lead = $this->input->post('id_lead', TRUE);
+        $new_status = $this->input->post('status', TRUE);
+
+        // Ambil status lama terlebih dahulu untuk dicatat di log
+        $this->db->select('status');
+        $this->db->where('id_lead', $id_lead);
+        $old_lead = $this->db->get('tb_leads')->row_array();
+        $old_status = $old_lead ? $old_lead['status'] : 'unknown';
+
+        // Update status di tabel utama (tb_leads)
+        $this->db->where('id_lead', $id_lead);
+        $this->db->update('tb_leads', [
+            'status' => $new_status,
+            'updated_at' => date('Y-m-d H:i:s')
+        ]);
+
+        // Catat jejak audit ke tabel log (tb_lead_status_logs)
+        $log_data = [
+            'lead_id'    => $id_lead,
+            'user_id'    => $this->session->userdata('id_user'),
+            'old_status' => $old_status,
+            'new_status' => $new_status,
+            'notes'      => 'Status updated via AJAX Dashboard',
+            'changed_at' => date('Y-m-d H:i:s')
+        ];
+        $this->db->insert('tb_lead_status_logs', $log_data);
+
+        // Kembalikan response JSON beserta token CSRF baru untuk keamanan beruntun
+        return $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode([
+                'status' => true,
+                'message' => 'Status berhasil diperbarui!',
+                'csrf_token' => $this->security->get_csrf_hash()
+            ]));
+    }
+}
+<!-- end file application/controllers/Admin.php -->
+
 <!-- file application/controllers/Api.php -->
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -98,6 +180,74 @@ class Api extends CI_Controller {
 }
 <!-- end file application/controllers/Api.php -->
 
+<!-- file application/controllers/Auth.php -->
+<?php
+defined('BASEPATH') OR exit('No direct script access allowed');
+
+class Auth extends CI_Controller {
+
+    public function __construct() {
+        parent::__construct();
+        $this->load->library('session');
+        $this->load->helper(['url', 'form']);
+        $this->load->model('Admin_model');
+    }
+
+    /**
+     * Menangani halaman dan proses Login
+     */
+    public function login() {
+        // Jika user sudah login, langsung tendang ke Dashboard Admin
+        if ($this->session->userdata('logged_in')) {
+            redirect('Admin');
+        }
+
+        // Jika ada request POST dari form login
+        if ($this->input->server('REQUEST_METHOD') === 'POST') {
+            // Tangkap input dengan XSS Clean (TRUE)
+            $username = $this->input->post('username', TRUE);
+            $password_input = $this->input->post('password', TRUE);
+
+            // Verifikasi username ke database
+            $user = $this->Admin_model->verify_user($username);
+
+            // Jika user ditemukan & password valid (menggunakan algoritma Bcrypt)
+            if ($user && password_verify($password_input, $user['password'])) {
+                
+                // Susun data sesi
+                $session_data = [
+                    'id_user'   => $user['id_user'],
+                    'username'  => $user['username'],
+                    'role_id'   => $user['role_id'],
+                    'logged_in' => TRUE
+                ];
+
+                // Set userdata lalu alihkan ke Controller Admin
+                $this->session->set_userdata($session_data);
+                redirect('Admin');
+                
+            } else {
+                // Jika gagal, set flashdata dan kembalikan ke halaman login
+                $this->session->set_flashdata('error', 'Username atau Password salah.');
+                redirect('Auth/login');
+            }
+        }
+
+        // Jika bukan POST (akses pertama kali), muat view login
+        $this->load->view('v_login');
+    }
+
+    /**
+     * Menangani proses Logout
+     */
+    public function logout() {
+        // Hancurkan semua sesi dan kembalikan ke halaman login
+        $this->session->sess_destroy();
+        redirect('Auth/login');
+    }
+}
+<!-- end file application/controllers/Auth.php -->
+
 <!-- file application/controllers/Landing.php -->
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
@@ -118,6 +268,33 @@ class Landing extends CI_Controller {
     }
 }
 <!-- end file application/controllers/Landing.php -->
+
+<!-- file application/models/Admin_model.php -->
+<?php
+defined('BASEPATH') OR exit('No direct script access allowed');
+
+class Admin_model extends CI_Model {
+
+    public function __construct() {
+        parent::__construct();
+        $this->load->database();
+    }
+
+    /**
+     * Memverifikasi keberadaan user berdasarkan username
+     * @param string $username
+     * @return array|null Mengembalikan satu baris data (row_array) jika ditemukan
+     */
+    public function verify_user($username) {
+        $this->db->select('*');
+        $this->db->from('tb_users');
+        $this->db->where('username', $username);
+        $query = $this->db->get();
+        
+        return $query->row_array();
+    }
+}
+<!-- end file application/models/Admin_model.php -->
 
 <!-- file application/models/Leads_model.php -->
 <?php
@@ -151,8 +328,349 @@ class Leads_model extends CI_Model {
         
         return $query->num_rows() > 0;
     }
+
+    /**
+     * MENGAMBIL DATA LEADS UNTUK DASHBOARD ADMIN (FUNGSI BARU)
+     * Menarik semua data prospek yang belum dihapus (is_deleted = 0)
+     * Diurutkan dari yang paling baru masuk (DESC)
+     */
+    public function get_active_leads() {
+        $this->db->select('*');
+        $this->db->from('tb_leads');
+        $this->db->where('is_deleted', 0); // Hanya ambil yang tidak di-soft-delete
+        $this->db->order_by('created_at', 'DESC');
+        $query = $this->db->get();
+        
+        return $query->result_array();
+    }
 }
 <!-- end file application/models/Leads_model.php -->
+
+<!-- file application/views/v_admin_leads.php -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>REPUBLIK | Leads Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet" type="text/css">
+    <style>
+        /* CSS Variables & Reset */
+        :root {
+            --bg-dark: #0B0B0B;
+            --bg-panel: #151515;
+            --bg-hover: #222222;
+            --accent-blue: #4A7AFF;
+            --accent-gold: #D4AF37;
+            --text-main: #ffffff;
+            --text-muted: #888888;
+            --border-color: #333333;
+            --font-main: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            font-family: var(--font-main);
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Layout */
+        .sidebar {
+            width: 260px;
+            background-color: var(--bg-panel);
+            border-right: 1px solid var(--border-color);
+            padding: 30px 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .brand-logo {
+            font-size: 1.5rem;
+            font-weight: 900;
+            letter-spacing: 2px;
+            color: var(--text-main);
+            margin-bottom: 40px;
+            text-decoration: none;
+        }
+        
+        .brand-logo span { color: var(--accent-blue); }
+
+        .nav-menu { list-style: none; flex-grow: 1; }
+        .nav-item { margin-bottom: 10px; }
+        .nav-link {
+            display: block;
+            padding: 12px 15px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-weight: bold;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+        .nav-link:hover, .nav-link.active {
+            background-color: var(--accent-blue);
+            color: #ffffff;
+        }
+
+        .user-panel {
+            padding-top: 20px;
+            border-top: 1px solid var(--border-color);
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+        .logout-btn {
+            display: block;
+            margin-top: 10px;
+            color: #ff4444;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        /* Content Area */
+        .main-content {
+            flex-grow: 1;
+            padding: 40px;
+            overflow-y: auto;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .page-header h2 { font-size: 2rem; }
+
+        /* DataTables Custom Styling for Dark Mode */
+        .dataTable-wrapper {
+            background-color: var(--bg-panel);
+            padding: 25px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+        .dataTable-table > thead > tr > th {
+            border-bottom: 1px solid var(--border-color);
+            color: var(--accent-gold);
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            padding-bottom: 15px;
+        }
+        .dataTable-table > tbody > tr > td {
+            border-bottom: 1px solid var(--border-color);
+            padding: 15px 10px;
+            vertical-align: middle;
+            color: #e0e0e0;
+        }
+        .dataTable-table > tbody > tr:hover {
+            background-color: var(--bg-hover) !important;
+        }
+        .dataTable-input, .dataTable-selector {
+            background-color: var(--bg-dark);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            padding: 8px 12px;
+            border-radius: 4px;
+        }
+
+        /* Status Dropdown Styling */
+        .select-status {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+            padding: 6px 10px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 0.85rem;
+            cursor: pointer;
+            outline: none;
+        }
+        .select-status:focus { border-color: var(--accent-blue); }
+        
+        .msg-preview {
+            max-width: 250px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: inline-block;
+            font-size: 0.9rem;
+        }
+
+        /* Notifikasi Toast Minimalis */
+        #toast {
+            visibility: hidden;
+            min-width: 250px;
+            background-color: var(--accent-blue);
+            color: #fff;
+            text-align: center;
+            border-radius: 4px;
+            padding: 16px;
+            position: fixed;
+            z-index: 1000;
+            right: 30px;
+            bottom: 30px;
+            font-weight: bold;
+            opacity: 0;
+            transition: opacity 0.5s, visibility 0.5s;
+        }
+        #toast.show {
+            visibility: visible;
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+
+    <aside class="sidebar">
+        <a href="<?= base_url('Admin') ?>" class="brand-logo">REP<span>.</span></a>
+        
+        <ul class="nav-menu">
+            <li class="nav-item">
+                <a href="<?= base_url('Admin') ?>" class="nav-link active">Leads Inbox</a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link">Settings</a>
+            </li>
+        </ul>
+
+        <div class="user-panel">
+            Logged in as:<br>
+            <strong style="color:var(--text-main)"><?= $this->session->userdata('username'); ?></strong>
+            <a href="<?= base_url('Auth/logout') ?>" class="logout-btn">Log Out &rarr;</a>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <div class="page-header">
+            <h2>Leads Intelligence</h2>
+        </div>
+
+        <input type="hidden" id="csrf_token" name="<?= $this->security->get_csrf_token_name(); ?>" value="<?= $this->security->get_csrf_hash(); ?>">
+
+        <div class="dataTable-wrapper">
+            <table id="leadsTable" class="dataTable-table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Client Name</th>
+                        <th>Organization</th>
+                        <th>Messages</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php if(!empty($leads)): foreach($leads as $row): ?>
+                    <tr>
+                        <td><?= date('d M Y, H:i', strtotime($row['created_at'])) ?></td>
+                        <td>
+                            <strong><?= html_escape($row['first_name'] . ' ' . $row['last_name']) ?></strong><br>
+                            <small style="color:var(--text-muted)"><?= html_escape($row['email']) ?></small>
+                        </td>
+                        <td>
+                            <?= html_escape($row['organization']) ?><br>
+                            <small style="color:var(--text-muted)"><?= html_escape($row['position']) ?></small>
+                        </td>
+                        <td>
+                            <span class="msg-preview" title="<?= html_escape($row['messages']) ?>">
+                                <?= html_escape($row['messages']) ?>
+                            </span>
+                        </td>
+                        <td>
+                            <select class="select-status" onchange="updateLeadStatus(this, <?= $row['id_lead'] ?>)">
+                                <option value="new" <?= ($row['status'] == 'new') ? 'selected' : '' ?>>New</option>
+                                <option value="reviewed" <?= ($row['status'] == 'reviewed') ? 'selected' : '' ?>>Reviewed</option>
+                                <option value="contacted" <?= ($row['status'] == 'contacted') ? 'selected' : '' ?>>Contacted</option>
+                                <option value="closed" <?= ($row['status'] == 'closed') ? 'selected' : '' ?>>Closed</option>
+                                <option value="spam" <?= ($row['status'] == 'spam') ? 'selected' : '' ?>>Spam</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <?php endforeach; else: ?>
+                    <tr>
+                        <td colspan="5" style="text-align:center;">No leads found.</td>
+                    </tr>
+                    <?php endif; ?>
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <div id="toast">Status Updated!</div>
+
+    <script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest" type="text/javascript"></script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Inisialisasi Vanilla JS DataTables
+            const myTable = document.getElementById("leadsTable");
+            if (myTable) {
+                new simpleDatatables.DataTable(myTable, {
+                    searchable: true,
+                    fixedHeight: true,
+                    perPage: 10
+                });
+            }
+        });
+
+        // Fungsi AJAX murni Vanilla JS (Sesuai Aturan Blueprint)
+        function updateLeadStatus(selectElement, idLead) {
+            const newStatus = selectElement.value;
+            const csrfInput = document.getElementById('csrf_token');
+            const csrfName = csrfInput.getAttribute('name');
+            const csrfValue = csrfInput.value;
+
+            // Membangun FormData
+            const formData = new FormData();
+            formData.append('id_lead', idLead);
+            formData.append('status', newStatus);
+            formData.append(csrfName, csrfValue);
+
+            // Menonaktifkan select sementara saat proses
+            selectElement.disabled = true;
+
+            // Eksekusi Fetch API
+            fetch('<?= base_url("Admin/update_status") ?>', {
+                method: 'POST',
+                body: formData,
+                credentials: 'same-origin'
+            })
+            .then(response => {
+                if(!response.ok) throw new Error('Network response was not ok');
+                return response.json();
+            })
+            .then(data => {
+                selectElement.disabled = false; // Aktifkan kembali
+                if(data.status) {
+                    // Update CSRF token di DOM dengan yang baru dari server
+                    csrfInput.value = data.csrf_token;
+                    
+                    // Tampilkan Toast Sukses
+                    showToast(data.message);
+                } else {
+                    alert('Gagal: ' + data.message);
+                }
+            })
+            .catch(error => {
+                selectElement.disabled = false;
+                alert('Terjadi kesalahan koneksi sistem.');
+                console.error('Error:', error);
+            });
+        }
+
+        // Fungsi kontrol animasi Toast Minimalis
+        function showToast(msg) {
+            const toast = document.getElementById("toast");
+            toast.innerText = msg;
+            toast.className = "show";
+            setTimeout(function(){ toast.className = toast.className.replace("show", ""); }, 3000);
+        }
+    </script>
+</body>
+</html>
+<!-- end file application/views/v_admin_leads.php -->
 
 <!-- file application/views/v_landing.php -->
 <!DOCTYPE html>
@@ -321,6 +839,164 @@ class Leads_model extends CI_Model {
 </body>
 </html>
 <!-- end file application/views/v_landing.php -->
+
+<!-- file application/views/v_login.php -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>REPUBLIK | CMS Authentication</title>
+    <style>
+        /* Standalone Minimalist Dark Mode CSS untuk Halaman Login */
+        :root {
+            --bg-dark: #0B0B0B;
+            --box-dark: #111111;
+            --accent-blue: #4A7AFF;
+            --accent-hover: #335ECC;
+            --text-main: #ffffff;
+            --text-muted: #888888;
+            --border-color: #333333;
+            --error-red: #ff4444;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .login-wrapper {
+            background-color: var(--box-dark);
+            width: 100%;
+            max-width: 400px;
+            padding: 50px 40px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .login-header h1 {
+            font-size: 2rem;
+            letter-spacing: 2px;
+            margin-bottom: 5px;
+            font-weight: 900;
+        }
+
+        .login-header p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            color: var(--text-muted);
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 15px;
+            background-color: #222;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            color: var(--text-main);
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus,
+        input[type="password"]:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 15px;
+            background-color: var(--accent-blue);
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .btn-submit:hover {
+            background-color: var(--accent-hover);
+        }
+
+        .alert-error {
+            background-color: rgba(255, 68, 68, 0.1);
+            border-left: 4px solid var(--error-red);
+            color: var(--error-red);
+            padding: 15px;
+            margin-bottom: 25px;
+            font-size: 0.9rem;
+            border-radius: 2px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-wrapper">
+        <div class="login-header">
+            <h1>REPUBLIK</h1>
+            <p>Control Center</p>
+        </div>
+
+        <?php if($this->session->flashdata('error')): ?>
+            <div class="alert-error">
+                <?= $this->session->flashdata('error') ?>
+            </div>
+        <?php endif; ?>
+
+        <form action="<?= base_url('Auth/login') ?>" method="POST">
+            <input type="hidden" name="<?= $this->security->get_csrf_token_name(); ?>" value="<?= $this->security->get_csrf_hash(); ?>">
+
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" required autocomplete="off" autofocus>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+
+            <button type="submit" class="btn-submit">Sign In</button>
+        </form>
+    </div>
+
+</body>
+</html>
+<!-- end file application/views/v_login.php -->
 
 <!-- file assets/css/style.css -->
 :root {
