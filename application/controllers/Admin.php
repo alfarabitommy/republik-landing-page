@@ -67,7 +67,6 @@ class Admin extends CI_Controller {
         // Ambil semua data dari tb_system_settings
         $query = $this->db->get('tb_system_settings')->result_array();
         
-        // Ubah menjadi Associative Array (Key => Value)
         $settings = [];
         foreach ($query as $row) {
             $settings[$row['setting_key']] = $row['setting_value'];
@@ -78,18 +77,49 @@ class Admin extends CI_Controller {
     }
 
     /**
-     * Menyimpan perubahan dari Editor Konten
+     * Menyimpan perubahan dari Editor Konten & Upload Gambar
      */
     public function save_settings() {
         if ($this->input->server('REQUEST_METHOD') === 'POST') {
-            // Tangkap semua input POST yang sudah di-filter XSS
+            // Tangkap semua input POST (teks) yang sudah di-filter XSS
             $post_data = $this->input->post(NULL, TRUE);
-            
-            // Singkirkan input token CSRF agar tidak ikut terproses ke database
-            unset($post_data[$this->security->get_csrf_token_name()]);
+            unset($post_data[$this->security->get_csrf_token_name()]); // Singkirkan CSRF
 
-            // Looping Batch Update (Update jika ada, Insert jika belum ada)
+            // Konfigurasi Library Upload CI3
+            $config['upload_path']   = './assets/img/';
+            $config['allowed_types'] = 'gif|jpg|png|jpeg|webp';
+            $config['max_size']      = 5120; // Maksimal 5MB
+            $config['encrypt_name']  = TRUE; // Acak nama file agar tidak ada spasi/konflik
+            
+            $this->load->library('upload', $config);
+
+            // Looping untuk memproses ke-5 input upload file gambar
+            for ($i = 1; $i <= 5; $i++) {
+                $field_name = 'video_thumb_' . $i;
+                
+                // Cek apakah ada file yang diunggah di field ini
+                if (!empty($_FILES[$field_name]['name'])) {
+                    if ($this->upload->do_upload($field_name)) {
+                        $upload_data = $this->upload->data();
+                        // Simpan lokasi file (relative path) ke dalam array data yang akan di-upsert
+                        $post_data[$field_name] = 'assets/img/' . $upload_data['file_name'];
+                    } else {
+                        // Jika gagal upload (misal format salah/ukuran terlalu besar), set flashdata error
+                        $error = $this->upload->display_errors('','');
+                        $this->session->set_flashdata('error', 'Gagal upload Thumbnail '.$i.': ' . $error);
+                        redirect('Admin/settings');
+                        return;
+                    }
+                }
+            }
+
+            // Looping Batch Update (Update jika key sudah ada, Insert jika belum ada)
             foreach ($post_data as $key => $value) {
+                // Kita abaikan jika value kosong pada kasus file upload (artinya user tidak upload file baru)
+                if ($value === '' && strpos($key, 'video_thumb_') !== false) {
+                    continue; 
+                }
+
                 $exists = $this->db->where('setting_key', $key)->get('tb_system_settings')->num_rows();
                 
                 if ($exists > 0) {
@@ -99,7 +129,6 @@ class Admin extends CI_Controller {
                 }
             }
 
-            // Set flashdata sukses dan kembali ke halaman settings
             $this->session->set_flashdata('success', 'Konten website berhasil diperbarui secara instan!');
             redirect('Admin/settings');
         }
