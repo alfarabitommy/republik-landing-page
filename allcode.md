@@ -1345,14 +1345,83 @@ footer p { font-size: 1rem; color: var(--text-muted); font-weight: 700; text-tra
 .footer-logo h2 { font-size: 1.8rem; letter-spacing: 3px; font-weight: 900; }
 .footer-logo p { font-size: 0.85rem; font-weight: 400; letter-spacing: 1px; }
 
+/* ==========================================================================
+   RESPONSIVE DESIGN (MEDIA QUERIES)
+   ========================================================================== */
+
+/* --- TABLET BREAKPOINT (Max 1024px) --- */
+@media (max-width: 1024px) {
+    /* Hero Collage: Ubah menjadi 2 Kolom, 3 Baris agar tidak terlalu kecil */
+    .hero-collage-grid { 
+        grid-template-columns: 1fr 1fr; 
+        grid-template-rows: repeat(3, 250px); 
+    }
+    .item-tall { grid-column: 1 / 2; grid-row: 1 / 3; } /* Kiri, merentang 2 baris */
+    .item-wide-top { grid-column: 2 / 3; grid-row: 1 / 2; } /* Kanan Atas */
+    .item-small-top { grid-column: 2 / 3; grid-row: 2 / 3; } /* Kanan Tengah */
+    .item-wide-bottom { grid-column: 1 / 2; grid-row: 3 / 4; } /* Kiri Bawah */
+    .item-small-bottom { grid-column: 2 / 3; grid-row: 3 / 4; } /* Kanan Bawah */
+
+    /* Portfolio Section: Ubah menjadi 2 Kolom seragam */
+    #portfolio-grid { 
+        grid-template-columns: repeat(2, 1fr); 
+        gap: 20px; 
+    }
+    .portfolio-item { grid-column: span 1 !important; }
+    .portfolio-item:nth-child(4), .portfolio-item:nth-child(5) { 
+        grid-column: span 1 !important; /* Reset formasi rata tengah */
+    }
+
+    /* Form Section: Rapatkan celah */
+    .form-grid { gap: 20px; }
+}
+
+/* --- MOBILE BREAKPOINT (Max 768px) --- */
 @media (max-width: 768px) {
-    .hero-collage-grid { grid-template-columns: 1fr; grid-template-rows: auto; }
-    .collage-cell { height: 200px; grid-column: auto !important; grid-row: auto !important; }
-    .form-grid, #portfolio-grid { grid-template-columns: 1fr; }
-    .textarea-group { grid-column: auto; grid-row: auto; }
-    .portfolio-item { grid-column: auto !important; }
-    /* Penyesuaian tombol close di layar HP */
-    .close-modal { top: -60px; right: 0; }
+    /* Tipografi: Kecilkan sedikit headline agar tidak menghabiskan layar vertikal */
+    .headline-utama { 
+        font-size: clamp(1.8rem, 6vw, 2.5rem); 
+        margin-top: 40px; 
+    }
+
+    /* Hero Collage: 1 Kolom penuh, tinggi dibatasi agar tidak scroll terlalu jauh */
+    .hero-collage-grid { 
+        grid-template-columns: 1fr; 
+        grid-template-rows: auto; 
+    }
+    .collage-cell { 
+        height: 180px; 
+        grid-column: 1 / -1 !important; 
+        grid-row: auto !important; 
+    }
+
+    /* Portfolio Section: 1 Kolom penuh */
+    #portfolio-grid { 
+        grid-template-columns: 1fr; 
+    }
+
+    /* Form Section: 1 Kolom penuh */
+    .form-grid { 
+        grid-template-columns: 1fr; 
+    }
+    .textarea-group { 
+        grid-column: 1 / -1; 
+        grid-row: auto; 
+    }
+    
+    /* Touch Target Optimization: Pastikan input nyaman ditekan di HP */
+    input, textarea { 
+        padding: 14px 15px; 
+    }
+
+    /* Video Modal: Geser tombol silang (X) agar tidak keluar layar HP */
+    .close-modal { 
+        top: -50px; 
+        right: 0; 
+        width: 40px; 
+        height: 40px; 
+        font-size: 1.5rem; 
+    }
 }
 <!-- end file assets/css/style.css -->
 
