@@ -13,7 +13,6 @@ document.addEventListener('DOMContentLoaded', function() {
             const videoSrc = this.getAttribute('data-video-src');
             let content = '';
 
-            // Detect YouTube vs Local Video
             if (videoSrc.includes('youtube.com') || videoSrc.includes('youtu.be')) {
                 const videoId = videoSrc.split('v=')[1] || videoSrc.split('/').pop();
                 content = `<iframe src="https://www.youtube.com/embed/${videoId}?autoplay=1" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
@@ -23,13 +22,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
             container.innerHTML = content;
             modal.style.display = 'flex';
-            document.body.style.overflow = 'hidden'; // Disable background scroll
+            document.body.style.overflow = 'hidden'; 
         });
     });
 
     const closeModal = () => {
         modal.style.display = 'none';
-        container.innerHTML = ''; // Kill video process
+        container.innerHTML = ''; 
         document.body.style.overflow = 'auto';
     };
 
@@ -58,7 +57,6 @@ document.addEventListener('DOMContentLoaded', function() {
             })
             .then(data => {
                 if (data.status) {
-                    // Success State
                     briefForm.style.display = 'none';
                     const success = document.createElement('div');
                     success.innerHTML = `<div style="text-align:center; padding:60px; border:1px solid var(--accent-blue); background:#111; border-radius:8px;">
@@ -67,11 +65,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     </div>`;
                     briefForm.parentNode.appendChild(success);
                 } else {
-                    // Error State
                     alert('Please check your input fields.');
                     btnSubmit.innerHTML = originalText;
                     btnSubmit.disabled = false;
-                    // Update CSRF token if provided
                     if (data.csrf_token) document.querySelector('input[type="hidden"]').value = data.csrf_token;
                 }
             })
@@ -83,7 +79,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // 3. FITUR BARU: FLOATING ACTION BUTTON (FAB) INTERACTION
+    // 3. FLOATING ACTION BUTTON (FAB) INTERACTION
     const fabTrigger = document.getElementById('fabTrigger');
     const fabMenu = document.getElementById('fabMenu');
     const iconChat = document.querySelector('.fab-icon-chat');
@@ -91,11 +87,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     if (fabTrigger && fabMenu) {
         fabTrigger.addEventListener('click', function() {
-            // Toggle class 'active' untuk CSS animasi pantulan
             fabTrigger.classList.toggle('active');
             fabMenu.classList.toggle('active');
 
-            // Logika ganti icon dari Obrolan menjadi Silang (X)
             if (fabTrigger.classList.contains('active')) {
                 iconChat.style.display = 'none';
                 iconClose.style.display = 'block';
@@ -105,7 +99,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
 
-        // Opsi tambahan: Tutup menu jika user klik di luar area FAB
         document.addEventListener('click', function(event) {
             const isClickInside = fabTrigger.contains(event.target) || fabMenu.contains(event.target);
             if (!isClickInside && fabMenu.classList.contains('active')) {
@@ -114,6 +107,27 @@ document.addEventListener('DOMContentLoaded', function() {
                 iconChat.style.display = 'block';
                 iconClose.style.display = 'none';
             }
+        });
+    }
+
+    // 4. FITUR BARU: BACK TO TOP BUTTON LOGIC
+    const btnBackToTop = document.getElementById('btnBackToTop');
+    if (btnBackToTop) {
+        // Tampilkan tombol hanya ketika user sudah scroll kebawah (melewati Hero Section)
+        window.addEventListener('scroll', function() {
+            if (window.scrollY > 300) {
+                btnBackToTop.classList.add('show');
+            } else {
+                btnBackToTop.classList.remove('show');
+            }
+        });
+
+        // Event saat tombol diklik: Meluncur kembali ke titik nol secara mulus
+        btnBackToTop.addEventListener('click', function() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
         });
     }
 
