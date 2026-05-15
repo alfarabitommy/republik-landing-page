@@ -1056,6 +1056,27 @@ class Leads_model extends CI_Model {
         </div>
     </div>
 
+    <div class="fab-container">
+        <div class="fab-menu" id="fabMenu">
+            <a href="https://wa.me/628123456789" target="_blank" class="fab-item" aria-label="WhatsApp">
+                <span class="fab-tooltip">WhatsApp</span>
+                <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
+            </a>
+            <a href="https://instagram.com" target="_blank" class="fab-item" aria-label="Instagram">
+                <span class="fab-tooltip">Instagram</span>
+                <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+            </a>
+            <a href="tel:+628123456789" class="fab-item" aria-label="Phone">
+                <span class="fab-tooltip">Phone</span>
+                <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+            </a>
+        </div>
+        <button class="fab-trigger" id="fabTrigger" aria-label="Contact Us">
+            <svg class="fab-icon-chat" viewBox="0 0 24 24" width="28" height="28" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+            <svg class="fab-icon-close" viewBox="0 0 24 24" width="28" height="28" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="display: none;"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+    </div>
+
     <footer>
         <div class="container">
             <p>Idea-first. System-led. Indonesia-native. Performance-aware.</p>
@@ -1250,7 +1271,6 @@ body { background-color: var(--bg-color); color: var(--text-color); font-family:
 .hero-section { width: 100%; overflow: hidden; }
 .hero-collage-container { position: relative; width: 100%; max-width: 1600px; margin: 0 auto; }
 
-/* REVISI LOGO: Posisi overlay logo tetap sama (sentral), tetapi gaya typography lama dihapus */
 .hero-logo-overlay { 
     position: absolute; 
     top: 50%; 
@@ -1260,12 +1280,11 @@ body { background-color: var(--bg-color); color: var(--text-color); font-family:
     pointer-events: none; 
 }
 
-/* REVISI LOGO: Gaya baru untuk gambar logo */
 .hero-logo-img {
     display: block;
-    max-width: 700px; /* Ukuran maksimal logo di desktop */
+    max-width: 700px; 
     height: auto;
-    filter: brightness(1); /* Memastikan putih sempurna seperti di gambar */
+    filter: brightness(1); 
 }
 
 .hero-collage-grid { display: grid; grid-template-columns: 1.2fr 2fr 1fr; grid-template-rows: 300px 300px; gap: 0; }
@@ -1374,6 +1393,107 @@ textarea { height: 80%; min-height: 160px; resize: none; }
 button#btnSubmit { background-color: var(--accent-blue); color: #ffffff; border: none; padding: 18px 50px; font-size: 1.1rem; font-weight: bold; border-radius: 40px; cursor: pointer; transition: 0.3s; text-transform: uppercase; letter-spacing: 1px; }
 button#btnSubmit:hover { background-color: var(--accent-blue-hover); transform: translateY(-2px); }
 
+/* --- FITUR BARU: FLOATING ACTION BUTTON (FAB) --- */
+.fab-container {
+    position: fixed;
+    bottom: 40px;
+    right: 40px;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.fab-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 20px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(20px);
+    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55); /* Efek memantul premium */
+}
+
+.fab-menu.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.fab-item {
+    position: relative;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: #1a1a1a;
+    border: 1px solid #333;
+    color: var(--text-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+    transition: all 0.3s ease;
+}
+
+.fab-item:hover {
+    background-color: var(--accent-blue);
+    transform: scale(1.1);
+    border-color: var(--accent-blue);
+}
+
+/* Tooltip Label untuk tiap item FAB */
+.fab-tooltip {
+    position: absolute;
+    right: 65px;
+    background-color: #111;
+    color: #fff;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    font-weight: bold;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateX(10px);
+    transition: all 0.3s ease;
+    border: 1px solid #333;
+    pointer-events: none;
+}
+
+.fab-item:hover .fab-tooltip {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(0);
+}
+
+.fab-trigger {
+    width: 65px;
+    height: 65px;
+    border-radius: 50%;
+    background-color: #111;
+    color: var(--text-color);
+    border: 1px solid #444;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.8);
+    transition: all 0.3s ease;
+}
+
+.fab-trigger:hover {
+    background-color: #222;
+    transform: scale(1.05);
+}
+
+.fab-trigger.active {
+    background-color: var(--accent-blue);
+    border-color: var(--accent-blue);
+    transform: rotate(90deg);
+}
+
 /* --- FOOTER --- */
 footer { text-align: center; padding: 80px 0; border-top: 1px solid #222; margin-top: 100px; }
 footer p { font-size: 1rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
@@ -1387,7 +1507,6 @@ footer p { font-size: 1rem; color: var(--text-muted); font-weight: 700; text-tra
 
 /* --- TABLET BREAKPOINT (Max 1024px) --- */
 @media (max-width: 1024px) {
-    /* Hero Collage: Ubah menjadi 2 Kolom, 3 Baris agar tidak terlalu kecil */
     .hero-collage-grid { 
         grid-template-columns: 1fr 1fr; 
         grid-template-rows: repeat(3, 250px); 
@@ -1398,7 +1517,6 @@ footer p { font-size: 1rem; color: var(--text-muted); font-weight: 700; text-tra
     .item-wide-bottom { grid-column: 1 / 2; grid-row: 3 / 4; }
     .item-small-bottom { grid-column: 2 / 3; grid-row: 3 / 4; }
 
-    /* Portfolio Section: Ubah menjadi 2 Kolom seragam */
     #portfolio-grid { 
         grid-template-columns: repeat(2, 1fr); 
         gap: 20px; 
@@ -1407,66 +1525,37 @@ footer p { font-size: 1rem; color: var(--text-muted); font-weight: 700; text-tra
     .portfolio-item:nth-child(4), .portfolio-item:nth-child(5) { 
         grid-column: span 1 !important;
     }
-
-    /* Form Section: Rapatkan celah */
     .form-grid { gap: 20px; }
+    
+    /* Penyesuaian jarak FAB di Tablet */
+    .fab-container { bottom: 30px; right: 30px; }
 }
 
 /* --- MOBILE BREAKPOINT (Max 768px) --- */
 @media (max-width: 768px) {
-    /* Tipografi: Kecilkan sedikit headline agar tidak menghabiskan layar vertikal */
     .headline-utama { 
         font-size: clamp(1.8rem, 6vw, 2.5rem); 
         margin-top: 40px; 
     }
-
-    /* REVISI LOGO: Gaya responsif untuk logo baru di perangkat seluler */
-    .hero-logo-img {
-        max-width: 200px; /* Ukuran maksimal logo di mobile */
-    }
-
-    /* Hero Collage: 1 Kolom penuh, tinggi dibatasi agar tidak scroll terlalu jauh */
-    .hero-collage-grid { 
-        grid-template-columns: 1fr; 
-        grid-template-rows: auto; 
-    }
-    .collage-cell { 
-        height: 180px; 
-        grid-column: 1 / -1 !important; 
-        grid-row: auto !important; 
-    }
-
-    /* Portfolio Section: 1 Kolom penuh */
-    #portfolio-grid { 
-        grid-template-columns: 1fr; 
-    }
-
-    /* Form Section: 1 Kolom penuh */
-    .form-grid { 
-        grid-template-columns: 1fr; 
-    }
-    .textarea-group { 
-        grid-column: 1 / -1; 
-        grid-row: auto; 
-    }
+    .hero-logo-img { max-width: 200px; }
+    .hero-collage-grid { grid-template-columns: 1fr; grid-template-rows: auto; }
+    .collage-cell { height: 180px; grid-column: 1 / -1 !important; grid-row: auto !important; }
+    #portfolio-grid { grid-template-columns: 1fr; }
+    .form-grid { grid-template-columns: 1fr; }
+    .textarea-group { grid-column: 1 / -1; grid-row: auto; }
+    input, textarea { padding: 14px 15px; }
+    .close-modal { top: -50px; right: 0; width: 40px; height: 40px; font-size: 1.5rem; }
     
-    /* Touch Target Optimization: Pastikan input nyaman ditekan di HP */
-    input, textarea { 
-        padding: 14px 15px; 
-    }
-
-    /* Video Modal: Geser tombol silang (X) agar tidak keluar layar HP */
-    .close-modal { 
-        top: -50px; 
-        right: 0; 
-        width: 40px; 
-        height: 40px; 
-        font-size: 1.5rem; 
-    }
+    /* Penyesuaian ukuran dan posisi FAB di Seluler agar pas di jari */
+    .fab-container { bottom: 20px; right: 20px; }
+    .fab-trigger { width: 55px; height: 55px; }
+    .fab-item { width: 45px; height: 45px; }
+    .fab-tooltip { display: none; /* Sembunyikan tooltip teks di seluler karena tidak ada hover */ }
 }
 <!-- end file assets/css/style.css -->
 
 <!-- file assets/js/main.js -->
+/* file: assets/js/main.js */
 document.addEventListener('DOMContentLoaded', function() {
     
     // 1. VIDEO MODAL ENGINE
@@ -1550,6 +1639,41 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
     }
+
+    // 3. FITUR BARU: FLOATING ACTION BUTTON (FAB) INTERACTION
+    const fabTrigger = document.getElementById('fabTrigger');
+    const fabMenu = document.getElementById('fabMenu');
+    const iconChat = document.querySelector('.fab-icon-chat');
+    const iconClose = document.querySelector('.fab-icon-close');
+
+    if (fabTrigger && fabMenu) {
+        fabTrigger.addEventListener('click', function() {
+            // Toggle class 'active' untuk CSS animasi pantulan
+            fabTrigger.classList.toggle('active');
+            fabMenu.classList.toggle('active');
+
+            // Logika ganti icon dari Obrolan menjadi Silang (X)
+            if (fabTrigger.classList.contains('active')) {
+                iconChat.style.display = 'none';
+                iconClose.style.display = 'block';
+            } else {
+                iconChat.style.display = 'block';
+                iconClose.style.display = 'none';
+            }
+        });
+
+        // Opsi tambahan: Tutup menu jika user klik di luar area FAB
+        document.addEventListener('click', function(event) {
+            const isClickInside = fabTrigger.contains(event.target) || fabMenu.contains(event.target);
+            if (!isClickInside && fabMenu.classList.contains('active')) {
+                fabTrigger.classList.remove('active');
+                fabMenu.classList.remove('active');
+                iconChat.style.display = 'block';
+                iconClose.style.display = 'none';
+            }
+        });
+    }
+
 });
 <!-- end file assets/js/main.js -->
 

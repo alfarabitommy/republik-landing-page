@@ -1,3 +1,4 @@
+/* file: assets/js/main.js */
 document.addEventListener('DOMContentLoaded', function() {
     
     // 1. VIDEO MODAL ENGINE
@@ -81,4 +82,39 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
     }
+
+    // 3. FITUR BARU: FLOATING ACTION BUTTON (FAB) INTERACTION
+    const fabTrigger = document.getElementById('fabTrigger');
+    const fabMenu = document.getElementById('fabMenu');
+    const iconChat = document.querySelector('.fab-icon-chat');
+    const iconClose = document.querySelector('.fab-icon-close');
+
+    if (fabTrigger && fabMenu) {
+        fabTrigger.addEventListener('click', function() {
+            // Toggle class 'active' untuk CSS animasi pantulan
+            fabTrigger.classList.toggle('active');
+            fabMenu.classList.toggle('active');
+
+            // Logika ganti icon dari Obrolan menjadi Silang (X)
+            if (fabTrigger.classList.contains('active')) {
+                iconChat.style.display = 'none';
+                iconClose.style.display = 'block';
+            } else {
+                iconChat.style.display = 'block';
+                iconClose.style.display = 'none';
+            }
+        });
+
+        // Opsi tambahan: Tutup menu jika user klik di luar area FAB
+        document.addEventListener('click', function(event) {
+            const isClickInside = fabTrigger.contains(event.target) || fabMenu.contains(event.target);
+            if (!isClickInside && fabMenu.classList.contains('active')) {
+                fabTrigger.classList.remove('active');
+                fabMenu.classList.remove('active');
+                iconChat.style.display = 'block';
+                iconClose.style.display = 'none';
+            }
+        });
+    }
+
 });

@@ -18,7 +18,6 @@ body { background-color: var(--bg-color); color: var(--text-color); font-family:
 .hero-section { width: 100%; overflow: hidden; }
 .hero-collage-container { position: relative; width: 100%; max-width: 1600px; margin: 0 auto; }
 
-/* REVISI LOGO: Posisi overlay logo tetap sama (sentral), tetapi gaya typography lama dihapus */
 .hero-logo-overlay { 
     position: absolute; 
     top: 50%; 
@@ -28,12 +27,11 @@ body { background-color: var(--bg-color); color: var(--text-color); font-family:
     pointer-events: none; 
 }
 
-/* REVISI LOGO: Gaya baru untuk gambar logo */
 .hero-logo-img {
     display: block;
-    max-width: 700px; /* Ukuran maksimal logo di desktop */
+    max-width: 700px; 
     height: auto;
-    filter: brightness(1); /* Memastikan putih sempurna seperti di gambar */
+    filter: brightness(1); 
 }
 
 .hero-collage-grid { display: grid; grid-template-columns: 1.2fr 2fr 1fr; grid-template-rows: 300px 300px; gap: 0; }
@@ -142,6 +140,107 @@ textarea { height: 80%; min-height: 160px; resize: none; }
 button#btnSubmit { background-color: var(--accent-blue); color: #ffffff; border: none; padding: 18px 50px; font-size: 1.1rem; font-weight: bold; border-radius: 40px; cursor: pointer; transition: 0.3s; text-transform: uppercase; letter-spacing: 1px; }
 button#btnSubmit:hover { background-color: var(--accent-blue-hover); transform: translateY(-2px); }
 
+/* --- FITUR BARU: FLOATING ACTION BUTTON (FAB) --- */
+.fab-container {
+    position: fixed;
+    bottom: 40px;
+    right: 40px;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.fab-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 20px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(20px);
+    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55); /* Efek memantul premium */
+}
+
+.fab-menu.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.fab-item {
+    position: relative;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: #1a1a1a;
+    border: 1px solid #333;
+    color: var(--text-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+    transition: all 0.3s ease;
+}
+
+.fab-item:hover {
+    background-color: var(--accent-blue);
+    transform: scale(1.1);
+    border-color: var(--accent-blue);
+}
+
+/* Tooltip Label untuk tiap item FAB */
+.fab-tooltip {
+    position: absolute;
+    right: 65px;
+    background-color: #111;
+    color: #fff;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    font-weight: bold;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateX(10px);
+    transition: all 0.3s ease;
+    border: 1px solid #333;
+    pointer-events: none;
+}
+
+.fab-item:hover .fab-tooltip {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(0);
+}
+
+.fab-trigger {
+    width: 65px;
+    height: 65px;
+    border-radius: 50%;
+    background-color: #111;
+    color: var(--text-color);
+    border: 1px solid #444;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.8);
+    transition: all 0.3s ease;
+}
+
+.fab-trigger:hover {
+    background-color: #222;
+    transform: scale(1.05);
+}
+
+.fab-trigger.active {
+    background-color: var(--accent-blue);
+    border-color: var(--accent-blue);
+    transform: rotate(90deg);
+}
+
 /* --- FOOTER --- */
 footer { text-align: center; padding: 80px 0; border-top: 1px solid #222; margin-top: 100px; }
 footer p { font-size: 1rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
@@ -155,7 +254,6 @@ footer p { font-size: 1rem; color: var(--text-muted); font-weight: 700; text-tra
 
 /* --- TABLET BREAKPOINT (Max 1024px) --- */
 @media (max-width: 1024px) {
-    /* Hero Collage: Ubah menjadi 2 Kolom, 3 Baris agar tidak terlalu kecil */
     .hero-collage-grid { 
         grid-template-columns: 1fr 1fr; 
         grid-template-rows: repeat(3, 250px); 
@@ -166,7 +264,6 @@ footer p { font-size: 1rem; color: var(--text-muted); font-weight: 700; text-tra
     .item-wide-bottom { grid-column: 1 / 2; grid-row: 3 / 4; }
     .item-small-bottom { grid-column: 2 / 3; grid-row: 3 / 4; }
 
-    /* Portfolio Section: Ubah menjadi 2 Kolom seragam */
     #portfolio-grid { 
         grid-template-columns: repeat(2, 1fr); 
         gap: 20px; 
@@ -175,60 +272,30 @@ footer p { font-size: 1rem; color: var(--text-muted); font-weight: 700; text-tra
     .portfolio-item:nth-child(4), .portfolio-item:nth-child(5) { 
         grid-column: span 1 !important;
     }
-
-    /* Form Section: Rapatkan celah */
     .form-grid { gap: 20px; }
+    
+    /* Penyesuaian jarak FAB di Tablet */
+    .fab-container { bottom: 30px; right: 30px; }
 }
 
 /* --- MOBILE BREAKPOINT (Max 768px) --- */
 @media (max-width: 768px) {
-    /* Tipografi: Kecilkan sedikit headline agar tidak menghabiskan layar vertikal */
     .headline-utama { 
         font-size: clamp(1.8rem, 6vw, 2.5rem); 
         margin-top: 40px; 
     }
-
-    /* REVISI LOGO: Gaya responsif untuk logo baru di perangkat seluler */
-    .hero-logo-img {
-        max-width: 200px; /* Ukuran maksimal logo di mobile */
-    }
-
-    /* Hero Collage: 1 Kolom penuh, tinggi dibatasi agar tidak scroll terlalu jauh */
-    .hero-collage-grid { 
-        grid-template-columns: 1fr; 
-        grid-template-rows: auto; 
-    }
-    .collage-cell { 
-        height: 180px; 
-        grid-column: 1 / -1 !important; 
-        grid-row: auto !important; 
-    }
-
-    /* Portfolio Section: 1 Kolom penuh */
-    #portfolio-grid { 
-        grid-template-columns: 1fr; 
-    }
-
-    /* Form Section: 1 Kolom penuh */
-    .form-grid { 
-        grid-template-columns: 1fr; 
-    }
-    .textarea-group { 
-        grid-column: 1 / -1; 
-        grid-row: auto; 
-    }
+    .hero-logo-img { max-width: 200px; }
+    .hero-collage-grid { grid-template-columns: 1fr; grid-template-rows: auto; }
+    .collage-cell { height: 180px; grid-column: 1 / -1 !important; grid-row: auto !important; }
+    #portfolio-grid { grid-template-columns: 1fr; }
+    .form-grid { grid-template-columns: 1fr; }
+    .textarea-group { grid-column: 1 / -1; grid-row: auto; }
+    input, textarea { padding: 14px 15px; }
+    .close-modal { top: -50px; right: 0; width: 40px; height: 40px; font-size: 1.5rem; }
     
-    /* Touch Target Optimization: Pastikan input nyaman ditekan di HP */
-    input, textarea { 
-        padding: 14px 15px; 
-    }
-
-    /* Video Modal: Geser tombol silang (X) agar tidak keluar layar HP */
-    .close-modal { 
-        top: -50px; 
-        right: 0; 
-        width: 40px; 
-        height: 40px; 
-        font-size: 1.5rem; 
-    }
+    /* Penyesuaian ukuran dan posisi FAB di Seluler agar pas di jari */
+    .fab-container { bottom: 20px; right: 20px; }
+    .fab-trigger { width: 55px; height: 55px; }
+    .fab-item { width: 45px; height: 45px; }
+    .fab-tooltip { display: none; /* Sembunyikan tooltip teks di seluler karena tidak ada hover */ }
 }
