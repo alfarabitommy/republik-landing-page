@@ -948,7 +948,7 @@ class Leads_model extends CI_Model {
 <body>
 
     <main>
-        <header class="hero-section">
+        <header class="hero-section snap-section">
             <div class="hero-collage-container">
                 <div class="hero-logo-overlay">
                     <img src="<?= base_url('assets/img/re-logo-2026.png') ?>" alt="REPUBLIK Creative Intelligence Agency Logo" class="hero-logo-img">
@@ -962,27 +962,26 @@ class Leads_model extends CI_Model {
                     <div class="collage-cell item-small-bottom placeholder-dark"><img src="<?= base_url('assets/img/college5.png') ?>" alt="REPUBLIK Creative Work 5" class="collage-img"></div>
                 </div>
             </div>
+        </header>
 
+        <section class="narrative-section snap-section">
             <div class="container">
                 <h2 class="headline-utama">
                     <?= nl2br(html_escape($settings['headline_main'] ?? 'Your brand doesn\'t need more content. It needs a sharper creative system.')) ?>
                 </h2>
-            </div>
-        </header>
-
-        <section class="narrative-section">
-            <div class="container">
-                <p>REPUBLIK helps brands turn business problems into culture-sharp creative platforms, social campaigns, content systems & performance-ready ideas. We work where attention is crowded, audiences are restless, and brands need more than "posting consistently."</p>
-                <p>We help you find the strategic angle, shape the creative idea, build the format system & make every touchpoint do its job.</p>
-                <div class="methodology">
-                    <small>From big campaign thinking to daily content execution, we connect:</small>
-                    <strong>Idea &rarr; Format &rarr; Behavior &rarr; Measurement</strong>
-                    <small>So your brand doesn't just show up. It gets noticed, remembered, and acted on.</small>
+                <div class="narrative-content">
+                    <p>REPUBLIK helps brands turn business problems into culture-sharp creative platforms, social campaigns, content systems & performance-ready ideas. We work where attention is crowded, audiences are restless, and brands need more than "posting consistently."</p>
+                    <p>We help you find the strategic angle, shape the creative idea, build the format system & make every touchpoint do its job.</p>
+                    <div class="methodology">
+                        <small>From big campaign thinking to daily content execution, we connect:</small>
+                        <strong>Idea &rarr; Format &rarr; Behavior &rarr; Measurement</strong>
+                        <small>So your brand doesn't just show up. It gets noticed, remembered, and acted on.</small>
+                    </div>
                 </div>
             </div>
         </section>
 
-        <section id="work" class="portfolio-section">
+        <section id="work" class="portfolio-section snap-section">
             <div class="container">
                 <div class="section-title">
                     <h3>Our Work</h3>
@@ -1020,7 +1019,7 @@ class Leads_model extends CI_Model {
             </div>
         </section>
 
-        <section id="contact" class="form-section">
+        <section id="contact" class="form-section snap-section">
             <div class="container form-container">
                 <div class="form-header">
                     <h2>Let's build something that moves.</h2>
@@ -1056,6 +1055,10 @@ class Leads_model extends CI_Model {
         </div>
     </div>
 
+    <button id="btnBackToTop" class="btn-back-to-top" aria-label="Back to Top">
+        <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"></line><polyline points="5 12 12 5 19 12"></polyline></svg>
+    </button>
+
     <div class="fab-container">
         <div class="fab-menu" id="fabMenu">
             <a href="https://wa.me/628123456789" target="_blank" class="fab-item" aria-label="WhatsApp">
@@ -1066,9 +1069,9 @@ class Leads_model extends CI_Model {
                 <span class="fab-tooltip">Instagram</span>
                 <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
             </a>
-            <a href="tel:+628123456789" class="fab-item" aria-label="Phone">
-                <span class="fab-tooltip">Phone</span>
-                <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+            <a href="https://linkedin.com" target="_blank" class="fab-item" aria-label="LinkedIn">
+                <span class="fab-tooltip">LinkedIn</span>
+                <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
             </a>
         </div>
         <button class="fab-trigger" id="fabTrigger" aria-label="Contact Us">
@@ -1077,7 +1080,7 @@ class Leads_model extends CI_Model {
         </button>
     </div>
 
-    <footer>
+    <footer class="snap-section">
         <div class="container">
             <p>Idea-first. System-led. Indonesia-native. Performance-aware.</p>
             <div class="footer-logo">
