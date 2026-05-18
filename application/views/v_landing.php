@@ -38,11 +38,15 @@
                 </div>
 
                 <div class="hero-collage-grid">
-                    <div class="collage-cell item-tall placeholder-dark"><img src="<?= base_url('assets/img/college1.png') ?>" alt="REPUBLIK Creative Work 1" class="collage-img" fetchpriority="high"></div>
-                    <div class="collage-cell item-wide-top placeholder-gray"><img src="<?= base_url('assets/img/college2.png') ?>" alt="REPUBLIK Creative Work 2" class="collage-img" fetchpriority="high"></div>
-                    <div class="collage-cell item-small-top placeholder-dark"><img src="<?= base_url('assets/img/college3.png') ?>" alt="REPUBLIK Creative Work 3" class="collage-img"></div>
-                    <div class="collage-cell item-wide-bottom placeholder-gray"><img src="<?= base_url('assets/img/college4.png') ?>" alt="REPUBLIK Creative Work 4" class="collage-img"></div>
-                    <div class="collage-cell item-small-bottom placeholder-dark"><img src="<?= base_url('assets/img/college5.png') ?>" alt="REPUBLIK Creative Work 5" class="collage-img"></div>
+                    <div class="collage-cell item-tall placeholder-dark"><img src="<?= base_url('assets/img/hero/1.png') ?>" alt="REPUBLIK Creative Work 1" class="collage-img" fetchpriority="high"></div>
+                    
+                    <div class="collage-cell item-wide-top placeholder-gray"><img src="<?= base_url('assets/img/hero/3.png') ?>" alt="REPUBLIK Creative Work 2" class="collage-img" fetchpriority="high"></div>
+                    <div class="collage-cell item-small-top placeholder-dark"><img src="<?= base_url('assets/img/hero/4.png') ?>" alt="REPUBLIK Creative Work 3" class="collage-img"></div>
+                    <div class="collage-cell item-new-top-right placeholder-gray"><img src="<?= base_url('assets/img/hero/2.png') ?>" alt="REPUBLIK Creative Work Extra 1" class="collage-img"></div>
+                    
+                    <div class="collage-cell item-wide-bottom placeholder-gray"><img src="<?= base_url('assets/img/hero/5.png') ?>" alt="REPUBLIK Creative Work 4" class="collage-img"></div>
+                    <div class="collage-cell item-small-bottom placeholder-dark"><img src="<?= base_url('assets/img/hero/6.png') ?>" alt="REPUBLIK Creative Work 5" class="collage-img"></div>
+                    <div class="collage-cell item-new-bottom-right placeholder-dark"><img src="<?= base_url('assets/img/hero/7.png') ?>" alt="REPUBLIK Creative Work Extra 2" class="collage-img"></div>
                 </div>
             </div>
         </header>
