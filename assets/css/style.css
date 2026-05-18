@@ -57,21 +57,36 @@ body {
     filter: brightness(1); 
 }
 
-/* REVISI CSS: Grid menjadi 4 kolom (Mengakomodasi 2 gambar baru 16:9 di sisi kanan) */
-.hero-collage-grid { display: grid; grid-template-columns: 1.2fr 2fr 1fr 1.5fr; grid-template-rows: 300px 300px; gap: 0; }
+/* REVISI CSS: Grid 10 Baris untuk memfasilitasi rasio 60:40 secara presisi */
+.hero-collage-grid { 
+    display: grid; 
+    grid-template-columns: 1.2fr 2fr 1fr 1.5fr; 
+    grid-template-rows: repeat(10, 60px); /* Total tinggi 600px dibagi 10 partisi */
+    gap: 0; 
+}
 .collage-cell { width: 100%; height: 100%; overflow: hidden; }
-.collage-img { width: 100%; height: 100%; object-fit: cover; opacity: 0.8; }
+.collage-img { 
+    width: 100%; 
+    height: 100%; 
+    object-fit: cover; /* Melindungi gambar dari efek distorsi/rusak/gepeng */
+    opacity: 0.8; 
+}
 
-.item-tall { grid-column: 1 / 2; grid-row: 1 / 3; }
-.item-wide-top { grid-column: 2 / 3; grid-row: 1 / 2; }
-.item-small-top { grid-column: 3 / 4; grid-row: 1 / 2; }
-/* Gambar 2.png baru */
-.item-new-top-right { grid-column: 4 / 5; grid-row: 1 / 2; }
+/* REVISI CSS: Pembagian Baris (Row Spans) */
+.item-tall { grid-column: 1 / 2; grid-row: 1 / 11; } /* Full 100% (10 baris) */
 
-.item-wide-bottom { grid-column: 2 / 3; grid-row: 2 / 3; }
-.item-small-bottom { grid-column: 3 / 4; grid-row: 2 / 3; }
-/* Gambar 7.png baru */
-.item-new-bottom-right { grid-column: 4 / 5; grid-row: 2 / 3; }
+/* KOLOM KEDUA (Rasio 60% dan 40%) */
+.item-wide-top { grid-column: 2 / 3; grid-row: 1 / 7; } /* 60% (6 baris) */
+.item-wide-bottom { grid-column: 2 / 3; grid-row: 7 / 11; } /* 40% (4 baris) */
+
+/* KOLOM KETIGA (Tetap 50:50) */
+.item-small-top { grid-column: 3 / 4; grid-row: 1 / 6; } /* 50% (5 baris) */
+.item-small-bottom { grid-column: 3 / 4; grid-row: 6 / 11; } /* 50% (5 baris) */
+
+/* KOLOM KEEMPAT (Rasio 60% dan 40% - DIUBAH AGAR SIMETRIS DENGAN KOLOM KEDUA) */
+.item-new-top-right { grid-column: 4 / 5; grid-row: 1 / 7; } /* 60% (6 baris) */
+.item-new-bottom-right { grid-column: 4 / 5; grid-row: 7 / 11; } /* 40% (4 baris) */
+
 
 .placeholder-gray { background-color: var(--placeholder-gray); }
 .placeholder-dark { background-color: var(--placeholder-dark); }
@@ -326,12 +341,13 @@ footer p { font-size: 1rem; color: var(--text-muted); font-weight: 700; text-tra
 
 /* --- TABLET BREAKPOINT (Max 1024px) --- */
 @media (max-width: 1024px) {
-    /* Menyesuaikan ulang ke 2 kolom, 4 baris untuk Tablet */
     .hero-collage-grid { 
         grid-template-columns: 1fr 1fr; 
         grid-template-rows: repeat(4, 250px); 
     }
     .item-tall { grid-column: 1 / 2; grid-row: 1 / 3; }
+    
+    /* Reset porsi kembali ke susunan block untuk Tablet */
     .item-wide-top { grid-column: 2 / 3; grid-row: 1 / 2; }
     .item-small-top { grid-column: 2 / 3; grid-row: 2 / 3; }
     .item-new-top-right { grid-column: 1 / 2; grid-row: 3 / 4; }
