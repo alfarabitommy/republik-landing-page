@@ -74,7 +74,7 @@ body {
     font-size: clamp(2rem, 4vw, 3.5rem); 
     text-align: center; 
     max-width: 1200px; 
-    margin: 0 auto 40px auto; /* Margin disesuaikan karena pindah ke section narrative */
+    margin: 0 auto 40px auto; 
     letter-spacing: -0.03em; 
     font-weight: 700; 
     line-height: 1.2; 
@@ -173,11 +173,12 @@ textarea { height: 80%; min-height: 160px; resize: none; }
 button#btnSubmit { background-color: var(--accent-blue); color: #ffffff; border: none; padding: 18px 50px; font-size: 1.1rem; font-weight: bold; border-radius: 40px; cursor: pointer; transition: 0.3s; text-transform: uppercase; letter-spacing: 1px; }
 button#btnSubmit:hover { background-color: var(--accent-blue-hover); transform: translateY(-2px); }
 
-/* --- FITUR BARU: BACK TO TOP BUTTON --- */
+/* --- PERBAIKAN BUG: BACK TO TOP BUTTON --- */
 .btn-back-to-top {
     position: fixed;
-    bottom: 120px; /* Berada tepat di atas FAB */
-    right: 50px;   /* Disejajarkan ke tengah FAB desktop */
+    /* Digeser menjadi sejajar secara horizontal di sebelah kiri FAB */
+    bottom: 50px; 
+    right: 120px; 
     width: 45px;
     height: 45px;
     border-radius: 50%;
@@ -192,7 +193,7 @@ button#btnSubmit:hover { background-color: var(--accent-blue-hover); transform: 
     transition: all 0.3s ease;
     opacity: 0;
     visibility: hidden;
-    z-index: 999;
+    z-index: 1001; /* Ditingkatkan agar mutlak di atas segalanya */
 }
 
 .btn-back-to-top.show {
@@ -340,7 +341,8 @@ footer p { font-size: 1rem; color: var(--text-muted); font-weight: 700; text-tra
     .form-grid { gap: 20px; }
     
     .fab-container { bottom: 30px; right: 30px; }
-    .btn-back-to-top { bottom: 110px; right: 40px; }
+    /* Penyesuaian Back to top di tablet */
+    .btn-back-to-top { bottom: 40px; right: 110px; } 
 }
 
 /* --- MOBILE BREAKPOINT (Max 768px) --- */
@@ -363,6 +365,6 @@ footer p { font-size: 1rem; color: var(--text-muted); font-weight: 700; text-tra
     .fab-item { width: 45px; height: 45px; }
     .fab-tooltip { display: none; }
 
-    /* Posisi presisi tombol panah atas di layar HP */
-    .btn-back-to-top { bottom: 90px; right: 25px; width: 45px; height: 45px; }
+    /* Posisi Back to top di layar HP agar tetap rapi di kiri FAB */
+    .btn-back-to-top { bottom: 25px; right: 90px; width: 45px; height: 45px; }
 }

@@ -1264,8 +1264,32 @@ class Leads_model extends CI_Model {
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
-body { background-color: var(--bg-color); color: var(--text-color); font-family: var(--font-main); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+
+/* ENGINE SCROLL SNAP DIMULAI DI SINI */
+html {
+    scroll-behavior: smooth;
+    scroll-snap-type: y mandatory;
+}
+
+body { 
+    background-color: var(--bg-color); 
+    color: var(--text-color); 
+    font-family: var(--font-main); 
+    line-height: 1.6; 
+    -webkit-font-smoothing: antialiased; 
+}
+
 .container { width: 90%; max-width: 1200px; margin: 0 auto; padding: 40px 0; }
+
+/* SETIAP SECTION MENJADI SLIDE YANG MENGUNCI */
+.snap-section {
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
 
 /* --- HERO & COLLAGE --- */
 .hero-section { width: 100%; overflow: hidden; }
@@ -1297,16 +1321,25 @@ body { background-color: var(--bg-color); color: var(--text-color); font-family:
 .item-small-bottom { grid-column: 3 / 4; grid-row: 2 / 3; }
 .placeholder-gray { background-color: var(--placeholder-gray); }
 .placeholder-dark { background-color: var(--placeholder-dark); }
-.headline-utama { font-size: clamp(2rem, 4vw, 3.5rem); text-align: center; max-width: 1200px; margin: 60px auto 0 auto; letter-spacing: -0.03em; font-weight: 700; line-height: 1.2; }
 
 /* --- NARRATIVE --- */
-.narrative-section p { text-align: center; max-width: 800px; margin: 0 auto 30px auto; font-size: 1.15rem; color: var(--text-muted); }
+.headline-utama { 
+    font-size: clamp(2rem, 4vw, 3.5rem); 
+    text-align: center; 
+    max-width: 1200px; 
+    margin: 0 auto 40px auto; 
+    letter-spacing: -0.03em; 
+    font-weight: 700; 
+    line-height: 1.2; 
+}
+
+.narrative-content p { text-align: center; max-width: 800px; margin: 0 auto 30px auto; font-size: 1.15rem; color: var(--text-muted); }
 .methodology { text-align: center; margin-top: 50px; }
 .methodology small { display: block; color: var(--text-muted); margin-bottom: 10px; }
 .methodology strong { font-size: 1.8rem; display: block; margin: 20px 0; color: var(--text-color); letter-spacing: 2px; }
 
 /* --- PORTFOLIO 3-2 GRID --- */
-.portfolio-section { padding-top: 80px; }
+.portfolio-section { padding-top: 0; }
 .section-title h3 { font-size: 2.2rem; text-align: center; margin-bottom: 20px; font-weight: 700; }
 .section-title p { text-align: center; max-width: 800px; margin: 0 auto 50px auto; color: var(--text-muted); }
 #portfolio-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 30px; margin-top: 40px; }
@@ -1370,7 +1403,7 @@ body { background-color: var(--bg-color); color: var(--text-color); font-family:
 }
 
 /* --- UPDATED FORM GRID --- */
-.form-container { max-width: 900px; padding-top: 100px; }
+.form-container { max-width: 900px; padding-top: 0; }
 .form-header h2 { font-size: 2.8rem; text-align: center; margin-bottom: 20px; font-weight: 700; }
 .form-header p { text-align: center; margin-bottom: 50px; color: var(--text-muted); }
 
@@ -1393,7 +1426,41 @@ textarea { height: 80%; min-height: 160px; resize: none; }
 button#btnSubmit { background-color: var(--accent-blue); color: #ffffff; border: none; padding: 18px 50px; font-size: 1.1rem; font-weight: bold; border-radius: 40px; cursor: pointer; transition: 0.3s; text-transform: uppercase; letter-spacing: 1px; }
 button#btnSubmit:hover { background-color: var(--accent-blue-hover); transform: translateY(-2px); }
 
-/* --- FITUR BARU: FLOATING ACTION BUTTON (FAB) --- */
+/* --- PERBAIKAN BUG: BACK TO TOP BUTTON --- */
+.btn-back-to-top {
+    position: fixed;
+    /* Digeser menjadi sejajar secara horizontal di sebelah kiri FAB */
+    bottom: 50px; 
+    right: 120px; 
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background-color: #111;
+    color: var(--text-color);
+    border: 1px solid #444;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.8);
+    transition: all 0.3s ease;
+    opacity: 0;
+    visibility: hidden;
+    z-index: 1001; /* Ditingkatkan agar mutlak di atas segalanya */
+}
+
+.btn-back-to-top.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+.btn-back-to-top:hover {
+    background-color: var(--accent-blue);
+    border-color: var(--accent-blue);
+    transform: translateY(-3px);
+}
+
+/* --- FLOATING ACTION BUTTON (FAB) --- */
 .fab-container {
     position: fixed;
     bottom: 40px;
@@ -1412,7 +1479,7 @@ button#btnSubmit:hover { background-color: var(--accent-blue-hover); transform: 
     opacity: 0;
     visibility: hidden;
     transform: translateY(20px);
-    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55); /* Efek memantul premium */
+    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 }
 
 .fab-menu.active {
@@ -1443,7 +1510,6 @@ button#btnSubmit:hover { background-color: var(--accent-blue-hover); transform: 
     border-color: var(--accent-blue);
 }
 
-/* Tooltip Label untuk tiap item FAB */
 .fab-tooltip {
     position: absolute;
     right: 65px;
@@ -1495,7 +1561,7 @@ button#btnSubmit:hover { background-color: var(--accent-blue-hover); transform: 
 }
 
 /* --- FOOTER --- */
-footer { text-align: center; padding: 80px 0; border-top: 1px solid #222; margin-top: 100px; }
+footer { text-align: center; border-top: 1px solid #222; }
 footer p { font-size: 1rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
 .footer-logo { margin-top: 40px; }
 .footer-logo h2 { font-size: 1.8rem; letter-spacing: 3px; font-weight: 900; }
@@ -1527,15 +1593,16 @@ footer p { font-size: 1rem; color: var(--text-muted); font-weight: 700; text-tra
     }
     .form-grid { gap: 20px; }
     
-    /* Penyesuaian jarak FAB di Tablet */
     .fab-container { bottom: 30px; right: 30px; }
+    /* Penyesuaian Back to top di tablet */
+    .btn-back-to-top { bottom: 40px; right: 110px; } 
 }
 
 /* --- MOBILE BREAKPOINT (Max 768px) --- */
 @media (max-width: 768px) {
     .headline-utama { 
         font-size: clamp(1.8rem, 6vw, 2.5rem); 
-        margin-top: 40px; 
+        margin-top: 20px; 
     }
     .hero-logo-img { max-width: 200px; }
     .hero-collage-grid { grid-template-columns: 1fr; grid-template-rows: auto; }
@@ -1546,11 +1613,13 @@ footer p { font-size: 1rem; color: var(--text-muted); font-weight: 700; text-tra
     input, textarea { padding: 14px 15px; }
     .close-modal { top: -50px; right: 0; width: 40px; height: 40px; font-size: 1.5rem; }
     
-    /* Penyesuaian ukuran dan posisi FAB di Seluler agar pas di jari */
     .fab-container { bottom: 20px; right: 20px; }
     .fab-trigger { width: 55px; height: 55px; }
     .fab-item { width: 45px; height: 45px; }
-    .fab-tooltip { display: none; /* Sembunyikan tooltip teks di seluler karena tidak ada hover */ }
+    .fab-tooltip { display: none; }
+
+    /* Posisi Back to top di layar HP agar tetap rapi di kiri FAB */
+    .btn-back-to-top { bottom: 25px; right: 90px; width: 45px; height: 45px; }
 }
 <!-- end file assets/css/style.css -->
 
@@ -1570,7 +1639,6 @@ document.addEventListener('DOMContentLoaded', function() {
             const videoSrc = this.getAttribute('data-video-src');
             let content = '';
 
-            // Detect YouTube vs Local Video
             if (videoSrc.includes('youtube.com') || videoSrc.includes('youtu.be')) {
                 const videoId = videoSrc.split('v=')[1] || videoSrc.split('/').pop();
                 content = `<iframe src="https://www.youtube.com/embed/${videoId}?autoplay=1" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
@@ -1580,13 +1648,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
             container.innerHTML = content;
             modal.style.display = 'flex';
-            document.body.style.overflow = 'hidden'; // Disable background scroll
+            document.body.style.overflow = 'hidden'; 
         });
     });
 
     const closeModal = () => {
         modal.style.display = 'none';
-        container.innerHTML = ''; // Kill video process
+        container.innerHTML = ''; 
         document.body.style.overflow = 'auto';
     };
 
@@ -1615,7 +1683,6 @@ document.addEventListener('DOMContentLoaded', function() {
             })
             .then(data => {
                 if (data.status) {
-                    // Success State
                     briefForm.style.display = 'none';
                     const success = document.createElement('div');
                     success.innerHTML = `<div style="text-align:center; padding:60px; border:1px solid var(--accent-blue); background:#111; border-radius:8px;">
@@ -1624,11 +1691,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     </div>`;
                     briefForm.parentNode.appendChild(success);
                 } else {
-                    // Error State
                     alert('Please check your input fields.');
                     btnSubmit.innerHTML = originalText;
                     btnSubmit.disabled = false;
-                    // Update CSRF token if provided
                     if (data.csrf_token) document.querySelector('input[type="hidden"]').value = data.csrf_token;
                 }
             })
@@ -1640,7 +1705,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // 3. FITUR BARU: FLOATING ACTION BUTTON (FAB) INTERACTION
+    // 3. FLOATING ACTION BUTTON (FAB) INTERACTION
     const fabTrigger = document.getElementById('fabTrigger');
     const fabMenu = document.getElementById('fabMenu');
     const iconChat = document.querySelector('.fab-icon-chat');
@@ -1648,11 +1713,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     if (fabTrigger && fabMenu) {
         fabTrigger.addEventListener('click', function() {
-            // Toggle class 'active' untuk CSS animasi pantulan
             fabTrigger.classList.toggle('active');
             fabMenu.classList.toggle('active');
 
-            // Logika ganti icon dari Obrolan menjadi Silang (X)
             if (fabTrigger.classList.contains('active')) {
                 iconChat.style.display = 'none';
                 iconClose.style.display = 'block';
@@ -1662,7 +1725,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
 
-        // Opsi tambahan: Tutup menu jika user klik di luar area FAB
         document.addEventListener('click', function(event) {
             const isClickInside = fabTrigger.contains(event.target) || fabMenu.contains(event.target);
             if (!isClickInside && fabMenu.classList.contains('active')) {
@@ -1671,6 +1733,38 @@ document.addEventListener('DOMContentLoaded', function() {
                 iconChat.style.display = 'block';
                 iconClose.style.display = 'none';
             }
+        });
+    }
+
+    // 4. PERBAIKAN BUG: BACK TO TOP BUTTON LOGIC
+    const btnBackToTop = document.getElementById('btnBackToTop');
+    if (btnBackToTop) {
+        // Deteksi scroll yang lebih kompatibel lintas peramban (Cross-Browser)
+        window.addEventListener('scroll', function() {
+            let scrollPosition = window.scrollY || document.documentElement.scrollTop;
+            if (scrollPosition > 300) {
+                btnBackToTop.classList.add('show');
+            } else {
+                btnBackToTop.classList.remove('show');
+            }
+        });
+
+        btnBackToTop.addEventListener('click', function(e) {
+            e.preventDefault(); // Mencegah perilaku bawaan tombol
+            
+            // BYPASS CONFLICT: Matikan paksa fitur CSS Snap sementara
+            document.documentElement.style.scrollSnapType = 'none';
+            
+            // Luncurkan ke atas dengan mulus
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+
+            // Nyalakan kembali fitur CSS Snap setelah animasi gulir selesai (setelah 850ms)
+            setTimeout(() => {
+                document.documentElement.style.scrollSnapType = 'y mandatory';
+            }, 850);
         });
     }
 

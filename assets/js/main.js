@@ -110,24 +110,35 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // 4. FITUR BARU: BACK TO TOP BUTTON LOGIC
+    // 4. PERBAIKAN BUG: BACK TO TOP BUTTON LOGIC
     const btnBackToTop = document.getElementById('btnBackToTop');
     if (btnBackToTop) {
-        // Tampilkan tombol hanya ketika user sudah scroll kebawah (melewati Hero Section)
+        // Deteksi scroll yang lebih kompatibel lintas peramban (Cross-Browser)
         window.addEventListener('scroll', function() {
-            if (window.scrollY > 300) {
+            let scrollPosition = window.scrollY || document.documentElement.scrollTop;
+            if (scrollPosition > 300) {
                 btnBackToTop.classList.add('show');
             } else {
                 btnBackToTop.classList.remove('show');
             }
         });
 
-        // Event saat tombol diklik: Meluncur kembali ke titik nol secara mulus
-        btnBackToTop.addEventListener('click', function() {
+        btnBackToTop.addEventListener('click', function(e) {
+            e.preventDefault(); // Mencegah perilaku bawaan tombol
+            
+            // BYPASS CONFLICT: Matikan paksa fitur CSS Snap sementara
+            document.documentElement.style.scrollSnapType = 'none';
+            
+            // Luncurkan ke atas dengan mulus
             window.scrollTo({
                 top: 0,
                 behavior: 'smooth'
             });
+
+            // Nyalakan kembali fitur CSS Snap setelah animasi gulir selesai (setelah 850ms)
+            setTimeout(() => {
+                document.documentElement.style.scrollSnapType = 'y mandatory';
+            }, 850);
         });
     }
 
