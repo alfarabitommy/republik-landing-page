@@ -12,10 +12,10 @@
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
-/* ENGINE SCROLL SNAP DIMULAI DI SINI */
+/* REVISI: scroll-snap-type dimatikan secara default untuk desktop 
+   agar Custom JS Engine bisa mengambil alih dengan lebih mulus */
 html {
-    scroll-behavior: smooth;
-    scroll-snap-type: y mandatory;
+    /* scroll-behavior: smooth; Dihapus karena akan dihandle oleh JS */
 }
 
 body { 
@@ -24,13 +24,14 @@ body {
     font-family: var(--font-main); 
     line-height: 1.6; 
     -webkit-font-smoothing: antialiased; 
+    /* Mencegah scroll default saat JS engine bekerja */
+    overscroll-behavior-y: none; 
 }
 
 .container { width: 90%; max-width: 1200px; margin: 0 auto; padding: 40px 0; }
 
 .snap-section {
-    scroll-snap-align: start;
-    scroll-snap-stop: always;
+    /* Hapus scroll-snap-align untuk desktop */
     min-height: 100vh;
     display: flex;
     flex-direction: column;
@@ -57,36 +58,27 @@ body {
     filter: brightness(1); 
 }
 
-/* REVISI CSS: Grid 10 Baris untuk memfasilitasi rasio 60:40 secara presisi */
 .hero-collage-grid { 
     display: grid; 
     grid-template-columns: 1.2fr 2fr 1fr 1.5fr; 
-    grid-template-rows: repeat(10, 60px); /* Total tinggi 600px dibagi 10 partisi */
+    grid-template-rows: repeat(10, 60px); 
     gap: 0; 
 }
 .collage-cell { width: 100%; height: 100%; overflow: hidden; }
 .collage-img { 
     width: 100%; 
     height: 100%; 
-    object-fit: cover; /* Melindungi gambar dari efek distorsi/rusak/gepeng */
+    object-fit: cover; 
     opacity: 0.8; 
 }
 
-/* REVISI CSS: Pembagian Baris (Row Spans) */
-.item-tall { grid-column: 1 / 2; grid-row: 1 / 11; } /* Full 100% (10 baris) */
-
-/* KOLOM KEDUA (Rasio 60% dan 40%) */
-.item-wide-top { grid-column: 2 / 3; grid-row: 1 / 7; } /* 60% (6 baris) */
-.item-wide-bottom { grid-column: 2 / 3; grid-row: 7 / 11; } /* 40% (4 baris) */
-
-/* KOLOM KETIGA (Tetap 50:50) */
-.item-small-top { grid-column: 3 / 4; grid-row: 1 / 6; } /* 50% (5 baris) */
-.item-small-bottom { grid-column: 3 / 4; grid-row: 6 / 11; } /* 50% (5 baris) */
-
-/* KOLOM KEEMPAT (Rasio 60% dan 40% - DIUBAH AGAR SIMETRIS DENGAN KOLOM KEDUA) */
-.item-new-top-right { grid-column: 4 / 5; grid-row: 1 / 7; } /* 60% (6 baris) */
-.item-new-bottom-right { grid-column: 4 / 5; grid-row: 7 / 11; } /* 40% (4 baris) */
-
+.item-tall { grid-column: 1 / 2; grid-row: 1 / 11; } 
+.item-wide-top { grid-column: 2 / 3; grid-row: 1 / 7; } 
+.item-wide-bottom { grid-column: 2 / 3; grid-row: 7 / 11; } 
+.item-small-top { grid-column: 3 / 4; grid-row: 1 / 6; } 
+.item-small-bottom { grid-column: 3 / 4; grid-row: 6 / 11; } 
+.item-new-top-right { grid-column: 4 / 5; grid-row: 1 / 7; } 
+.item-new-bottom-right { grid-column: 4 / 5; grid-row: 7 / 11; } 
 
 .placeholder-gray { background-color: var(--placeholder-gray); }
 .placeholder-dark { background-color: var(--placeholder-dark); }
@@ -347,7 +339,6 @@ footer p { font-size: 1rem; color: var(--text-muted); font-weight: 700; text-tra
     }
     .item-tall { grid-column: 1 / 2; grid-row: 1 / 3; }
     
-    /* Reset porsi kembali ke susunan block untuk Tablet */
     .item-wide-top { grid-column: 2 / 3; grid-row: 1 / 2; }
     .item-small-top { grid-column: 2 / 3; grid-row: 2 / 3; }
     .item-new-top-right { grid-column: 1 / 2; grid-row: 3 / 4; }
@@ -371,13 +362,22 @@ footer p { font-size: 1rem; color: var(--text-muted); font-weight: 700; text-tra
 
 /* --- MOBILE BREAKPOINT (Max 768px) --- */
 @media (max-width: 768px) {
+    /* Kembalikan CSS native snap khusus untuk Mobile karena performanya lebih baik di layar sentuh */
+    html {
+        scroll-behavior: smooth;
+        scroll-snap-type: y mandatory;
+    }
+    .snap-section {
+        scroll-snap-align: start;
+        scroll-snap-stop: always;
+    }
+
     .headline-utama { 
         font-size: clamp(1.8rem, 6vw, 2.5rem); 
         margin-top: 20px; 
     }
     .hero-logo-img { max-width: 200px; }
     
-    /* Gambar di seluler otomatis menumpuk 1 kolom penuh vertikal */
     .hero-collage-grid { grid-template-columns: 1fr; grid-template-rows: auto; }
     .collage-cell { height: 180px; grid-column: 1 / -1 !important; grid-row: auto !important; }
     

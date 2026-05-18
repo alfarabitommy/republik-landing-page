@@ -1,7 +1,77 @@
 /* file: assets/js/main.js */
 document.addEventListener('DOMContentLoaded', function() {
     
-    // 1. VIDEO MODAL ENGINE
+    // ==========================================
+    // 1. ENGINE CUSTOM SMOOTH SCROLL (DESKTOP)
+    // ==========================================
+    const isMobile = window.innerWidth <= 768;
+    
+    if (!isMobile) {
+        const sections = document.querySelectorAll('.snap-section');
+        let currentSectionIndex = 0;
+        let isScrolling = false;
+
+        // Fungsi animasi scroll manual (Easing function)
+        function smoothScrollTo(targetPosition, duration) {
+            const startPosition = window.scrollY;
+            const distance = targetPosition - startPosition;
+            let startTime = null;
+
+            function animation(currentTime) {
+                if (startTime === null) startTime = currentTime;
+                const timeElapsed = currentTime - startPosition;
+                const run = easeInOutQuad(currentTime - startTime, startPosition, distance, duration);
+                window.scrollTo(0, run);
+                
+                if (currentTime - startTime < duration) {
+                    requestAnimationFrame(animation);
+                } else {
+                    isScrolling = false; // Buka kunci setelah selesai
+                }
+            }
+
+            // Algoritma Easing agar gerakan melambat di akhir
+            function easeInOutQuad(t, b, c, d) {
+                t /= d / 2;
+                if (t < 1) return c / 2 * t * t + b;
+                t--;
+                return -c / 2 * (t * (t - 2) - 1) + b;
+            }
+
+            requestAnimationFrame(animation);
+        }
+
+        // Event pendeteksi pergerakan mousewheel
+        window.addEventListener('wheel', function(e) {
+            // Hindari engine jika modal video terbuka
+            if (document.getElementById('videoModal').style.display === 'flex') return;
+            
+            e.preventDefault(); // Matikan scroll bawaan browser yang kasar
+
+            if (isScrolling) return; // Kunci jika sedang beranimasi
+
+            // Deteksi arah scroll
+            if (e.deltaY > 0) {
+                // Scroll Bawah
+                if (currentSectionIndex < sections.length - 1) {
+                    isScrolling = true;
+                    currentSectionIndex++;
+                    smoothScrollTo(sections[currentSectionIndex].offsetTop, 800); // 800ms durasi
+                }
+            } else {
+                // Scroll Atas
+                if (currentSectionIndex > 0) {
+                    isScrolling = true;
+                    currentSectionIndex--;
+                    smoothScrollTo(sections[currentSectionIndex].offsetTop, 800);
+                }
+            }
+        }, { passive: false });
+    }
+
+    // ==========================================
+    // 2. VIDEO MODAL ENGINE
+    // ==========================================
     const modal = document.getElementById('videoModal');
     const container = document.getElementById('videoContainer');
     const triggers = document.querySelectorAll('.video-trigger');
@@ -35,7 +105,9 @@ document.addEventListener('DOMContentLoaded', function() {
     if (closeBtn) closeBtn.addEventListener('click', closeModal);
     if (overlay) overlay.addEventListener('click', closeModal);
 
-    // 2. AJAX FORM SUBMISSION
+    // ==========================================
+    // 3. AJAX FORM SUBMISSION
+    // ==========================================
     const briefForm = document.getElementById('briefForm');
     const btnSubmit = document.getElementById('btnSubmit');
 
@@ -79,7 +151,9 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // 3. FLOATING ACTION BUTTON (FAB) INTERACTION
+    // ==========================================
+    // 4. FLOATING ACTION BUTTON (FAB) INTERACTION
+    // ==========================================
     const fabTrigger = document.getElementById('fabTrigger');
     const fabMenu = document.getElementById('fabMenu');
     const iconChat = document.querySelector('.fab-icon-chat');
@@ -110,10 +184,11 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // 4. PERBAIKAN BUG: BACK TO TOP BUTTON LOGIC
+    // ==========================================
+    // 5. BACK TO TOP BUTTON LOGIC
+    // ==========================================
     const btnBackToTop = document.getElementById('btnBackToTop');
     if (btnBackToTop) {
-        // Deteksi scroll yang lebih kompatibel lintas peramban (Cross-Browser)
         window.addEventListener('scroll', function() {
             let scrollPosition = window.scrollY || document.documentElement.scrollTop;
             if (scrollPosition > 300) {
@@ -124,21 +199,18 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         btnBackToTop.addEventListener('click', function(e) {
-            e.preventDefault(); // Mencegah perilaku bawaan tombol
+            e.preventDefault(); 
             
-            // BYPASS CONFLICT: Matikan paksa fitur CSS Snap sementara
-            document.documentElement.style.scrollSnapType = 'none';
-            
-            // Luncurkan ke atas dengan mulus
-            window.scrollTo({
-                top: 0,
-                behavior: 'smooth'
-            });
-
-            // Nyalakan kembali fitur CSS Snap setelah animasi gulir selesai (setelah 850ms)
-            setTimeout(() => {
-                document.documentElement.style.scrollSnapType = 'y mandatory';
-            }, 850);
+            // Bypass JS Engine sementara
+            if (!isMobile) {
+                isScrolling = true;
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                // Reset index tracking
+                currentSectionIndex = 0; 
+                setTimeout(() => { isScrolling = false; }, 850);
+            } else {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
         });
     }
 
