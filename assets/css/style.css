@@ -14,9 +14,6 @@
 
 /* REVISI: scroll-snap-type dimatikan secara default untuk desktop 
    agar Custom JS Engine bisa mengambil alih dengan lebih mulus */
-html {
-    /* scroll-behavior: smooth; Dihapus karena akan dihandle oleh JS */
-}
 
 body { 
     background-color: var(--bg-color); 

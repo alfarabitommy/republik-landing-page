@@ -1272,11 +1272,8 @@ class Leads_model extends CI_Model {
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
-/* ENGINE SCROLL SNAP DIMULAI DI SINI */
-html {
-    scroll-behavior: smooth;
-    scroll-snap-type: y mandatory;
-}
+/* REVISI: scroll-snap-type dimatikan secara default untuk desktop 
+   agar Custom JS Engine bisa mengambil alih dengan lebih mulus */
 
 body { 
     background-color: var(--bg-color); 
@@ -1284,13 +1281,14 @@ body {
     font-family: var(--font-main); 
     line-height: 1.6; 
     -webkit-font-smoothing: antialiased; 
+    /* Mencegah scroll default saat JS engine bekerja */
+    overscroll-behavior-y: none; 
 }
 
 .container { width: 90%; max-width: 1200px; margin: 0 auto; padding: 40px 0; }
 
 .snap-section {
-    scroll-snap-align: start;
-    scroll-snap-stop: always;
+    /* Hapus scroll-snap-align untuk desktop */
     min-height: 100vh;
     display: flex;
     flex-direction: column;
@@ -1317,21 +1315,27 @@ body {
     filter: brightness(1); 
 }
 
-/* REVISI CSS: Grid menjadi 4 kolom (Mengakomodasi 2 gambar baru 16:9 di sisi kanan) */
-.hero-collage-grid { display: grid; grid-template-columns: 1.2fr 2fr 1fr 1.5fr; grid-template-rows: 300px 300px; gap: 0; }
+.hero-collage-grid { 
+    display: grid; 
+    grid-template-columns: 1.2fr 2fr 1fr 1.5fr; 
+    grid-template-rows: repeat(10, 60px); 
+    gap: 0; 
+}
 .collage-cell { width: 100%; height: 100%; overflow: hidden; }
-.collage-img { width: 100%; height: 100%; object-fit: cover; opacity: 0.8; }
+.collage-img { 
+    width: 100%; 
+    height: 100%; 
+    object-fit: cover; 
+    opacity: 0.8; 
+}
 
-.item-tall { grid-column: 1 / 2; grid-row: 1 / 3; }
-.item-wide-top { grid-column: 2 / 3; grid-row: 1 / 2; }
-.item-small-top { grid-column: 3 / 4; grid-row: 1 / 2; }
-/* Gambar 2.png baru */
-.item-new-top-right { grid-column: 4 / 5; grid-row: 1 / 2; }
-
-.item-wide-bottom { grid-column: 2 / 3; grid-row: 2 / 3; }
-.item-small-bottom { grid-column: 3 / 4; grid-row: 2 / 3; }
-/* Gambar 7.png baru */
-.item-new-bottom-right { grid-column: 4 / 5; grid-row: 2 / 3; }
+.item-tall { grid-column: 1 / 2; grid-row: 1 / 11; } 
+.item-wide-top { grid-column: 2 / 3; grid-row: 1 / 7; } 
+.item-wide-bottom { grid-column: 2 / 3; grid-row: 7 / 11; } 
+.item-small-top { grid-column: 3 / 4; grid-row: 1 / 6; } 
+.item-small-bottom { grid-column: 3 / 4; grid-row: 6 / 11; } 
+.item-new-top-right { grid-column: 4 / 5; grid-row: 1 / 7; } 
+.item-new-bottom-right { grid-column: 4 / 5; grid-row: 7 / 11; } 
 
 .placeholder-gray { background-color: var(--placeholder-gray); }
 .placeholder-dark { background-color: var(--placeholder-dark); }
@@ -1586,12 +1590,12 @@ footer p { font-size: 1rem; color: var(--text-muted); font-weight: 700; text-tra
 
 /* --- TABLET BREAKPOINT (Max 1024px) --- */
 @media (max-width: 1024px) {
-    /* Menyesuaikan ulang ke 2 kolom, 4 baris untuk Tablet */
     .hero-collage-grid { 
         grid-template-columns: 1fr 1fr; 
         grid-template-rows: repeat(4, 250px); 
     }
     .item-tall { grid-column: 1 / 2; grid-row: 1 / 3; }
+    
     .item-wide-top { grid-column: 2 / 3; grid-row: 1 / 2; }
     .item-small-top { grid-column: 2 / 3; grid-row: 2 / 3; }
     .item-new-top-right { grid-column: 1 / 2; grid-row: 3 / 4; }
@@ -1615,13 +1619,22 @@ footer p { font-size: 1rem; color: var(--text-muted); font-weight: 700; text-tra
 
 /* --- MOBILE BREAKPOINT (Max 768px) --- */
 @media (max-width: 768px) {
+    /* Kembalikan CSS native snap khusus untuk Mobile karena performanya lebih baik di layar sentuh */
+    html {
+        scroll-behavior: smooth;
+        scroll-snap-type: y mandatory;
+    }
+    .snap-section {
+        scroll-snap-align: start;
+        scroll-snap-stop: always;
+    }
+
     .headline-utama { 
         font-size: clamp(1.8rem, 6vw, 2.5rem); 
         margin-top: 20px; 
     }
     .hero-logo-img { max-width: 200px; }
     
-    /* Gambar di seluler otomatis menumpuk 1 kolom penuh vertikal */
     .hero-collage-grid { grid-template-columns: 1fr; grid-template-rows: auto; }
     .collage-cell { height: 180px; grid-column: 1 / -1 !important; grid-row: auto !important; }
     
@@ -1644,7 +1657,77 @@ footer p { font-size: 1rem; color: var(--text-muted); font-weight: 700; text-tra
 /* file: assets/js/main.js */
 document.addEventListener('DOMContentLoaded', function() {
     
-    // 1. VIDEO MODAL ENGINE
+    // ==========================================
+    // 1. ENGINE CUSTOM SMOOTH SCROLL (DESKTOP)
+    // ==========================================
+    const isMobile = window.innerWidth <= 768;
+    
+    if (!isMobile) {
+        const sections = document.querySelectorAll('.snap-section');
+        let currentSectionIndex = 0;
+        let isScrolling = false;
+
+        // Fungsi animasi scroll manual (Easing function)
+        function smoothScrollTo(targetPosition, duration) {
+            const startPosition = window.scrollY;
+            const distance = targetPosition - startPosition;
+            let startTime = null;
+
+            function animation(currentTime) {
+                if (startTime === null) startTime = currentTime;
+                const timeElapsed = currentTime - startPosition;
+                const run = easeInOutQuad(currentTime - startTime, startPosition, distance, duration);
+                window.scrollTo(0, run);
+                
+                if (currentTime - startTime < duration) {
+                    requestAnimationFrame(animation);
+                } else {
+                    isScrolling = false; // Buka kunci setelah selesai
+                }
+            }
+
+            // Algoritma Easing agar gerakan melambat di akhir
+            function easeInOutQuad(t, b, c, d) {
+                t /= d / 2;
+                if (t < 1) return c / 2 * t * t + b;
+                t--;
+                return -c / 2 * (t * (t - 2) - 1) + b;
+            }
+
+            requestAnimationFrame(animation);
+        }
+
+        // Event pendeteksi pergerakan mousewheel
+        window.addEventListener('wheel', function(e) {
+            // Hindari engine jika modal video terbuka
+            if (document.getElementById('videoModal').style.display === 'flex') return;
+            
+            e.preventDefault(); // Matikan scroll bawaan browser yang kasar
+
+            if (isScrolling) return; // Kunci jika sedang beranimasi
+
+            // Deteksi arah scroll
+            if (e.deltaY > 0) {
+                // Scroll Bawah
+                if (currentSectionIndex < sections.length - 1) {
+                    isScrolling = true;
+                    currentSectionIndex++;
+                    smoothScrollTo(sections[currentSectionIndex].offsetTop, 800); // 800ms durasi
+                }
+            } else {
+                // Scroll Atas
+                if (currentSectionIndex > 0) {
+                    isScrolling = true;
+                    currentSectionIndex--;
+                    smoothScrollTo(sections[currentSectionIndex].offsetTop, 800);
+                }
+            }
+        }, { passive: false });
+    }
+
+    // ==========================================
+    // 2. VIDEO MODAL ENGINE
+    // ==========================================
     const modal = document.getElementById('videoModal');
     const container = document.getElementById('videoContainer');
     const triggers = document.querySelectorAll('.video-trigger');
@@ -1678,7 +1761,9 @@ document.addEventListener('DOMContentLoaded', function() {
     if (closeBtn) closeBtn.addEventListener('click', closeModal);
     if (overlay) overlay.addEventListener('click', closeModal);
 
-    // 2. AJAX FORM SUBMISSION
+    // ==========================================
+    // 3. AJAX FORM SUBMISSION
+    // ==========================================
     const briefForm = document.getElementById('briefForm');
     const btnSubmit = document.getElementById('btnSubmit');
 
@@ -1722,7 +1807,9 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // 3. FLOATING ACTION BUTTON (FAB) INTERACTION
+    // ==========================================
+    // 4. FLOATING ACTION BUTTON (FAB) INTERACTION
+    // ==========================================
     const fabTrigger = document.getElementById('fabTrigger');
     const fabMenu = document.getElementById('fabMenu');
     const iconChat = document.querySelector('.fab-icon-chat');
@@ -1753,10 +1840,11 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // 4. PERBAIKAN BUG: BACK TO TOP BUTTON LOGIC
+    // ==========================================
+    // 5. BACK TO TOP BUTTON LOGIC
+    // ==========================================
     const btnBackToTop = document.getElementById('btnBackToTop');
     if (btnBackToTop) {
-        // Deteksi scroll yang lebih kompatibel lintas peramban (Cross-Browser)
         window.addEventListener('scroll', function() {
             let scrollPosition = window.scrollY || document.documentElement.scrollTop;
             if (scrollPosition > 300) {
@@ -1767,21 +1855,18 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         btnBackToTop.addEventListener('click', function(e) {
-            e.preventDefault(); // Mencegah perilaku bawaan tombol
+            e.preventDefault(); 
             
-            // BYPASS CONFLICT: Matikan paksa fitur CSS Snap sementara
-            document.documentElement.style.scrollSnapType = 'none';
-            
-            // Luncurkan ke atas dengan mulus
-            window.scrollTo({
-                top: 0,
-                behavior: 'smooth'
-            });
-
-            // Nyalakan kembali fitur CSS Snap setelah animasi gulir selesai (setelah 850ms)
-            setTimeout(() => {
-                document.documentElement.style.scrollSnapType = 'y mandatory';
-            }, 850);
+            // Bypass JS Engine sementara
+            if (!isMobile) {
+                isScrolling = true;
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                // Reset index tracking
+                currentSectionIndex = 0; 
+                setTimeout(() => { isScrolling = false; }, 850);
+            } else {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
         });
     }
 
