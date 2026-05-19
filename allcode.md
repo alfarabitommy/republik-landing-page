@@ -1314,10 +1314,29 @@ body {
     display: block;
     max-width: 700px; 
     height: auto;
-    filter: brightness(1); 
+    /* REVISI DESKTOP: Tambahkan pendaran cahaya (glow) tipis agar logo semakin menonjol */
+    filter: drop-shadow(0 0 25px rgba(255, 255, 255, 0.2)); 
 }
 
-.hero-collage-grid { display: grid; grid-template-columns: 1.2fr 2fr 1fr 1.5fr; grid-template-rows: repeat(10, 60px); gap: 0; }
+/* REVISI DESKTOP: Tambahkan position relative untuk menampung pseudo-element overlay */
+.hero-collage-grid { 
+    display: grid; 
+    grid-template-columns: 1.2fr 2fr 1fr 1.5fr; 
+    grid-template-rows: repeat(10, 60px); 
+    gap: 0; 
+    position: relative;
+}
+
+/* REVISI DESKTOP: Kaca Gelap (Dark Overlay) transparansi 45% (tidak terlalu pekat) */
+.hero-collage-grid::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0, 0, 0, 0.45);
+    z-index: 2; /* Menutupi gambar, tapi di bawah logo yang memiliki z-index 10 */
+    pointer-events: none; /* Agar tidak menghalangi interaksi (jika ada) */
+}
+
 .collage-cell { width: 100%; height: 100%; overflow: hidden; }
 .collage-img { width: 100%; height: 100%; object-fit: cover; opacity: 0.8; }
 
@@ -1593,13 +1612,9 @@ footer p { font-size: 1rem; color: var(--text-muted); font-weight: 700; text-tra
         z-index: 1; /* Di bawah Logo */
     }
 
-    /* KACA GELAP (Dark Overlay) 75% Transparansi */
+    /* KACA GELAP (Dark Overlay) 75% Transparansi khusus Mobile */
     .hero-collage-grid::after {
-        content: '';
-        position: absolute;
-        top: 0; left: 0; right: 0; bottom: 0;
-        background: rgba(0, 0, 0, 0.75);
-        z-index: 2; /* Menutupi gambar, di bawah logo */
+        background: rgba(0, 0, 0, 0.75); /* Timpa nilai transparansi desktop (45%) menjadi pekat (75%) di HP */
     }
 
     /* Modifikasi setiap gambar menjadi kartu melayang (Polaroid effect) */
