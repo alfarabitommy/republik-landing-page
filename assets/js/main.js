@@ -1,123 +1,11 @@
 /* file: assets/js/main.js */
 document.addEventListener('DOMContentLoaded', function() {
     
-    const isMobile = window.innerWidth <= 768;
-    const sections = document.querySelectorAll('.snap-section');
-    let currentSectionIndex = 0;
-    let isAnimating = false;
-    let lastScrollTime = 0;
-    const btnBackToTop = document.getElementById('btnBackToTop');
+    // REVISI: Seluruh baris kode 'Custom Wheel Hijacker Engine' dihapus total.
+    // Navigasi scrolling halaman kini sepenuhnya dikendalikan secara alami oleh browser.
 
     // ==========================================
-    // 1. LUXURY FLUID SCROLL ENGINE (DESKTOP)
-    // ==========================================
-    
-    // Kurva Matematika Premium (Cubic Out Easing) - Memberikan efek gliding empuk di akhir gerakan
-    function easeOutCubic(t) {
-        return 1 - Math.pow(1 - t, 3);
-    }
-
-    function smoothGlidingTo(targetPosition, duration) {
-        const startPosition = window.scrollY || document.documentElement.scrollTop;
-        const distance = targetPosition - startPosition;
-        let startTime = null;
-
-        function animationStep(currentTime) {
-            if (startTime === null) startTime = currentTime;
-            const timeElapsed = currentTime - startTime;
-            const progress = Math.min(timeElapsed / duration, 1);
-            
-            // Terapkan kurva perlambatan organik
-            const easedProgress = easeOutCubic(progress);
-            window.scrollTo(0, startPosition + (distance * easedProgress));
-            
-            if (progress < 1) {
-                requestAnimationFrame(animationStep);
-            } else {
-                window.scrollTo(0, targetPosition); // Kunci posisi mutlak di akhir agar presisi
-                // Berikan buffer 250ms setelah animasi selesai untuk menyerap sisa inersia trackpad
-                setTimeout(() => {
-                    isAnimating = false;
-                }, 250);
-            }
-        }
-        requestAnimationFrame(animationStep);
-    }
-
-    if (!isMobile) {
-        window.addEventListener('wheel', function(e) {
-            // Abaikan jika modal sedang terbuka
-            if (document.getElementById('videoModal').style.display === 'flex') return;
-            
-            e.preventDefault(); // Matikan scroll patah-patah bawaan Windows/Chrome
-
-            const currentTime = new Date().getTime();
-            // Cegah double jump akibat sensitivitas trackpad/magic mouse
-            if (isAnimating || (currentTime - lastScrollTime < 1300)) return;
-
-            if (e.deltaY > 0) {
-                // Jalur Gulir ke Bawah
-                if (currentSectionIndex < sections.length - 1) {
-                    isAnimating = true;
-                    lastScrollTime = currentTime;
-                    currentSectionIndex++;
-                    smoothGlidingTo(sections[currentSectionIndex].offsetTop, 950); // Durasi meluncur 950ms mewah
-                }
-            } else {
-                // Jalur Gulir ke Atas
-                if (currentSectionIndex > 0) {
-                    isAnimating = true;
-                    lastScrollTime = currentTime;
-                    currentSectionIndex--;
-                    smoothGlidingTo(sections[currentSectionIndex].offsetTop, 950);
-                }
-            }
-        }, { passive: false });
-    }
-
-    // ==========================================
-    // 2. SCROLL INTEGRATION & SYNC TRACKER
-    // ==========================================
-    window.addEventListener('scroll', function() {
-        let scrollPosition = window.scrollY || document.documentElement.scrollTop;
-        
-        // Atur visibilitas tombol Back to Top
-        if (btnBackToTop) {
-            if (scrollPosition > 400) {
-                btnBackToTop.classList.add('show');
-            } else {
-                btnBackToTop.classList.remove('show');
-            }
-        }
-
-        // Sinkronisasi index memori jika user menyeret scrollbar fisik di tepi layar
-        if (!isAnimating && !isMobile) {
-            sections.forEach((sec, index) => {
-                if (scrollPosition >= sec.offsetTop - (window.innerHeight / 2)) {
-                    currentSectionIndex = index;
-                }
-            });
-        }
-    });
-
-    if (btnBackToTop) {
-        btnBackToTop.addEventListener('click', function(e) {
-            e.preventDefault(); 
-            if (isAnimating) return;
-
-            if (!isMobile) {
-                isAnimating = true;
-                lastScrollTime = new Date().getTime();
-                currentSectionIndex = 0; // Kembalikan koordinat index ke Hero
-                smoothGlidingTo(0, 1100); // Luncuran kembali ke atas dibuat sedikit lebih lambat & anggun
-            } else {
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            }
-        });
-    }
-
-    // ==========================================
-    // 3. VIDEO MODAL ENGINE
+    // 1. VIDEO MODAL ENGINE
     // ==========================================
     const modal = document.getElementById('videoModal');
     const container = document.getElementById('videoContainer');
@@ -153,7 +41,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (overlay) overlay.addEventListener('click', closeModal);
 
     // ==========================================
-    // 4. AJAX FORM SUBMISSION
+    // 2. AJAX FORM SUBMISSION
     // ==========================================
     const briefForm = document.getElementById('briefForm');
     const btnSubmit = document.getElementById('btnSubmit');
@@ -199,7 +87,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // ==========================================
-    // 5. FLOATING ACTION BUTTON (FAB) INTERACTION
+    // 3. FLOATING ACTION BUTTON (FAB) INTERACTION
     // ==========================================
     const fabTrigger = document.getElementById('fabTrigger');
     const fabMenu = document.getElementById('fabMenu');
@@ -228,6 +116,26 @@ document.addEventListener('DOMContentLoaded', function() {
                 iconChat.style.display = 'block';
                 iconClose.style.display = 'none';
             }
+        });
+    }
+
+    // ==========================================
+    // 4. BACK TO TOP BUTTON LOGIC (CLEAN NATIVE)
+    // ==========================================
+    const btnBackToTop = document.getElementById('btnBackToTop');
+    if (btnBackToTop) {
+        window.addEventListener('scroll', function() {
+            let scrollPosition = window.scrollY || document.documentElement.scrollTop;
+            if (scrollPosition > 400) {
+                btnBackToTop.classList.add('show');
+            } else {
+                btnBackToTop.classList.remove('show');
+            }
+        });
+
+        btnBackToTop.addEventListener('click', function(e) {
+            e.preventDefault(); 
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         });
     }
 

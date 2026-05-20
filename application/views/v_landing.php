@@ -1,3 +1,4 @@
+<?php /* file: application/views/v_landing.php */ ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -30,8 +31,13 @@
 </head>
 <body>
 
+    <?php 
+    // Headline statik dikunci dalam satu variabel murni
+    $shared_headline = '<span class="headline-top">Your brand doesn’t need more content.</span> <span class="headline-bottom">It needs a sharper creative system.</span>';
+    ?>
+
     <main>
-        <header class="hero-section snap-section">
+        <header class="hero-section">
             <div class="hero-collage-container">
                 <div class="hero-logo-overlay">
                     <img src="<?= base_url('assets/img/re-logo-2026.png') ?>" alt="REPUBLIK Creative Intelligence Agency Logo" class="hero-logo-img">
@@ -49,13 +55,16 @@
                     <div class="collage-cell item-new-bottom-right placeholder-dark"><img src="<?= base_url('assets/img/hero/7.png') ?>" alt="REPUBLIK Creative Work Extra 2" class="collage-img"></div>
                 </div>
             </div>
+
+            <div class="hero-text-wrapper">
+                <div class="headline-container">
+                    <?= $shared_headline ?> 
+                </div>
+            </div>
         </header>
 
-        <section class="narrative-section snap-section">
+        <section class="narrative-section">
             <div class="container">
-                <h2 class="headline-utama">
-                    <?= nl2br(html_escape($settings['headline_main'] ?? 'Your brand doesn\'t need more content. It needs a sharper creative system.')) ?>
-                </h2>
                 <div class="narrative-content">
                     <p>REPUBLIK helps brands turn business problems into culture-sharp creative platforms, social campaigns, content systems & performance-ready ideas. We work where attention is crowded, audiences are restless, and brands need more than "posting consistently."</p>
                     <p>We help you find the strategic angle, shape the creative idea, build the format system & make every touchpoint do its job.</p>
@@ -68,7 +77,7 @@
             </div>
         </section>
 
-        <section id="work" class="portfolio-section snap-section">
+        <section id="work" class="portfolio-section">
             <div class="container">
                 <div class="section-title">
                     <h3>Our Work</h3>
@@ -77,27 +86,27 @@
                 
                 <div id="portfolio-grid" class="portfolio-grid">
                     
-                    <div class="portfolio-item video-trigger" aria-label="Play <?= html_escape($settings['video_title_1'] ?? 'Video 1') ?>" data-video-src="<?= $settings['video_1'] ?? 'https://www.youtube.com/watch?v=dQw4w9WgXcQ' ?>" style="background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.6) 100%), url('<?= !empty($settings['video_thumb_1']) ? base_url($settings['video_thumb_1']) : '' ?>') center/cover no-repeat #222;">
+                    <div class="portfolio-item video-trigger" aria-label="Play Honda AHM" data-video-src="<?= $settings['video_1'] ?? 'https://www.youtube.com/watch?v=dQw4w9WgXcQ' ?>" style="background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.6) 100%), url('<?= !empty($settings['video_thumb_1']) ? base_url($settings['video_thumb_1']) : '' ?>') center/cover no-repeat #222;">
                         <div class="overlay-text"><?= html_escape($settings['video_title_1'] ?? 'HONDA AHM') ?></div>
                         <div class="play-icon" aria-hidden="true">▶</div>
                     </div>
                     
-                    <div class="portfolio-item video-trigger" aria-label="Play <?= html_escape($settings['video_title_2'] ?? 'Video 2') ?>" data-video-src="<?= $settings['video_2'] ?? 'https://www.youtube.com/watch?v=dQw4w9WgXcQ' ?>" style="background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.6) 100%), url('<?= !empty($settings['video_thumb_2']) ? base_url($settings['video_thumb_2']) : '' ?>') center/cover no-repeat #222;">
+                    <div class="portfolio-item video-trigger" aria-label="Play Jergens" data-video-src="<?= $settings['video_2'] ?? 'https://www.youtube.com/watch?v=dQw4w9WgXcQ' ?>" style="background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.6) 100%), url('<?= !empty($settings['video_thumb_2']) ? base_url($settings['video_thumb_2']) : '' ?>') center/cover no-repeat #222;">
                         <div class="overlay-text"><?= html_escape($settings['video_title_2'] ?? 'JERGENS') ?></div>
                         <div class="play-icon" aria-hidden="true">▶</div>
                     </div>
                     
-                    <div class="portfolio-item video-trigger" aria-label="Play <?= html_escape($settings['video_title_3'] ?? 'Video 3') ?>" data-video-src="<?= $settings['video_3'] ?? 'https://www.youtube.com/watch?v=dQw4w9WgXcQ' ?>" style="background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.6) 100%), url('<?= !empty($settings['video_thumb_3']) ? base_url($settings['video_thumb_3']) : '' ?>') center/cover no-repeat #222;">
+                    <div class="portfolio-item video-trigger" aria-label="Play Honda AHM" data-video-src="<?= $settings['video_3'] ?? 'https://www.youtube.com/watch?v=dQw4w9WgXcQ' ?>" style="background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.6) 100%), url('<?= !empty($settings['video_thumb_3']) ? base_url($settings['video_thumb_3']) : '' ?>') center/cover no-repeat #222;">
                         <div class="overlay-text"><?= html_escape($settings['video_title_3'] ?? 'HONDA AHM') ?></div>
                         <div class="play-icon" aria-hidden="true">▶</div>
                     </div>
                     
-                    <div class="portfolio-item video-trigger" aria-label="Play <?= html_escape($settings['video_title_4'] ?? 'Video 4') ?>" data-video-src="<?= $settings['video_4'] ?? base_url('assets/video/honda.mp4') ?>" style="background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.6) 100%), url('<?= !empty($settings['video_thumb_4']) ? base_url($settings['video_thumb_4']) : '' ?>') center/cover no-repeat #222;">
+                    <div class="portfolio-item video-trigger" aria-label="Play Honda AHM" data-video-src="<?= $settings['video_4'] ?? base_url('assets/video/honda.mp4') ?>" style="background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.6) 100%), url('<?= !empty($settings['video_thumb_4']) ? base_url($settings['video_thumb_4']) : '' ?>') center/cover no-repeat #222;">
                         <div class="overlay-text"><?= html_escape($settings['video_title_4'] ?? 'HONDA AHM') ?></div>
                         <div class="play-icon" aria-hidden="true">▶</div>
                     </div>
                     
-                    <div class="portfolio-item video-trigger" aria-label="Play <?= html_escape($settings['video_title_5'] ?? 'Video 5') ?>" data-video-src="<?= $settings['video_5'] ?? 'https://www.youtube.com/watch?v=dQw4w9WgXcQ' ?>" style="background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.6) 100%), url('<?= !empty($settings['video_thumb_5']) ? base_url($settings['video_thumb_5']) : '' ?>') center/cover no-repeat #222;">
+                    <div class="portfolio-item video-trigger" aria-label="Play Jergens" data-video-src="<?= $settings['video_5'] ?? 'https://www.youtube.com/watch?v=dQw4w9WgXcQ' ?>" style="background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.6) 100%), url('<?= !empty($settings['video_thumb_5']) ? base_url($settings['video_thumb_5']) : '' ?>') center/cover no-repeat #222;">
                         <div class="overlay-text"><?= html_escape($settings['video_title_5'] ?? 'JERGENS') ?></div>
                         <div class="play-icon" aria-hidden="true">▶</div>
                     </div>
@@ -106,7 +115,7 @@
             </div>
         </section>
 
-        <section id="contact" class="form-section snap-section">
+        <section id="contact" class="form-section">
             <div class="container form-container">
                 <div class="form-header">
                     <h2>Let's build something that moves.</h2>
@@ -150,7 +159,7 @@
         <div class="fab-menu" id="fabMenu">
             <a href="https://wa.me/6285714734610" target="_blank" class="fab-item" aria-label="WhatsApp">
                 <span class="fab-tooltip">WhatsApp</span>
-                <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
+                <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
             </a>
             <a href="https://www.instagram.com/republik.asia/" target="_blank" class="fab-item" aria-label="Instagram">
                 <span class="fab-tooltip">Instagram</span>
@@ -167,7 +176,7 @@
         </button>
     </div>
 
-    <footer class="snap-section">
+    <footer>
         <div class="container">
             <p>Idea-first. System-led. Indonesia-native. Performance-aware.</p>
             <div class="footer-logo">

@@ -915,6 +915,7 @@ class Leads_model extends CI_Model {
 <!-- end file application/views/v_admin_settings.php -->
 
 <!-- file application/views/v_landing.php -->
+<?php /* file: application/views/v_landing.php */ ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -947,8 +948,13 @@ class Leads_model extends CI_Model {
 </head>
 <body>
 
+    <?php 
+    // Headline statik dikunci dalam satu variabel murni
+    $shared_headline = '<span class="headline-top">Your brand doesn’t need more content.</span> <span class="headline-bottom">It needs a sharper creative system.</span>';
+    ?>
+
     <main>
-        <header class="hero-section snap-section">
+        <header class="hero-section">
             <div class="hero-collage-container">
                 <div class="hero-logo-overlay">
                     <img src="<?= base_url('assets/img/re-logo-2026.png') ?>" alt="REPUBLIK Creative Intelligence Agency Logo" class="hero-logo-img">
@@ -966,13 +972,16 @@ class Leads_model extends CI_Model {
                     <div class="collage-cell item-new-bottom-right placeholder-dark"><img src="<?= base_url('assets/img/hero/7.png') ?>" alt="REPUBLIK Creative Work Extra 2" class="collage-img"></div>
                 </div>
             </div>
+
+            <div class="hero-text-wrapper">
+                <div class="headline-container">
+                    <?= $shared_headline ?> 
+                </div>
+            </div>
         </header>
 
-        <section class="narrative-section snap-section">
+        <section class="narrative-section">
             <div class="container">
-                <h2 class="headline-utama">
-                    <?= nl2br(html_escape($settings['headline_main'] ?? 'Your brand doesn\'t need more content. It needs a sharper creative system.')) ?>
-                </h2>
                 <div class="narrative-content">
                     <p>REPUBLIK helps brands turn business problems into culture-sharp creative platforms, social campaigns, content systems & performance-ready ideas. We work where attention is crowded, audiences are restless, and brands need more than "posting consistently."</p>
                     <p>We help you find the strategic angle, shape the creative idea, build the format system & make every touchpoint do its job.</p>
@@ -985,7 +994,7 @@ class Leads_model extends CI_Model {
             </div>
         </section>
 
-        <section id="work" class="portfolio-section snap-section">
+        <section id="work" class="portfolio-section">
             <div class="container">
                 <div class="section-title">
                     <h3>Our Work</h3>
@@ -994,27 +1003,27 @@ class Leads_model extends CI_Model {
                 
                 <div id="portfolio-grid" class="portfolio-grid">
                     
-                    <div class="portfolio-item video-trigger" aria-label="Play <?= html_escape($settings['video_title_1'] ?? 'Video 1') ?>" data-video-src="<?= $settings['video_1'] ?? 'https://www.youtube.com/watch?v=dQw4w9WgXcQ' ?>" style="background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.6) 100%), url('<?= !empty($settings['video_thumb_1']) ? base_url($settings['video_thumb_1']) : '' ?>') center/cover no-repeat #222;">
+                    <div class="portfolio-item video-trigger" aria-label="Play Honda AHM" data-video-src="<?= $settings['video_1'] ?? 'https://www.youtube.com/watch?v=dQw4w9WgXcQ' ?>" style="background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.6) 100%), url('<?= !empty($settings['video_thumb_1']) ? base_url($settings['video_thumb_1']) : '' ?>') center/cover no-repeat #222;">
                         <div class="overlay-text"><?= html_escape($settings['video_title_1'] ?? 'HONDA AHM') ?></div>
                         <div class="play-icon" aria-hidden="true">▶</div>
                     </div>
                     
-                    <div class="portfolio-item video-trigger" aria-label="Play <?= html_escape($settings['video_title_2'] ?? 'Video 2') ?>" data-video-src="<?= $settings['video_2'] ?? 'https://www.youtube.com/watch?v=dQw4w9WgXcQ' ?>" style="background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.6) 100%), url('<?= !empty($settings['video_thumb_2']) ? base_url($settings['video_thumb_2']) : '' ?>') center/cover no-repeat #222;">
+                    <div class="portfolio-item video-trigger" aria-label="Play Jergens" data-video-src="<?= $settings['video_2'] ?? 'https://www.youtube.com/watch?v=dQw4w9WgXcQ' ?>" style="background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.6) 100%), url('<?= !empty($settings['video_thumb_2']) ? base_url($settings['video_thumb_2']) : '' ?>') center/cover no-repeat #222;">
                         <div class="overlay-text"><?= html_escape($settings['video_title_2'] ?? 'JERGENS') ?></div>
                         <div class="play-icon" aria-hidden="true">▶</div>
                     </div>
                     
-                    <div class="portfolio-item video-trigger" aria-label="Play <?= html_escape($settings['video_title_3'] ?? 'Video 3') ?>" data-video-src="<?= $settings['video_3'] ?? 'https://www.youtube.com/watch?v=dQw4w9WgXcQ' ?>" style="background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.6) 100%), url('<?= !empty($settings['video_thumb_3']) ? base_url($settings['video_thumb_3']) : '' ?>') center/cover no-repeat #222;">
+                    <div class="portfolio-item video-trigger" aria-label="Play Honda AHM" data-video-src="<?= $settings['video_3'] ?? 'https://www.youtube.com/watch?v=dQw4w9WgXcQ' ?>" style="background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.6) 100%), url('<?= !empty($settings['video_thumb_3']) ? base_url($settings['video_thumb_3']) : '' ?>') center/cover no-repeat #222;">
                         <div class="overlay-text"><?= html_escape($settings['video_title_3'] ?? 'HONDA AHM') ?></div>
                         <div class="play-icon" aria-hidden="true">▶</div>
                     </div>
                     
-                    <div class="portfolio-item video-trigger" aria-label="Play <?= html_escape($settings['video_title_4'] ?? 'Video 4') ?>" data-video-src="<?= $settings['video_4'] ?? base_url('assets/video/honda.mp4') ?>" style="background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.6) 100%), url('<?= !empty($settings['video_thumb_4']) ? base_url($settings['video_thumb_4']) : '' ?>') center/cover no-repeat #222;">
+                    <div class="portfolio-item video-trigger" aria-label="Play Honda AHM" data-video-src="<?= $settings['video_4'] ?? base_url('assets/video/honda.mp4') ?>" style="background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.6) 100%), url('<?= !empty($settings['video_thumb_4']) ? base_url($settings['video_thumb_4']) : '' ?>') center/cover no-repeat #222;">
                         <div class="overlay-text"><?= html_escape($settings['video_title_4'] ?? 'HONDA AHM') ?></div>
                         <div class="play-icon" aria-hidden="true">▶</div>
                     </div>
                     
-                    <div class="portfolio-item video-trigger" aria-label="Play <?= html_escape($settings['video_title_5'] ?? 'Video 5') ?>" data-video-src="<?= $settings['video_5'] ?? 'https://www.youtube.com/watch?v=dQw4w9WgXcQ' ?>" style="background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.6) 100%), url('<?= !empty($settings['video_thumb_5']) ? base_url($settings['video_thumb_5']) : '' ?>') center/cover no-repeat #222;">
+                    <div class="portfolio-item video-trigger" aria-label="Play Jergens" data-video-src="<?= $settings['video_5'] ?? 'https://www.youtube.com/watch?v=dQw4w9WgXcQ' ?>" style="background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.6) 100%), url('<?= !empty($settings['video_thumb_5']) ? base_url($settings['video_thumb_5']) : '' ?>') center/cover no-repeat #222;">
                         <div class="overlay-text"><?= html_escape($settings['video_title_5'] ?? 'JERGENS') ?></div>
                         <div class="play-icon" aria-hidden="true">▶</div>
                     </div>
@@ -1023,7 +1032,7 @@ class Leads_model extends CI_Model {
             </div>
         </section>
 
-        <section id="contact" class="form-section snap-section">
+        <section id="contact" class="form-section">
             <div class="container form-container">
                 <div class="form-header">
                     <h2>Let's build something that moves.</h2>
@@ -1067,7 +1076,7 @@ class Leads_model extends CI_Model {
         <div class="fab-menu" id="fabMenu">
             <a href="https://wa.me/6285714734610" target="_blank" class="fab-item" aria-label="WhatsApp">
                 <span class="fab-tooltip">WhatsApp</span>
-                <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
+                <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
             </a>
             <a href="https://www.instagram.com/republik.asia/" target="_blank" class="fab-item" aria-label="Instagram">
                 <span class="fab-tooltip">Instagram</span>
@@ -1084,7 +1093,7 @@ class Leads_model extends CI_Model {
         </button>
     </div>
 
-    <footer class="snap-section">
+    <footer>
         <div class="container">
             <p>Idea-first. System-led. Indonesia-native. Performance-aware.</p>
             <div class="footer-logo">
@@ -1272,10 +1281,9 @@ class Leads_model extends CI_Model {
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
-/* REVISI DESKTOP: Matikan native snapping bawaan browser agar tidak berbenturan
-   dan merusak kehalusan gerakan dari Custom JS Cinematic Engine */
+/* REVISI GLOBAL: Mengembalikan pergerakan halaman ke Standard Native Smooth Scroll */
 html {
-    scroll-behavior: auto !important; /* Dinonaktifkan karena transisi diatur penuh oleh engine */
+    scroll-behavior: smooth !important;
 }
 
 body { 
@@ -1284,22 +1292,28 @@ body {
     font-family: var(--font-main); 
     line-height: 1.6; 
     -webkit-font-smoothing: antialiased; 
-    overscroll-behavior-y: none; /* Mencegah efek bounce mental yang kasar di ujung halaman */
 }
 
 .container { width: 90%; max-width: 1200px; margin: 0 auto; padding: 40px 0; }
 
-.snap-section {
-    min-height: 100vh;
+/* --- HERO & COLLAGE LAYOUT --- */
+.hero-section { 
+    width: 100%; 
+    height: 100vh; /* Mengunci porsi layar pertama saat landing */
+    overflow: hidden; 
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    position: relative;
+    justify-content: space-between; 
 }
 
-/* --- HERO & COLLAGE --- */
-.hero-section { width: 100%; overflow: hidden; }
-.hero-collage-container { position: relative; width: 100%; max-width: 1600px; margin: 0 auto; display: flex; align-items: center; justify-content: center;}
+.hero-collage-container { 
+    position: relative; 
+    width: 100%; 
+    margin: 0 auto; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center;
+}
 
 .hero-logo-overlay { 
     position: absolute; 
@@ -1317,10 +1331,11 @@ body {
     filter: drop-shadow(0 0 25px rgba(255, 255, 255, 0.2)); 
 }
 
+/* REVISI DESKTOP: Ukuran kolase 66vh memangkas gap kosong berlebih */
 .hero-collage-grid { 
     display: grid; 
     grid-template-columns: 1.2fr 2fr 1fr 1.5fr; 
-    height: 100vh; 
+    height: 66vh; 
     grid-template-rows: repeat(10, 1fr); 
     gap: 0; 
     position: relative;
@@ -1347,29 +1362,55 @@ body {
 .item-new-top-right { grid-column: 4 / 5; grid-row: 1 / 7; }
 .item-new-bottom-right { grid-column: 4 / 5; grid-row: 7 / 11; }
 
+/* --- TWO-LINE HEADLINE TIPOGRAFI --- */
+.hero-text-wrapper {
+    width: 100%;
+    padding-top: 1vh; 
+    padding-bottom: 2vh; 
+    background-color: var(--bg-color);
+}
+
+.headline-container {
+    text-align: center;
+    margin: 0 auto;
+    max-width: 1300px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.headline-top {
+    font-size: clamp(1.6rem, 2.5vw, 2.2rem);
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    color: var(--text-color);
+    opacity: 0.9;
+}
+
+.headline-bottom {
+    font-size: clamp(2.2rem, 4.2vw, 4rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+    color: var(--text-color);
+}
+
 .placeholder-gray { background-color: var(--placeholder-gray); }
 .placeholder-dark { background-color: var(--placeholder-dark); }
 
-/* --- NARRATIVE --- */
-.headline-utama { 
-    font-size: clamp(2rem, 4vw, 3.5rem); 
-    text-align: center; 
-    max-width: 1200px; 
-    margin: 0 auto 40px auto; 
-    letter-spacing: -0.03em; 
-    font-weight: 700; 
-    line-height: 1.2; 
+/* --- NARRATIVE SECTION (REVISI PADDING SEHINGGA COCOK UNTUK SCROLL ALAMI) --- */
+.narrative-section {
+    padding: 25px 0 60px 0;
 }
+.narrative-content p { text-align: center; max-width: 850px; margin: 0 auto 30px auto; font-size: 1.2rem; color: var(--text-muted); line-height: 1.7; }
+.methodology { text-align: center; margin-top: 60px; }
+.methodology small { display: block; color: var(--text-muted); margin-bottom: 10px; font-size: 0.95rem; }
+.methodology strong { font-size: 1.8rem; display: block; margin: 25px 0; color: var(--text-color); letter-spacing: 2px; }
 
-.narrative-content p { text-align: center; max-width: 800px; margin: 0 auto 30px auto; font-size: 1.15rem; color: var(--text-muted); }
-.methodology { text-align: center; margin-top: 50px; }
-.methodology small { display: block; color: var(--text-muted); margin-bottom: 10px; }
-.methodology strong { font-size: 1.8rem; display: block; margin: 20px 0; color: var(--text-color); letter-spacing: 2px; }
-
-/* --- PORTFOLIO 3-2 GRID --- */
-.portfolio-section { padding-top: 0; }
-.section-title h3 { font-size: 2.2rem; text-align: center; margin-bottom: 20px; font-weight: 700; }
-.section-title p { text-align: center; max-width: 800px; margin: 0 auto 50px auto; color: var(--text-muted); }
+/* --- PORTFOLIO GRID --- */
+.portfolio-section { padding: 0px 0 100px 0; }
+.section-title h3 { font-size: 2.5rem; text-align: center; margin-bottom: 20px; font-weight: 700; letter-spacing: -0.02em; }
+.section-title p { text-align: center; max-width: 800px; margin: 0 auto 50px auto; color: var(--text-muted); font-size: 1.05rem; }
 #portfolio-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 30px; margin-top: 40px; }
 .portfolio-item { grid-column: span 2; position: relative; background: #222; aspect-ratio: 16/9; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.3s; border: 1px solid #333; overflow: hidden; }
 .portfolio-item:nth-child(4) { grid-column: 2 / 4; }
@@ -1377,9 +1418,9 @@ body {
 .portfolio-item:hover { transform: scale(1.02); border-color: var(--accent-blue); }
 .play-icon { font-size: 3rem; opacity: 0.4; transition: 0.3s; z-index: 2; color: #fff; }
 .portfolio-item:hover .play-icon { opacity: 1; color: var(--accent-blue); }
-.overlay-text { position: absolute; bottom: 20px; left: 20px; font-weight: bold; font-size: 1rem; z-index: 3; color: #fff; text-transform: uppercase; }
+.overlay-text { position: absolute; bottom: 20px; left: 20px; font-weight: bold; font-size: 1.1rem; z-index: 3; color: #fff; text-transform: uppercase; letter-spacing: 1px; }
 
-/* --- VIDEO MODAL --- */
+/* --- VIDEO POPUP MODAL --- */
 .video-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 9999; align-items: center; justify-content: center; }
 .modal-overlay { position: absolute; width: 100%; height: 100%; background: rgba(0,0,0,0.95); }
 .modal-content { 
@@ -1417,174 +1458,43 @@ body {
     transform: scale(1.1);
 }
 
-#videoContainer { 
-    width: 100%; 
-    height: 100%; 
-    border-radius: 8px; 
-    overflow: hidden; 
-}
-#videoContainer iframe, #videoContainer video { 
-    width: 100%; 
-    height: 100%; 
-    border: none; 
-    display: block; 
-}
+#videoContainer { width: 100%; height: 100%; border-radius: 8px; overflow: hidden; }
+#videoContainer iframe, #videoContainer video { width: 100%; height: 100%; border: none; display: block; }
 
-/* --- UPDATED FORM GRID --- */
+/* --- FORM GRID CONTACT --- */
+.form-section { padding: 0px 0; }
 .form-container { max-width: 900px; padding-top: 0; }
-.form-header h2 { font-size: 2.8rem; text-align: center; margin-bottom: 20px; font-weight: 700; }
-.form-header p { text-align: center; margin-bottom: 50px; color: var(--text-muted); }
-
-.form-grid { 
-    display: grid; 
-    grid-template-columns: 1fr 1fr; 
-    gap: 25px 40px; 
-}
-
-.textarea-group { 
-    grid-column: 2;
-    grid-row: 3 / span 2; 
-}
-
+.form-header h2 { font-size: 2.8rem; text-align: center; margin-bottom: 20px; font-weight: 700; letter-spacing: -0.02em; }
+.form-header p { text-align: center; margin-bottom: 50px; color: var(--text-muted); font-size: 1.05rem; }
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 25px 40px; }
+.textarea-group { grid-column: 2; grid-row: 3 / span 2; }
 label { font-size: 0.9rem; margin-bottom: 10px; color: var(--text-color); font-weight: bold; text-transform: uppercase; }
 input, textarea { width: 100%; padding: 15px; background-color: #ffffff; border: none; border-radius: 2px; color: #000000; font-family: var(--font-main); font-size: 1rem; }
 textarea { height: 80%; min-height: 160px; resize: none; }
 
+.form-submit { text-align: center; margin-top: 50px; }
+button#btnSubmit { background-color: var(--accent-blue); color: #ffffff; border: none; padding: 18px 50px; font-size: 1.1rem; font-weight: bold; border-radius: 40px; cursor: pointer; transition: 0.3s; text-transform: uppercase; letter-spacing: 1px; }
+button#btnSubmit:hover { background-color: var(--accent-blue-hover); transform: translateY(-2px); }
+
 /* --- FLOATING ACTION BUTTON (FAB) --- */
-.fab-container {
-    position: fixed;
-    bottom: 40px;
-    right: 40px;
-    z-index: 1000;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
+.fab-container { position: fixed; bottom: 40px; right: 40px; z-index: 1000; display: flex; flex-direction: column; align-items: center; }
+.fab-menu { display: flex; flex-direction: column; gap: 15px; margin-bottom: 20px; opacity: 0; visibility: hidden; transform: translateY(20px); transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55); }
+.fab-menu.active { opacity: 1; visibility: visible; transform: translateY(0); }
+.fab-item { position: relative; width: 50px; height: 50px; border-radius: 50%; background-color: #1a1a1a; border: 1px solid #333; color: var(--text-color); display: flex; justify-content: center; align-items: center; text-decoration: none; box-shadow: 0 4px 15px rgba(0,0,0,0.5); transition: all 0.3s ease; }
+.fab-item:hover { background-color: var(--accent-blue); transform: scale(1.1); border-color: var(--accent-blue); }
+.fab-tooltip { position: absolute; right: 65px; background-color: #111; color: #fff; padding: 6px 12px; border-radius: 4px; font-size: 0.85rem; font-weight: bold; white-space: nowrap; opacity: 0; visibility: hidden; transform: translateX(10px); transition: all 0.3s ease; border: 1px solid #333; pointer-events: none; }
+.fab-item:hover .fab-tooltip { opacity: 1; visibility: visible; transform: translateX(0); }
+.fab-trigger { width: 65px; height: 65px; border-radius: 50%; background-color: #111; color: var(--text-color); border: 1px solid #444; display: flex; justify-content: center; align-items: center; cursor: pointer; box-shadow: 0 10px 25px rgba(0,0,0,0.8); transition: all 0.3s ease; }
+.fab-trigger:hover { background-color: #222; transform: scale(1.05); }
+.fab-trigger.active { background-color: var(--accent-blue); border-color: var(--accent-blue); transform: rotate(90deg); }
 
-.fab-menu {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    margin-bottom: 20px;
-    opacity: 0;
-    visibility: hidden;
-    transform: translateY(20px);
-    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-}
-
-.fab-menu.active {
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(0);
-}
-
-.fab-item {
-    position: relative;
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    background-color: #1a1a1a;
-    border: 1px solid #333;
-    color: var(--text-color);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-decoration: none;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-    transition: all 0.3s ease;
-}
-
-.fab-item:hover {
-    background-color: var(--accent-blue);
-    transform: scale(1.1);
-    border-color: var(--accent-blue);
-}
-
-.fab-tooltip {
-    position: absolute;
-    right: 65px;
-    background-color: #111;
-    color: #fff;
-    padding: 6px 12px;
-    border-radius: 4px;
-    font-size: 0.85rem;
-    font-weight: bold;
-    white-space: nowrap;
-    opacity: 0;
-    visibility: hidden;
-    transform: translateX(10px);
-    transition: all 0.3s ease;
-    border: 1px solid #333;
-    pointer-events: none;
-}
-
-.fab-item:hover .fab-tooltip {
-    opacity: 1;
-    visibility: visible;
-    transform: translateX(0);
-}
-
-.fab-trigger {
-    width: 65px;
-    height: 65px;
-    border-radius: 50%;
-    background-color: #111;
-    color: var(--text-color);
-    border: 1px solid #444;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.8);
-    transition: all 0.3s ease;
-}
-
-.fab-trigger:hover {
-    background-color: #222;
-    transform: scale(1.05);
-}
-
-.fab-trigger.active {
-    background-color: var(--accent-blue);
-    border-color: var(--accent-blue);
-    transform: rotate(90deg);
-}
-
-/* --- PERBAIKAN BUG: BACK TO TOP BUTTON --- */
-.btn-back-to-top {
-    position: fixed;
-    bottom: 50px; 
-    right: 120px; 
-    width: 45px;
-    height: 45px;
-    border-radius: 50%;
-    background-color: #111;
-    color: var(--text-color);
-    border: 1px solid #444;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.8);
-    transition: all 0.3s ease;
-    opacity: 0;
-    visibility: hidden;
-    z-index: 1001;
-}
-
-.btn-back-to-top.show {
-    opacity: 1;
-    visibility: visible;
-}
-
-.btn-back-to-top:hover {
-    background-color: var(--accent-blue);
-    border-color: var(--accent-blue);
-    transform: translateY(-3px);
-}
+/* --- BACK TO TOP BUTTON --- */
+.btn-back-to-top { position: fixed; bottom: 50px; right: 120px; width: 45px; height: 45px; border-radius: 50%; background-color: #111; color: var(--text-color); border: 1px solid #444; display: flex; justify-content: center; align-items: center; cursor: pointer; box-shadow: 0 10px 25px rgba(0,0,0,0.8); transition: all 0.3s ease; opacity: 0; visibility: hidden; z-index: 1001; }
+.btn-back-to-top.show { opacity: 1; visibility: visible; }
+.btn-back-to-top:hover { background-color: var(--accent-blue); border-color: var(--accent-blue); transform: translateY(-3px); }
 
 /* --- FOOTER --- */
-footer { text-align: center; padding: 40px 0; border-top: 1px solid #222; }
+footer { text-align: center; padding: 60px 0; border-top: 1px solid #222; }
 footer p { font-size: 1rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
 .footer-logo { margin-top: 40px; }
 .footer-logo h2 { font-size: 1.8rem; letter-spacing: 3px; font-weight: 900; }
@@ -1598,7 +1508,7 @@ footer p { font-size: 1rem; color: var(--text-muted); font-weight: 700; text-tra
 @media (max-width: 1024px) {
     .hero-collage-grid { 
         grid-template-columns: 1fr 1fr; 
-        height: 100vh;
+        height: 65vh;
         grid-template-rows: repeat(4, 1fr); 
     }
     .item-tall { grid-column: 1 / 2; grid-row: 1 / 3; }
@@ -1609,32 +1519,15 @@ footer p { font-size: 1rem; color: var(--text-muted); font-weight: 700; text-tra
     .item-small-bottom { grid-column: 1 / 2; grid-row: 4 / 5; }
     .item-new-bottom-right { grid-column: 2 / 3; grid-row: 4 / 5; }
 
-    #portfolio-grid { 
-        grid-template-columns: repeat(2, 1fr); 
-        gap: 20px; 
-    }
+    #portfolio-grid { grid-template-columns: repeat(2, 1fr); gap: 20px; }
     .portfolio-item { grid-column: span 1 !important; }
-    .portfolio-item:nth-child(4), .portfolio-item:nth-child(5) { 
-        grid-column: span 1 !important;
-    }
     .form-grid { gap: 20px; }
 }
 
 /* --- MOBILE BREAKPOINT (Max 768px) --- */
 @media (max-width: 768px) {
-    /* AKTIFKAN NATIVE SNAP KHUSUS UNTUK HP LAYAR SENTUH */
-    html {
-        scroll-behavior: smooth !important;
-        scroll-snap-type: y mandatory !important;
-    }
-    
-    .snap-section {
-        scroll-snap-align: start !important;
-        scroll-snap-stop: always !important;
-    }
-
     .hero-collage-container {
-        height: 100vh;
+        height: 65vh;
         background-color: var(--bg-color);
         position: relative;
     }
@@ -1646,21 +1539,10 @@ footer p { font-size: 1rem; color: var(--text-muted); font-weight: 700; text-tra
         width: 100%; height: 100%;
         z-index: 1; 
     }
+    .hero-collage-grid::after { background: rgba(0, 0, 0, 0.75); }
 
-    .hero-collage-grid::after {
-        background: rgba(0, 0, 0, 0.75); 
-    }
-
-    .collage-cell {
-        position: absolute !important;
-        height: auto !important;
-        z-index: 1;
-        border-radius: 8px; 
-        overflow: hidden;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.8);
-    }
-    
-    .collage-img { border-radius: 8px; }
+    .collage-cell { position: absolute !important; height: auto !important; z-index: 1; border-radius: 6px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.8); }
+    .collage-img { border-radius: 6px; }
 
     .item-tall            { top: 5%; left: -5%; width: 45%; height: 35% !important; transform: rotate(-8deg); }
     .item-wide-top        { top: 12%; right: -10%; width: 60%; height: 25% !important; transform: rotate(5deg); }
@@ -1670,29 +1552,24 @@ footer p { font-size: 1rem; color: var(--text-muted); font-weight: 700; text-tra
     .item-small-bottom    { bottom: 2%; right: -5%; width: 50%; height: 24% !important; transform: rotate(10deg); }
     .item-new-bottom-right{ bottom: -10%; left: 35%; width: 40%; height: 25% !important; transform: rotate(-4deg); }
 
-    .hero-logo-overlay {
-        position: absolute;
-        top: 50%; left: 50%;
-        transform: translate(-50%, -50%);
-        z-index: 10; 
-        width: 85%;
-    }
+    .hero-logo-overlay { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 10; width: 85%; }
+    .hero-logo-img { max-width: 260px; width: 100%; margin: 0 auto; filter: drop-shadow(0 0 25px rgba(255,255,255,0.15)); }
 
-    .hero-logo-img {
-        max-width: 320px;
-        width: 100%;
-        margin: 0 auto;
-        filter: drop-shadow(0 0 25px rgba(255,255,255,0.15));
+    .hero-text-wrapper {
+        padding-top: 2vh;
+        padding-bottom: 2vh;
     }
-
-    .headline-utama { 
-        font-size: clamp(1.8rem, 6vw, 2.5rem); 
-        margin-top: 20px; 
+    .headline-container {
+        gap: 6px;
+        padding: 0 15px;
     }
     
+    .headline-top { font-size: clamp(1.4rem, 2.2vw, 1.8rem); }
+
     #portfolio-grid { grid-template-columns: 1fr; }
     .portfolio-item:nth-child(4), .portfolio-item:nth-child(5) { grid-column: span 2; }
     
+    .form-section { padding: 60px 0; }
     .form-grid { grid-template-columns: 1fr; }
     .textarea-group { grid-column: 1 / -1; grid-row: auto; }
     input, textarea { padding: 14px 15px; }
@@ -1710,123 +1587,11 @@ footer p { font-size: 1rem; color: var(--text-muted); font-weight: 700; text-tra
 /* file: assets/js/main.js */
 document.addEventListener('DOMContentLoaded', function() {
     
-    const isMobile = window.innerWidth <= 768;
-    const sections = document.querySelectorAll('.snap-section');
-    let currentSectionIndex = 0;
-    let isAnimating = false;
-    let lastScrollTime = 0;
-    const btnBackToTop = document.getElementById('btnBackToTop');
+    // REVISI: Seluruh baris kode 'Custom Wheel Hijacker Engine' dihapus total.
+    // Navigasi scrolling halaman kini sepenuhnya dikendalikan secara alami oleh browser.
 
     // ==========================================
-    // 1. LUXURY FLUID SCROLL ENGINE (DESKTOP)
-    // ==========================================
-    
-    // Kurva Matematika Premium (Cubic Out Easing) - Memberikan efek gliding empuk di akhir gerakan
-    function easeOutCubic(t) {
-        return 1 - Math.pow(1 - t, 3);
-    }
-
-    function smoothGlidingTo(targetPosition, duration) {
-        const startPosition = window.scrollY || document.documentElement.scrollTop;
-        const distance = targetPosition - startPosition;
-        let startTime = null;
-
-        function animationStep(currentTime) {
-            if (startTime === null) startTime = currentTime;
-            const timeElapsed = currentTime - startTime;
-            const progress = Math.min(timeElapsed / duration, 1);
-            
-            // Terapkan kurva perlambatan organik
-            const easedProgress = easeOutCubic(progress);
-            window.scrollTo(0, startPosition + (distance * easedProgress));
-            
-            if (progress < 1) {
-                requestAnimationFrame(animationStep);
-            } else {
-                window.scrollTo(0, targetPosition); // Kunci posisi mutlak di akhir agar presisi
-                // Berikan buffer 250ms setelah animasi selesai untuk menyerap sisa inersia trackpad
-                setTimeout(() => {
-                    isAnimating = false;
-                }, 250);
-            }
-        }
-        requestAnimationFrame(animationStep);
-    }
-
-    if (!isMobile) {
-        window.addEventListener('wheel', function(e) {
-            // Abaikan jika modal sedang terbuka
-            if (document.getElementById('videoModal').style.display === 'flex') return;
-            
-            e.preventDefault(); // Matikan scroll patah-patah bawaan Windows/Chrome
-
-            const currentTime = new Date().getTime();
-            // Cegah double jump akibat sensitivitas trackpad/magic mouse
-            if (isAnimating || (currentTime - lastScrollTime < 1300)) return;
-
-            if (e.deltaY > 0) {
-                // Jalur Gulir ke Bawah
-                if (currentSectionIndex < sections.length - 1) {
-                    isAnimating = true;
-                    lastScrollTime = currentTime;
-                    currentSectionIndex++;
-                    smoothGlidingTo(sections[currentSectionIndex].offsetTop, 950); // Durasi meluncur 950ms mewah
-                }
-            } else {
-                // Jalur Gulir ke Atas
-                if (currentSectionIndex > 0) {
-                    isAnimating = true;
-                    lastScrollTime = currentTime;
-                    currentSectionIndex--;
-                    smoothGlidingTo(sections[currentSectionIndex].offsetTop, 950);
-                }
-            }
-        }, { passive: false });
-    }
-
-    // ==========================================
-    // 2. SCROLL INTEGRATION & SYNC TRACKER
-    // ==========================================
-    window.addEventListener('scroll', function() {
-        let scrollPosition = window.scrollY || document.documentElement.scrollTop;
-        
-        // Atur visibilitas tombol Back to Top
-        if (btnBackToTop) {
-            if (scrollPosition > 400) {
-                btnBackToTop.classList.add('show');
-            } else {
-                btnBackToTop.classList.remove('show');
-            }
-        }
-
-        // Sinkronisasi index memori jika user menyeret scrollbar fisik di tepi layar
-        if (!isAnimating && !isMobile) {
-            sections.forEach((sec, index) => {
-                if (scrollPosition >= sec.offsetTop - (window.innerHeight / 2)) {
-                    currentSectionIndex = index;
-                }
-            });
-        }
-    });
-
-    if (btnBackToTop) {
-        btnBackToTop.addEventListener('click', function(e) {
-            e.preventDefault(); 
-            if (isAnimating) return;
-
-            if (!isMobile) {
-                isAnimating = true;
-                lastScrollTime = new Date().getTime();
-                currentSectionIndex = 0; // Kembalikan koordinat index ke Hero
-                smoothGlidingTo(0, 1100); // Luncuran kembali ke atas dibuat sedikit lebih lambat & anggun
-            } else {
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            }
-        });
-    }
-
-    // ==========================================
-    // 3. VIDEO MODAL ENGINE
+    // 1. VIDEO MODAL ENGINE
     // ==========================================
     const modal = document.getElementById('videoModal');
     const container = document.getElementById('videoContainer');
@@ -1862,7 +1627,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (overlay) overlay.addEventListener('click', closeModal);
 
     // ==========================================
-    // 4. AJAX FORM SUBMISSION
+    // 2. AJAX FORM SUBMISSION
     // ==========================================
     const briefForm = document.getElementById('briefForm');
     const btnSubmit = document.getElementById('btnSubmit');
@@ -1908,7 +1673,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // ==========================================
-    // 5. FLOATING ACTION BUTTON (FAB) INTERACTION
+    // 3. FLOATING ACTION BUTTON (FAB) INTERACTION
     // ==========================================
     const fabTrigger = document.getElementById('fabTrigger');
     const fabMenu = document.getElementById('fabMenu');
@@ -1937,6 +1702,26 @@ document.addEventListener('DOMContentLoaded', function() {
                 iconChat.style.display = 'block';
                 iconClose.style.display = 'none';
             }
+        });
+    }
+
+    // ==========================================
+    // 4. BACK TO TOP BUTTON LOGIC (CLEAN NATIVE)
+    // ==========================================
+    const btnBackToTop = document.getElementById('btnBackToTop');
+    if (btnBackToTop) {
+        window.addEventListener('scroll', function() {
+            let scrollPosition = window.scrollY || document.documentElement.scrollTop;
+            if (scrollPosition > 400) {
+                btnBackToTop.classList.add('show');
+            } else {
+                btnBackToTop.classList.remove('show');
+            }
+        });
+
+        btnBackToTop.addEventListener('click', function(e) {
+            e.preventDefault(); 
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         });
     }
 
