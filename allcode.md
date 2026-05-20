@@ -1272,10 +1272,10 @@ class Leads_model extends CI_Model {
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
-/* ENGINE SCROLL SNAP DIMULAI DI SINI */
+/* REVISI DESKTOP: Matikan native snapping bawaan browser agar tidak berbenturan
+   dan merusak kehalusan gerakan dari Custom JS Cinematic Engine */
 html {
-    scroll-behavior: smooth;
-    scroll-snap-type: y mandatory;
+    scroll-behavior: auto !important; /* Dinonaktifkan karena transisi diatur penuh oleh engine */
 }
 
 body { 
@@ -1284,17 +1284,17 @@ body {
     font-family: var(--font-main); 
     line-height: 1.6; 
     -webkit-font-smoothing: antialiased; 
+    overscroll-behavior-y: none; /* Mencegah efek bounce mental yang kasar di ujung halaman */
 }
 
 .container { width: 90%; max-width: 1200px; margin: 0 auto; padding: 40px 0; }
 
 .snap-section {
-    scroll-snap-align: start;
-    scroll-snap-stop: always;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
+    position: relative;
 }
 
 /* --- HERO & COLLAGE --- */
@@ -1317,7 +1317,6 @@ body {
     filter: drop-shadow(0 0 25px rgba(255, 255, 255, 0.2)); 
 }
 
-/* REVISI GAP DESKTOP: height 100vh dan pecahan baris menggunakan 1fr */
 .hero-collage-grid { 
     display: grid; 
     grid-template-columns: 1.2fr 2fr 1fr 1.5fr; 
@@ -1450,10 +1449,6 @@ body {
 label { font-size: 0.9rem; margin-bottom: 10px; color: var(--text-color); font-weight: bold; text-transform: uppercase; }
 input, textarea { width: 100%; padding: 15px; background-color: #ffffff; border: none; border-radius: 2px; color: #000000; font-family: var(--font-main); font-size: 1rem; }
 textarea { height: 80%; min-height: 160px; resize: none; }
-
-.form-submit { text-align: center; margin-top: 50px; }
-button#btnSubmit { background-color: var(--accent-blue); color: #ffffff; border: none; padding: 18px 50px; font-size: 1.1rem; font-weight: bold; border-radius: 40px; cursor: pointer; transition: 0.3s; text-transform: uppercase; letter-spacing: 1px; }
-button#btnSubmit:hover { background-color: var(--accent-blue-hover); transform: translateY(-2px); }
 
 /* --- FLOATING ACTION BUTTON (FAB) --- */
 .fab-container {
@@ -1601,7 +1596,6 @@ footer p { font-size: 1rem; color: var(--text-muted); font-weight: 700; text-tra
 
 /* --- TABLET BREAKPOINT (Max 1024px) --- */
 @media (max-width: 1024px) {
-    /* REVISI GAP TABLET: height 100vh dan pecahan baris menggunakan 1fr */
     .hero-collage-grid { 
         grid-template-columns: 1fr 1fr; 
         height: 100vh;
@@ -1624,12 +1618,21 @@ footer p { font-size: 1rem; color: var(--text-muted); font-weight: 700; text-tra
         grid-column: span 1 !important;
     }
     .form-grid { gap: 20px; }
-    
-    .btn-back-to-top { bottom: 40px; right: 110px; } 
 }
 
 /* --- MOBILE BREAKPOINT (Max 768px) --- */
 @media (max-width: 768px) {
+    /* AKTIFKAN NATIVE SNAP KHUSUS UNTUK HP LAYAR SENTUH */
+    html {
+        scroll-behavior: smooth !important;
+        scroll-snap-type: y mandatory !important;
+    }
+    
+    .snap-section {
+        scroll-snap-align: start !important;
+        scroll-snap-stop: always !important;
+    }
+
     .hero-collage-container {
         height: 100vh;
         background-color: var(--bg-color);
@@ -1710,94 +1713,95 @@ document.addEventListener('DOMContentLoaded', function() {
     const isMobile = window.innerWidth <= 768;
     const sections = document.querySelectorAll('.snap-section');
     let currentSectionIndex = 0;
-    let isScrolling = false;
-    let lastScrollTime = 0; // Buffer untuk Trackpad / Magic Mouse
+    let isAnimating = false;
+    let lastScrollTime = 0;
     const btnBackToTop = document.getElementById('btnBackToTop');
 
     // ==========================================
-    // 1. ENGINE CUSTOM SMOOTH SCROLL (DESKTOP)
+    // 1. LUXURY FLUID SCROLL ENGINE (DESKTOP)
     // ==========================================
     
-    // Fungsi animasi saya keluarkan ke global scope agar Back to Top bisa meminjam animasinya
-    function smoothScrollTo(targetPosition, duration) {
+    // Kurva Matematika Premium (Cubic Out Easing) - Memberikan efek gliding empuk di akhir gerakan
+    function easeOutCubic(t) {
+        return 1 - Math.pow(1 - t, 3);
+    }
+
+    function smoothGlidingTo(targetPosition, duration) {
         const startPosition = window.scrollY || document.documentElement.scrollTop;
         const distance = targetPosition - startPosition;
         let startTime = null;
 
-        function animation(currentTime) {
+        function animationStep(currentTime) {
             if (startTime === null) startTime = currentTime;
-            const timeElapsed = currentTime - startPosition;
-            const run = easeInOutQuad(currentTime - startTime, startPosition, distance, duration);
-            window.scrollTo(0, run);
+            const timeElapsed = currentTime - startTime;
+            const progress = Math.min(timeElapsed / duration, 1);
             
-            if (currentTime - startTime < duration) {
-                requestAnimationFrame(animation);
+            // Terapkan kurva perlambatan organik
+            const easedProgress = easeOutCubic(progress);
+            window.scrollTo(0, startPosition + (distance * easedProgress));
+            
+            if (progress < 1) {
+                requestAnimationFrame(animationStep);
             } else {
-                window.scrollTo(0, targetPosition); // Pastikan presisi mutlak di akhir animasi
-                isScrolling = false; 
+                window.scrollTo(0, targetPosition); // Kunci posisi mutlak di akhir agar presisi
+                // Berikan buffer 250ms setelah animasi selesai untuk menyerap sisa inersia trackpad
+                setTimeout(() => {
+                    isAnimating = false;
+                }, 250);
             }
         }
-
-        function easeInOutQuad(t, b, c, d) {
-            t /= d / 2;
-            if (t < 1) return c / 2 * t * t + b;
-            t--;
-            return -c / 2 * (t * (t - 2) - 1) + b;
-        }
-
-        requestAnimationFrame(animation);
+        requestAnimationFrame(animationStep);
     }
 
     if (!isMobile) {
         window.addEventListener('wheel', function(e) {
+            // Abaikan jika modal sedang terbuka
             if (document.getElementById('videoModal').style.display === 'flex') return;
             
-            e.preventDefault();
+            e.preventDefault(); // Matikan scroll patah-patah bawaan Windows/Chrome
 
             const currentTime = new Date().getTime();
-            // REVISI: Cooldown 1200ms menolak sinyal sisa "Inertia" dari sentuhan Trackpad
-            if (isScrolling || (currentTime - lastScrollTime < 1200)) {
-                return; 
-            }
+            // Cegah double jump akibat sensitivitas trackpad/magic mouse
+            if (isAnimating || (currentTime - lastScrollTime < 1300)) return;
 
-            if (e.deltaY > 0) { // Scroll Bawah
+            if (e.deltaY > 0) {
+                // Jalur Gulir ke Bawah
                 if (currentSectionIndex < sections.length - 1) {
-                    isScrolling = true;
+                    isAnimating = true;
                     lastScrollTime = currentTime;
                     currentSectionIndex++;
-                    smoothScrollTo(sections[currentSectionIndex].offsetTop, 800); 
+                    smoothGlidingTo(sections[currentSectionIndex].offsetTop, 950); // Durasi meluncur 950ms mewah
                 }
-            } else { // Scroll Atas
+            } else {
+                // Jalur Gulir ke Atas
                 if (currentSectionIndex > 0) {
-                    isScrolling = true;
+                    isAnimating = true;
                     lastScrollTime = currentTime;
                     currentSectionIndex--;
-                    smoothScrollTo(sections[currentSectionIndex].offsetTop, 800);
+                    smoothGlidingTo(sections[currentSectionIndex].offsetTop, 950);
                 }
             }
         }, { passive: false });
     }
 
     // ==========================================
-    // 2. SCROLL TRACKER & BACK TO TOP
+    // 2. SCROLL INTEGRATION & SYNC TRACKER
     // ==========================================
-    // Meletakkan event scroll ke global untuk men-trigger UI Button dan Tracking
     window.addEventListener('scroll', function() {
         let scrollPosition = window.scrollY || document.documentElement.scrollTop;
         
-        // Memunculkan tombol Back to Top
+        // Atur visibilitas tombol Back to Top
         if (btnBackToTop) {
-            if (scrollPosition > 300) {
+            if (scrollPosition > 400) {
                 btnBackToTop.classList.add('show');
             } else {
                 btnBackToTop.classList.remove('show');
             }
         }
 
-        // REVISI: Auto-Sync Index jika user iseng menarik scrollbar (batang di pinggir layar) secara manual
-        if (!isScrolling && !isMobile) {
+        // Sinkronisasi index memori jika user menyeret scrollbar fisik di tepi layar
+        if (!isAnimating && !isMobile) {
             sections.forEach((sec, index) => {
-                // Deteksi section mana yang paling banyak terlihat di layar
                 if (scrollPosition >= sec.offsetTop - (window.innerHeight / 2)) {
                     currentSectionIndex = index;
                 }
@@ -1808,13 +1812,13 @@ document.addEventListener('DOMContentLoaded', function() {
     if (btnBackToTop) {
         btnBackToTop.addEventListener('click', function(e) {
             e.preventDefault(); 
-            
+            if (isAnimating) return;
+
             if (!isMobile) {
-                // REVISI: Menggunakan Custom Scroll Engine kita, bukan bawaan window
-                isScrolling = true;
-                lastScrollTime = new Date().getTime(); 
-                currentSectionIndex = 0; // Reset memori index ke 0 (Hero)
-                smoothScrollTo(0, 800);
+                isAnimating = true;
+                lastScrollTime = new Date().getTime();
+                currentSectionIndex = 0; // Kembalikan koordinat index ke Hero
+                smoothGlidingTo(0, 1100); // Luncuran kembali ke atas dibuat sedikit lebih lambat & anggun
             } else {
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             }
@@ -1904,7 +1908,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // ==========================================
-    // 5. FLOATING ACTION BUTTON (FAB)
+    // 5. FLOATING ACTION BUTTON (FAB) INTERACTION
     // ==========================================
     const fabTrigger = document.getElementById('fabTrigger');
     const fabMenu = document.getElementById('fabMenu');
