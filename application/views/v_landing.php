@@ -1,4 +1,3 @@
-<?php /* file: application/views/v_landing.php */ ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -32,8 +31,8 @@
 <body>
 
     <?php 
-    // Headline statik dikunci dalam satu variabel murni
-    $shared_headline = '<span class="headline-top">Your brand doesn’t need more content.</span> <span class="headline-bottom">It needs a sharper creative system.</span>';
+    // Headline statik didefinisikan 1 kali sebagai variabel murni
+    $shared_headline = '<div class="headline-container"><span class="headline-top">Your brand doesn’t need more content.</span> <span class="headline-bottom">It needs a sharper creative system.</span></div>';
     ?>
 
     <main>
@@ -57,9 +56,7 @@
             </div>
 
             <div class="hero-text-wrapper">
-                <div class="headline-container">
-                    <?= $shared_headline ?> 
-                </div>
+                <?= $shared_headline ?> 
             </div>
         </header>
 
@@ -85,32 +82,12 @@
                 </div>
                 
                 <div id="portfolio-grid" class="portfolio-grid">
-                    
-                    <div class="portfolio-item video-trigger" aria-label="Play Honda AHM" data-video-src="<?= $settings['video_1'] ?? 'https://www.youtube.com/watch?v=dQw4w9WgXcQ' ?>" style="background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.6) 100%), url('<?= !empty($settings['video_thumb_1']) ? base_url($settings['video_thumb_1']) : '' ?>') center/cover no-repeat #222;">
-                        <div class="overlay-text"><?= html_escape($settings['video_title_1'] ?? 'HONDA AHM') ?></div>
+                    <?php for($i=1; $i<=6; $i++): ?>
+                    <div class="portfolio-item video-trigger" aria-label="Play <?= html_escape($settings['video_title_'.$i] ?? 'Video '.$i) ?>" data-video-src="<?= $settings['video_'.$i] ?? 'https://www.youtube.com/watch?v=dQw4w9WgXcQ' ?>" style="background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.6) 100%), url('<?= !empty($settings['video_thumb_'.$i]) ? base_url($settings['video_thumb_'.$i]) : '' ?>') center/cover no-repeat #222;">
+                        <div class="overlay-text"><?= html_escape($settings['video_title_'.$i] ?? 'PORTFOLIO '.$i) ?></div>
                         <div class="play-icon" aria-hidden="true">▶</div>
                     </div>
-                    
-                    <div class="portfolio-item video-trigger" aria-label="Play Jergens" data-video-src="<?= $settings['video_2'] ?? 'https://www.youtube.com/watch?v=dQw4w9WgXcQ' ?>" style="background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.6) 100%), url('<?= !empty($settings['video_thumb_2']) ? base_url($settings['video_thumb_2']) : '' ?>') center/cover no-repeat #222;">
-                        <div class="overlay-text"><?= html_escape($settings['video_title_2'] ?? 'JERGENS') ?></div>
-                        <div class="play-icon" aria-hidden="true">▶</div>
-                    </div>
-                    
-                    <div class="portfolio-item video-trigger" aria-label="Play Honda AHM" data-video-src="<?= $settings['video_3'] ?? 'https://www.youtube.com/watch?v=dQw4w9WgXcQ' ?>" style="background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.6) 100%), url('<?= !empty($settings['video_thumb_3']) ? base_url($settings['video_thumb_3']) : '' ?>') center/cover no-repeat #222;">
-                        <div class="overlay-text"><?= html_escape($settings['video_title_3'] ?? 'HONDA AHM') ?></div>
-                        <div class="play-icon" aria-hidden="true">▶</div>
-                    </div>
-                    
-                    <div class="portfolio-item video-trigger" aria-label="Play Honda AHM" data-video-src="<?= $settings['video_4'] ?? base_url('assets/video/honda.mp4') ?>" style="background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.6) 100%), url('<?= !empty($settings['video_thumb_4']) ? base_url($settings['video_thumb_4']) : '' ?>') center/cover no-repeat #222;">
-                        <div class="overlay-text"><?= html_escape($settings['video_title_4'] ?? 'HONDA AHM') ?></div>
-                        <div class="play-icon" aria-hidden="true">▶</div>
-                    </div>
-                    
-                    <div class="portfolio-item video-trigger" aria-label="Play Jergens" data-video-src="<?= $settings['video_5'] ?? 'https://www.youtube.com/watch?v=dQw4w9WgXcQ' ?>" style="background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.6) 100%), url('<?= !empty($settings['video_thumb_5']) ? base_url($settings['video_thumb_5']) : '' ?>') center/cover no-repeat #222;">
-                        <div class="overlay-text"><?= html_escape($settings['video_title_5'] ?? 'JERGENS') ?></div>
-                        <div class="play-icon" aria-hidden="true">▶</div>
-                    </div>
-
+                    <?php endfor; ?>
                 </div>
             </div>
         </section>
