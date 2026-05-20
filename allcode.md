@@ -11,49 +11,26 @@ class Admin extends CI_Controller {
         $this->load->model('Leads_model');
         $this->load->database();
 
-        // Middleware Proteksi Akses CMS
         if (!$this->session->userdata('logged_in')) {
             redirect('Auth/login');
         }
     }
 
-    /**
-     * Halaman Utama Dashboard (Menampilkan Tabel Leads)
-     */
     public function index() {
         $data['leads'] = $this->Leads_model->get_active_leads();
         $this->load->view('v_admin_leads', $data);
     }
 
-    /**
-     * Fungsi AJAX untuk memperbarui status penanganan Lead
-     */
     public function update_status() {
         if ($this->input->server('REQUEST_METHOD') !== 'POST') {
             return $this->output->set_status_header(403)->set_content_type('application/json')->set_output(json_encode(['status' => false, 'message' => 'Forbidden']));
         }
-
         $id_lead = $this->input->post('id_lead', TRUE);
         $new_status = $this->input->post('status', TRUE);
-
-        $this->db->select('status');
-        $this->db->where('id_lead', $id_lead);
-        $old_lead = $this->db->get('tb_leads')->row_array();
-        $old_status = $old_lead ? $old_lead['status'] : 'unknown';
-
+        
         $this->db->where('id_lead', $id_lead);
         $this->db->update('tb_leads', ['status' => $new_status, 'updated_at' => date('Y-m-d H:i:s')]);
-
-        $log_data = [
-            'lead_id'    => $id_lead,
-            'user_id'    => $this->session->userdata('id_user'),
-            'old_status' => $old_status,
-            'new_status' => $new_status,
-            'notes'      => 'Status updated via AJAX',
-            'changed_at' => date('Y-m-d H:i:s')
-        ];
-        $this->db->insert('tb_lead_status_logs', $log_data);
-
+        
         return $this->output->set_content_type('application/json')->set_output(json_encode([
             'status' => true,
             'message' => 'Status berhasil diperbarui!',
@@ -61,76 +38,48 @@ class Admin extends CI_Controller {
         ]));
     }
 
-    /**
-     * Halaman Pengaturan Konten Dinamis (CMS Editor)
-     */
     public function settings() {
-        // Ambil semua data dari tb_system_settings
         $query = $this->db->get('tb_system_settings')->result_array();
-        
         $settings = [];
-        foreach ($query as $row) {
-            $settings[$row['setting_key']] = $row['setting_value'];
+        foreach ($query as $row) { 
+            $settings[$row['setting_key']] = $row['setting_value']; 
         }
-        
         $data['settings'] = $settings;
         $this->load->view('v_admin_settings', $data);
     }
 
-    /**
-     * Menyimpan perubahan dari Editor Konten & Upload Gambar
-     */
     public function save_settings() {
         if ($this->input->server('REQUEST_METHOD') === 'POST') {
-            // Tangkap semua input POST (teks) yang sudah di-filter XSS
             $post_data = $this->input->post(NULL, TRUE);
-            unset($post_data[$this->security->get_csrf_token_name()]); // Singkirkan CSRF
+            unset($post_data[$this->security->get_csrf_token_name()]);
 
-            // Konfigurasi Library Upload CI3
             $config['upload_path']   = './assets/img/';
             $config['allowed_types'] = 'gif|jpg|png|jpeg|webp';
-            $config['max_size']      = 5120; // Maksimal 5MB
-            $config['encrypt_name']  = TRUE; // Acak nama file agar tidak ada spasi/konflik
-            
+            $config['max_size']      = 5120;
+            $config['encrypt_name']  = TRUE;
             $this->load->library('upload', $config);
 
-            // Looping untuk memproses ke-5 input upload file gambar
-            for ($i = 1; $i <= 5; $i++) {
+            // Looping 6 slot video
+            for ($i = 1; $i <= 6; $i++) {
                 $field_name = 'video_thumb_' . $i;
-                
-                // Cek apakah ada file yang diunggah di field ini
                 if (!empty($_FILES[$field_name]['name'])) {
                     if ($this->upload->do_upload($field_name)) {
                         $upload_data = $this->upload->data();
-                        // Simpan lokasi file (relative path) ke dalam array data yang akan di-upsert
                         $post_data[$field_name] = 'assets/img/' . $upload_data['file_name'];
-                    } else {
-                        // Jika gagal upload (misal format salah/ukuran terlalu besar), set flashdata error
-                        $error = $this->upload->display_errors('','');
-                        $this->session->set_flashdata('error', 'Gagal upload Thumbnail '.$i.': ' . $error);
-                        redirect('Admin/settings');
-                        return;
                     }
                 }
             }
 
-            // Looping Batch Update (Update jika key sudah ada, Insert jika belum ada)
             foreach ($post_data as $key => $value) {
-                // Kita abaikan jika value kosong pada kasus file upload (artinya user tidak upload file baru)
-                if ($value === '' && strpos($key, 'video_thumb_') !== false) {
-                    continue; 
-                }
-
+                if ($value === '' && strpos($key, 'video_thumb_') !== false) continue;
                 $exists = $this->db->where('setting_key', $key)->get('tb_system_settings')->num_rows();
-                
                 if ($exists > 0) {
                     $this->db->where('setting_key', $key)->update('tb_system_settings', ['setting_value' => $value]);
                 } else {
                     $this->db->insert('tb_system_settings', ['setting_key' => $key, 'setting_value' => $value]);
                 }
             }
-
-            $this->session->set_flashdata('success', 'Konten website berhasil diperbarui secara instan!');
+            $this->session->set_flashdata('success', 'Konten website berhasil diperbarui!');
             redirect('Admin/settings');
         }
     }
@@ -737,185 +686,64 @@ class Leads_model extends CI_Model {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>REPUBLIK | Content Editor</title>
     <style>
-        :root {
-            --bg-dark: #0B0B0B;
-            --bg-panel: #151515;
-            --bg-hover: #222222;
-            --accent-blue: #4A7AFF;
-            --accent-blue-hover: #335ECC;
-            --accent-gold: #D4AF37;
-            --text-main: #ffffff;
-            --text-muted: #888888;
-            --border-color: #333333;
-            --success-green: #00C851;
-            --error-red: #ff4444;
-            --font-main: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-        }
-
+        :root { --bg-dark: #0B0B0B; --bg-panel: #151515; --accent-blue: #4A7AFF; --text-main: #ffffff; --border-color: #333333; --accent-gold: #D4AF37; }
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { background-color: var(--bg-dark); color: var(--text-main); font-family: var(--font-main); display: flex; min-height: 100vh; }
-
-        .sidebar { width: 260px; background-color: var(--bg-panel); border-right: 1px solid var(--border-color); padding: 30px 20px; display: flex; flex-direction: column; }
-        .brand-logo { font-size: 1.5rem; font-weight: 900; letter-spacing: 2px; color: var(--text-main); margin-bottom: 40px; text-decoration: none; }
-        .brand-logo span { color: var(--accent-blue); }
-        .nav-menu { list-style: none; flex-grow: 1; }
-        .nav-item { margin-bottom: 10px; }
-        .nav-link { display: block; padding: 12px 15px; color: var(--text-muted); text-decoration: none; font-weight: bold; border-radius: 4px; transition: 0.3s; }
-        .nav-link:hover, .nav-link.active { background-color: var(--accent-blue); color: #ffffff; }
-        .user-panel { padding-top: 20px; border-top: 1px solid var(--border-color); font-size: 0.9rem; color: var(--text-muted); }
-        .logout-btn { display: block; margin-top: 10px; color: #ff4444; text-decoration: none; font-weight: bold; }
-
+        body { background-color: var(--bg-dark); color: var(--text-main); font-family: 'Helvetica Neue', Arial, sans-serif; display: flex; min-height: 100vh; }
+        .sidebar { width: 260px; background-color: var(--bg-panel); border-right: 1px solid var(--border-color); padding: 30px 20px; }
+        .brand-logo { font-size: 1.5rem; font-weight: 900; color: #fff; text-decoration: none; margin-bottom: 40px; display: block; }
+        .nav-link { display: block; padding: 12px 15px; color: #888; text-decoration: none; font-weight: bold; border-radius: 4px; margin-bottom: 5px; }
+        .nav-link.active { background-color: var(--accent-blue); color: #fff; }
         .main-content { flex-grow: 1; padding: 40px; overflow-y: auto; }
-        .page-header { margin-bottom: 30px; }
-        .page-header h2 { font-size: 2rem; }
-
-        .editor-wrapper { background-color: var(--bg-panel); padding: 30px; border-radius: 8px; border: 1px solid var(--border-color); max-width: 850px; }
-        
-        .form-group { margin-bottom: 25px; }
+        .editor-wrapper { background-color: var(--bg-panel); padding: 30px; border-radius: 8px; border: 1px solid var(--border-color); max-width: 900px; }
         .form-group-bundle { background-color: #1a1a1a; padding: 20px; border: 1px solid var(--border-color); border-radius: 6px; margin-bottom: 25px; }
-        
-        label { display: block; margin-bottom: 10px; font-weight: bold; color: var(--accent-gold); text-transform: uppercase; font-size: 0.85rem; letter-spacing: 1px; }
-        .sub-label { color: var(--text-muted); font-size: 0.8rem; margin-bottom: 5px; display: block; text-transform: none; font-weight: normal; }
-        
-        input[type="text"], textarea { width: 100%; padding: 12px 15px; background-color: var(--bg-dark); border: 1px solid var(--border-color); border-radius: 4px; color: var(--text-main); font-family: var(--font-main); font-size: 0.95rem; margin-bottom: 10px; }
-        input[type="file"] { width: 100%; padding: 10px; background-color: var(--bg-dark); border: 1px dashed var(--border-color); border-radius: 4px; color: var(--text-main); margin-bottom: 10px; cursor: pointer; }
-        input[type="text"]:focus, textarea:focus { outline: none; border-color: var(--accent-blue); }
-        textarea { height: 120px; resize: vertical; }
-
-        .btn-save { background-color: var(--accent-blue); color: #fff; border: none; padding: 15px 30px; font-size: 1rem; font-weight: bold; border-radius: 4px; cursor: pointer; text-transform: uppercase; transition: 0.3s; margin-top: 20px;}
-        .btn-save:hover { background-color: var(--accent-blue-hover); }
-
-        .alert-success { background-color: rgba(0, 200, 81, 0.1); border-left: 4px solid var(--success-green); color: var(--success-green); padding: 15px; margin-bottom: 25px; font-size: 0.95rem; font-weight: bold; border-radius: 2px; }
-        .alert-error { background-color: rgba(255, 68, 68, 0.1); border-left: 4px solid var(--error-red); color: var(--error-red); padding: 15px; margin-bottom: 25px; font-size: 0.95rem; font-weight: bold; border-radius: 2px; }
-        
-        .img-preview { max-height: 80px; border-radius: 4px; border: 1px solid #444; margin-bottom: 10px; display: block; }
+        label { display: block; margin-bottom: 10px; font-weight: bold; color: var(--accent-gold); text-transform: uppercase; font-size: 0.8rem; }
+        input[type="text"], textarea { width: 100%; padding: 12px; background-color: #000; border: 1px solid #444; border-radius: 4px; color: #fff; margin-bottom: 10px; }
+        .img-preview { max-height: 60px; margin-bottom: 10px; display: block; border: 1px solid #444; }
+        .btn-save { background-color: var(--accent-blue); color: #fff; border: none; padding: 15px 30px; font-weight: bold; border-radius: 4px; cursor: pointer; transition: 0.3s; }
+        .btn-save:hover { background-color: #335ECC; }
     </style>
 </head>
 <body>
-
     <aside class="sidebar">
-        <a href="<?= base_url('Admin') ?>" class="brand-logo">REP<span>.</span></a>
-        <ul class="nav-menu">
-            <li class="nav-item"><a href="<?= base_url('Admin') ?>" class="nav-link">Leads Inbox</a></li>
-            <li class="nav-item"><a href="<?= base_url('Admin/settings') ?>" class="nav-link active">Settings</a></li>
-        </ul>
-        <div class="user-panel">
-            Logged in as:<br><strong style="color:var(--text-main)"><?= $this->session->userdata('username'); ?></strong>
-            <a href="<?= base_url('Auth/logout') ?>" class="logout-btn">Log Out &rarr;</a>
-        </div>
+        <a href="#" class="brand-logo">REP.</a>
+        <a href="<?= base_url('Admin') ?>" class="nav-link">Leads Inbox</a>
+        <a href="<?= base_url('Admin/settings') ?>" class="nav-link active">Settings</a>
     </aside>
-
     <main class="main-content">
-        <div class="page-header">
-            <h2>Dynamic Content Editor</h2>
-        </div>
-
+        <h2>Content Editor</h2>
         <div class="editor-wrapper">
-            <?php if($this->session->flashdata('success')): ?>
-                <div class="alert-success"><?= $this->session->flashdata('success') ?></div>
+            <?php if($this->session->flashdata('success')): ?> 
+                <p style="color:lime; margin-bottom:20px; padding: 15px; background: rgba(0,255,0,0.1); border: 1px solid lime; border-radius: 4px;"><?= $this->session->flashdata('success') ?></p> 
             <?php endif; ?>
             
-            <?php if($this->session->flashdata('error')): ?>
-                <div class="alert-error"><?= $this->session->flashdata('error') ?></div>
-            <?php endif; ?>
-
             <form action="<?= base_url('Admin/save_settings') ?>" method="POST" enctype="multipart/form-data">
                 <input type="hidden" name="<?= $this->security->get_csrf_token_name(); ?>" value="<?= $this->security->get_csrf_hash(); ?>">
-
-                <div class="form-group">
-                    <label for="headline_main">Hero Main Headline</label>
-                    <textarea id="headline_main" name="headline_main" required><?= $settings['headline_main'] ?? '' ?></textarea>
-                </div>
-
-                <hr style="border: 0; border-top: 1px dashed #444; margin: 40px 0 30px 0;">
-                <h3 style="margin-bottom: 20px; font-size: 1.2rem; color: #fff;">Portfolio Section (Our Work)</h3>
-
-                <div class="form-group-bundle">
-                    <label>Portfolio 1 (Top Left)</label>
-                    <span class="sub-label">Title Displayed:</span>
-                    <input type="text" name="video_title_1" value="<?= $settings['video_title_1'] ?? 'HONDA AHM' ?>" placeholder="e.g., HONDA AHM">
-                    
-                    <span class="sub-label">Video URL (YouTube/MP4):</span>
-                    <input type="text" name="video_1" value="<?= $settings['video_1'] ?? 'https://www.youtube.com/watch?v=dQw4w9WgXcQ' ?>">
-                    
-                    <span class="sub-label">Upload New Thumbnail (Leave blank to keep current):</span>
-                    <?php if(!empty($settings['video_thumb_1'])): ?>
-                        <img src="<?= base_url($settings['video_thumb_1']) ?>" alt="Current Thumb" class="img-preview">
-                    <?php endif; ?>
-                    <input type="file" name="video_thumb_1" accept="image/*">
-                </div>
                 
+                <h3 style="margin: 20px 0;">Portfolio Videos (Slot 1-6)</h3>
+                
+                <?php for($i=1; $i<=6; $i++): ?>
                 <div class="form-group-bundle">
-                    <label>Portfolio 2 (Top Middle)</label>
-                    <span class="sub-label">Title Displayed:</span>
-                    <input type="text" name="video_title_2" value="<?= $settings['video_title_2'] ?? 'JERGENS' ?>" placeholder="e.g., JERGENS">
+                    <label>Portfolio <?= $i ?></label>
+                    <input type="text" name="video_title_<?= $i ?>" value="<?= $settings['video_title_'.$i] ?? '' ?>" placeholder="Judul Display (Contoh: HONDA AHM)">
+                    <input type="text" name="video_<?= $i ?>" value="<?= $settings['video_'.$i] ?? '' ?>" placeholder="URL Video (YouTube / Link MP4)">
                     
-                    <span class="sub-label">Video URL (YouTube/MP4):</span>
-                    <input type="text" name="video_2" value="<?= $settings['video_2'] ?? 'https://www.youtube.com/watch?v=dQw4w9WgXcQ' ?>">
-                    
-                    <span class="sub-label">Upload New Thumbnail:</span>
-                    <?php if(!empty($settings['video_thumb_2'])): ?>
-                        <img src="<?= base_url($settings['video_thumb_2']) ?>" alt="Current Thumb" class="img-preview">
+                    <?php if(!empty($settings['video_thumb_'.$i])): ?>
+                        <img src="<?= base_url($settings['video_thumb_'.$i]) ?>" class="img-preview" alt="Thumbnail Preview">
                     <?php endif; ?>
-                    <input type="file" name="video_thumb_2" accept="image/*">
+                    
+                    <input type="file" name="video_thumb_<?= $i ?>" accept="image/*">
                 </div>
+                <?php endfor; ?>
 
-                <div class="form-group-bundle">
-                    <label>Portfolio 3 (Top Right)</label>
-                    <span class="sub-label">Title Displayed:</span>
-                    <input type="text" name="video_title_3" value="<?= $settings['video_title_3'] ?? 'HONDA AHM' ?>" placeholder="e.g., HONDA AHM">
-                    
-                    <span class="sub-label">Video URL (YouTube/MP4):</span>
-                    <input type="text" name="video_3" value="<?= $settings['video_3'] ?? 'https://www.youtube.com/watch?v=dQw4w9WgXcQ' ?>">
-                    
-                    <span class="sub-label">Upload New Thumbnail:</span>
-                    <?php if(!empty($settings['video_thumb_3'])): ?>
-                        <img src="<?= base_url($settings['video_thumb_3']) ?>" alt="Current Thumb" class="img-preview">
-                    <?php endif; ?>
-                    <input type="file" name="video_thumb_3" accept="image/*">
-                </div>
-
-                <div class="form-group-bundle">
-                    <label>Portfolio 4 (Bottom Left-Center)</label>
-                    <span class="sub-label">Title Displayed:</span>
-                    <input type="text" name="video_title_4" value="<?= $settings['video_title_4'] ?? 'HONDA AHM' ?>" placeholder="e.g., HONDA AHM">
-                    
-                    <span class="sub-label">Video URL (YouTube/MP4):</span>
-                    <input type="text" name="video_4" value="<?= $settings['video_4'] ?? base_url('assets/video/honda.mp4') ?>">
-                    
-                    <span class="sub-label">Upload New Thumbnail:</span>
-                    <?php if(!empty($settings['video_thumb_4'])): ?>
-                        <img src="<?= base_url($settings['video_thumb_4']) ?>" alt="Current Thumb" class="img-preview">
-                    <?php endif; ?>
-                    <input type="file" name="video_thumb_4" accept="image/*">
-                </div>
-
-                <div class="form-group-bundle">
-                    <label>Portfolio 5 (Bottom Right-Center)</label>
-                    <span class="sub-label">Title Displayed:</span>
-                    <input type="text" name="video_title_5" value="<?= $settings['video_title_5'] ?? 'JERGENS' ?>" placeholder="e.g., JERGENS">
-                    
-                    <span class="sub-label">Video URL (YouTube/MP4):</span>
-                    <input type="text" name="video_5" value="<?= $settings['video_5'] ?? 'https://www.youtube.com/watch?v=dQw4w9WgXcQ' ?>">
-                    
-                    <span class="sub-label">Upload New Thumbnail:</span>
-                    <?php if(!empty($settings['video_thumb_5'])): ?>
-                        <img src="<?= base_url($settings['video_thumb_5']) ?>" alt="Current Thumb" class="img-preview">
-                    <?php endif; ?>
-                    <input type="file" name="video_thumb_5" accept="image/*">
-                </div>
-
-                <button type="submit" class="btn-save">Save All Content</button>
+                <button type="submit" class="btn-save">Save Changes</button>
             </form>
         </div>
     </main>
-
 </body>
 </html>
 <!-- end file application/views/v_admin_settings.php -->
 
 <!-- file application/views/v_landing.php -->
-<?php /* file: application/views/v_landing.php */ ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -1002,32 +830,12 @@ class Leads_model extends CI_Model {
                 </div>
                 
                 <div id="portfolio-grid" class="portfolio-grid">
-                    
-                    <div class="portfolio-item video-trigger" aria-label="Play Honda AHM" data-video-src="<?= $settings['video_1'] ?? 'https://www.youtube.com/watch?v=dQw4w9WgXcQ' ?>" style="background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.6) 100%), url('<?= !empty($settings['video_thumb_1']) ? base_url($settings['video_thumb_1']) : '' ?>') center/cover no-repeat #222;">
-                        <div class="overlay-text"><?= html_escape($settings['video_title_1'] ?? 'HONDA AHM') ?></div>
+                    <?php for($i=1; $i<=6; $i++): ?>
+                    <div class="portfolio-item video-trigger" aria-label="Play <?= html_escape($settings['video_title_'.$i] ?? 'Video '.$i) ?>" data-video-src="<?= $settings['video_'.$i] ?? '[https://www.youtube.com/watch?v=dQw4w9WgXcQ](https://www.youtube.com/watch?v=dQw4w9WgXcQ)' ?>" style="background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.6) 100%), url('<?= !empty($settings['video_thumb_'.$i]) ? base_url($settings['video_thumb_'.$i]) : '' ?>') center/cover no-repeat #222;">
+                        <div class="overlay-text"><?= html_escape($settings['video_title_'.$i] ?? 'PORTFOLIO '.$i) ?></div>
                         <div class="play-icon" aria-hidden="true">▶</div>
                     </div>
-                    
-                    <div class="portfolio-item video-trigger" aria-label="Play Jergens" data-video-src="<?= $settings['video_2'] ?? 'https://www.youtube.com/watch?v=dQw4w9WgXcQ' ?>" style="background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.6) 100%), url('<?= !empty($settings['video_thumb_2']) ? base_url($settings['video_thumb_2']) : '' ?>') center/cover no-repeat #222;">
-                        <div class="overlay-text"><?= html_escape($settings['video_title_2'] ?? 'JERGENS') ?></div>
-                        <div class="play-icon" aria-hidden="true">▶</div>
-                    </div>
-                    
-                    <div class="portfolio-item video-trigger" aria-label="Play Honda AHM" data-video-src="<?= $settings['video_3'] ?? 'https://www.youtube.com/watch?v=dQw4w9WgXcQ' ?>" style="background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.6) 100%), url('<?= !empty($settings['video_thumb_3']) ? base_url($settings['video_thumb_3']) : '' ?>') center/cover no-repeat #222;">
-                        <div class="overlay-text"><?= html_escape($settings['video_title_3'] ?? 'HONDA AHM') ?></div>
-                        <div class="play-icon" aria-hidden="true">▶</div>
-                    </div>
-                    
-                    <div class="portfolio-item video-trigger" aria-label="Play Honda AHM" data-video-src="<?= $settings['video_4'] ?? base_url('assets/video/honda.mp4') ?>" style="background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.6) 100%), url('<?= !empty($settings['video_thumb_4']) ? base_url($settings['video_thumb_4']) : '' ?>') center/cover no-repeat #222;">
-                        <div class="overlay-text"><?= html_escape($settings['video_title_4'] ?? 'HONDA AHM') ?></div>
-                        <div class="play-icon" aria-hidden="true">▶</div>
-                    </div>
-                    
-                    <div class="portfolio-item video-trigger" aria-label="Play Jergens" data-video-src="<?= $settings['video_5'] ?? 'https://www.youtube.com/watch?v=dQw4w9WgXcQ' ?>" style="background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.6) 100%), url('<?= !empty($settings['video_thumb_5']) ? base_url($settings['video_thumb_5']) : '' ?>') center/cover no-repeat #222;">
-                        <div class="overlay-text"><?= html_escape($settings['video_title_5'] ?? 'JERGENS') ?></div>
-                        <div class="play-icon" aria-hidden="true">▶</div>
-                    </div>
-
+                    <?php endfor; ?>
                 </div>
             </div>
         </section>
@@ -1074,15 +882,15 @@ class Leads_model extends CI_Model {
 
     <div class="fab-container">
         <div class="fab-menu" id="fabMenu">
-            <a href="https://wa.me/6285714734610" target="_blank" class="fab-item" aria-label="WhatsApp">
+            <a href="[https://wa.me/6285714734610](https://wa.me/6285714734610)" target="_blank" class="fab-item" aria-label="WhatsApp">
                 <span class="fab-tooltip">WhatsApp</span>
                 <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
             </a>
-            <a href="https://www.instagram.com/republik.asia/" target="_blank" class="fab-item" aria-label="Instagram">
+            <a href="[https://www.instagram.com/republik.asia/](https://www.instagram.com/republik.asia/)" target="_blank" class="fab-item" aria-label="Instagram">
                 <span class="fab-tooltip">Instagram</span>
                 <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
             </a>
-            <a href="https://id.linkedin.com/company/republikasia" target="_blank" class="fab-item" aria-label="LinkedIn">
+            <a href="[https://id.linkedin.com/company/republikasia](https://id.linkedin.com/company/republikasia)" target="_blank" class="fab-item" aria-label="LinkedIn">
                 <span class="fab-tooltip">LinkedIn</span>
                 <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
             </a>
@@ -1292,6 +1100,7 @@ body {
     font-family: var(--font-main); 
     line-height: 1.6; 
     -webkit-font-smoothing: antialiased; 
+    overflow-x: hidden;
 }
 
 .container { width: 90%; max-width: 1200px; margin: 0 auto; padding: 40px 0; }
@@ -1299,11 +1108,10 @@ body {
 /* --- HERO & COLLAGE LAYOUT --- */
 .hero-section { 
     width: 100%; 
-    height: 100vh; /* Mengunci porsi layar pertama saat landing */
+    height: auto; 
     overflow: hidden; 
     display: flex;
     flex-direction: column;
-    justify-content: space-between; 
 }
 
 .hero-collage-container { 
@@ -1331,7 +1139,6 @@ body {
     filter: drop-shadow(0 0 25px rgba(255, 255, 255, 0.2)); 
 }
 
-/* REVISI DESKTOP: Ukuran kolase 66vh memangkas gap kosong berlebih */
 .hero-collage-grid { 
     display: grid; 
     grid-template-columns: 1.2fr 2fr 1fr 1.5fr; 
@@ -1365,7 +1172,7 @@ body {
 /* --- TWO-LINE HEADLINE TIPOGRAFI --- */
 .hero-text-wrapper {
     width: 100%;
-    padding-top: 1vh; 
+    padding-top: 8vh; 
     padding-bottom: 2vh; 
     background-color: var(--bg-color);
 }
@@ -1398,9 +1205,9 @@ body {
 .placeholder-gray { background-color: var(--placeholder-gray); }
 .placeholder-dark { background-color: var(--placeholder-dark); }
 
-/* --- NARRATIVE SECTION (REVISI PADDING SEHINGGA COCOK UNTUK SCROLL ALAMI) --- */
+/* --- NARRATIVE SECTION --- */
 .narrative-section {
-    padding: 25px 0 60px 0;
+    padding: 0px 0 0px 0;
 }
 .narrative-content p { text-align: center; max-width: 850px; margin: 0 auto 30px auto; font-size: 1.2rem; color: var(--text-muted); line-height: 1.7; }
 .methodology { text-align: center; margin-top: 60px; }
@@ -1408,19 +1215,36 @@ body {
 .methodology strong { font-size: 1.8rem; display: block; margin: 25px 0; color: var(--text-color); letter-spacing: 2px; }
 
 /* --- PORTFOLIO GRID --- */
-.portfolio-section { padding: 0px 0 100px 0; }
+.portfolio-section { padding: 0px 0 80px 0; }
 .section-title h3 { font-size: 2.5rem; text-align: center; margin-bottom: 20px; font-weight: 700; letter-spacing: -0.02em; }
 .section-title p { text-align: center; max-width: 800px; margin: 0 auto 50px auto; color: var(--text-muted); font-size: 1.05rem; }
-#portfolio-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 30px; margin-top: 40px; }
-.portfolio-item { grid-column: span 2; position: relative; background: #222; aspect-ratio: 16/9; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.3s; border: 1px solid #333; overflow: hidden; }
-.portfolio-item:nth-child(4) { grid-column: 2 / 4; }
-.portfolio-item:nth-child(5) { grid-column: 4 / 6; }
-.portfolio-item:hover { transform: scale(1.02); border-color: var(--accent-blue); }
-.play-icon { font-size: 3rem; opacity: 0.4; transition: 0.3s; z-index: 2; color: #fff; }
+
+.portfolio-grid { 
+    display: grid; 
+    grid-template-columns: repeat(3, 1fr); 
+    gap: 30px; 
+    margin-top: 40px; 
+}
+
+.portfolio-item { 
+    position: relative; 
+    background: #222; 
+    aspect-ratio: 16/9; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    cursor: pointer; 
+    transition: 0.4s cubic-bezier(0.165, 0.84, 0.44, 1); 
+    border: 1px solid #333; 
+    overflow: hidden; 
+}
+
+.portfolio-item:hover { transform: translateY(-5px); border-color: var(--accent-blue); }
+.play-icon { font-size: 3rem; opacity: 0.3; transition: 0.3s; z-index: 2; color: #fff; }
 .portfolio-item:hover .play-icon { opacity: 1; color: var(--accent-blue); }
 .overlay-text { position: absolute; bottom: 20px; left: 20px; font-weight: bold; font-size: 1.1rem; z-index: 3; color: #fff; text-transform: uppercase; letter-spacing: 1px; }
 
-/* --- VIDEO POPUP MODAL --- */
+/* --- VIDEO MODAL --- */
 .video-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 9999; align-items: center; justify-content: center; }
 .modal-overlay { position: absolute; width: 100%; height: 100%; background: rgba(0,0,0,0.95); }
 .modal-content { 
@@ -1453,15 +1277,12 @@ body {
     transition: all 0.3s ease;
     z-index: 11;
 }
-.close-modal:hover { 
-    background-color: var(--accent-blue);
-    transform: scale(1.1);
-}
+.close-modal:hover { background-color: var(--accent-blue); transform: scale(1.1); }
 
 #videoContainer { width: 100%; height: 100%; border-radius: 8px; overflow: hidden; }
 #videoContainer iframe, #videoContainer video { width: 100%; height: 100%; border: none; display: block; }
 
-/* --- FORM GRID CONTACT --- */
+/* --- FORM GRID --- */
 .form-section { padding: 0px 0; }
 .form-container { max-width: 900px; padding-top: 0; }
 .form-header h2 { font-size: 2.8rem; text-align: center; margin-bottom: 20px; font-weight: 700; letter-spacing: -0.02em; }
@@ -1494,7 +1315,7 @@ button#btnSubmit:hover { background-color: var(--accent-blue-hover); transform: 
 .btn-back-to-top:hover { background-color: var(--accent-blue); border-color: var(--accent-blue); transform: translateY(-3px); }
 
 /* --- FOOTER --- */
-footer { text-align: center; padding: 60px 0; border-top: 1px solid #222; }
+footer { text-align: center; padding: 40px 0; border-top: 1px solid #222; }
 footer p { font-size: 1rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
 .footer-logo { margin-top: 40px; }
 .footer-logo h2 { font-size: 1.8rem; letter-spacing: 3px; font-weight: 900; }
@@ -1504,7 +1325,6 @@ footer p { font-size: 1rem; color: var(--text-muted); font-weight: 700; text-tra
    RESPONSIVE DESIGN (MEDIA QUERIES)
    ========================================================================= */
 
-/* --- TABLET BREAKPOINT (Max 1024px) --- */
 @media (max-width: 1024px) {
     .hero-collage-grid { 
         grid-template-columns: 1fr 1fr; 
@@ -1519,13 +1339,12 @@ footer p { font-size: 1rem; color: var(--text-muted); font-weight: 700; text-tra
     .item-small-bottom { grid-column: 1 / 2; grid-row: 4 / 5; }
     .item-new-bottom-right { grid-column: 2 / 3; grid-row: 4 / 5; }
 
-    #portfolio-grid { grid-template-columns: repeat(2, 1fr); gap: 20px; }
-    .portfolio-item { grid-column: span 1 !important; }
+    .portfolio-grid { grid-template-columns: repeat(2, 1fr); gap: 20px; }
     .form-grid { gap: 20px; }
 }
 
-/* --- MOBILE BREAKPOINT (Max 768px) --- */
 @media (max-width: 768px) {
+    /* REVISI SCATTERED MOODBOARD MOBILE */
     .hero-collage-container {
         height: 65vh;
         background-color: var(--bg-color);
@@ -1539,7 +1358,19 @@ footer p { font-size: 1rem; color: var(--text-muted); font-weight: 700; text-tra
         width: 100%; height: 100%;
         z-index: 1; 
     }
-    .hero-collage-grid::after { background: rgba(0, 0, 0, 0.75); }
+    
+    /* REVISI UTAMA: Overlay diperpanjang ke bawah dan samping untuk menutup lubang */
+    .hero-collage-grid::after {
+        background: rgba(0, 0, 0, 0.75); 
+        bottom: -15% !important; /* Memanjang ke bawah melewati batas wadah */
+        left: -15% !important;   /* Memlebar ke kiri untuk rotasi gambar */
+        right: -15% !important;  /* Memlebar ke kanan untuk rotasi gambar */
+        top: -5% !important;    /* Sedikit ke atas untuk rotasi gambar */
+    }
+
+    .narrative-section {
+        padding: 0px 0 0px 0;
+    }
 
     .collage-cell { position: absolute !important; height: auto !important; z-index: 1; border-radius: 6px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.8); }
     .collage-img { border-radius: 6px; }
@@ -1550,24 +1381,21 @@ footer p { font-size: 1rem; color: var(--text-muted); font-weight: 700; text-tra
     .item-new-top-right   { top: 42%; right: 2%; width: 45%; height: 28% !important; transform: rotate(7deg); }
     .item-wide-bottom     { bottom: 15%; left: 10%; width: 55%; height: 25% !important; transform: rotate(-5deg); }
     .item-small-bottom    { bottom: 2%; right: -5%; width: 50%; height: 24% !important; transform: rotate(10deg); }
+    
+    /* Gambar ini paling bawah dan sering bocor */
     .item-new-bottom-right{ bottom: -10%; left: 35%; width: 40%; height: 25% !important; transform: rotate(-4deg); }
 
     .hero-logo-overlay { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 10; width: 85%; }
     .hero-logo-img { max-width: 260px; width: 100%; margin: 0 auto; filter: drop-shadow(0 0 25px rgba(255,255,255,0.15)); }
 
     .hero-text-wrapper {
-        padding-top: 2vh;
+        padding-top: 15vh;
         padding-bottom: 2vh;
     }
-    .headline-container {
-        gap: 6px;
-        padding: 0 15px;
-    }
-    
+    .headline-container { gap: 6px; padding: 0 15px; }
     .headline-top { font-size: clamp(1.4rem, 2.2vw, 1.8rem); }
 
-    #portfolio-grid { grid-template-columns: 1fr; }
-    .portfolio-item:nth-child(4), .portfolio-item:nth-child(5) { grid-column: span 2; }
+    .portfolio-grid { grid-template-columns: 1fr; }
     
     .form-section { padding: 60px 0; }
     .form-grid { grid-template-columns: 1fr; }
@@ -1587,9 +1415,6 @@ footer p { font-size: 1rem; color: var(--text-muted); font-weight: 700; text-tra
 /* file: assets/js/main.js */
 document.addEventListener('DOMContentLoaded', function() {
     
-    // REVISI: Seluruh baris kode 'Custom Wheel Hijacker Engine' dihapus total.
-    // Navigasi scrolling halaman kini sepenuhnya dikendalikan secara alami oleh browser.
-
     // ==========================================
     // 1. VIDEO MODAL ENGINE
     // ==========================================
@@ -1706,7 +1531,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // ==========================================
-    // 4. BACK TO TOP BUTTON LOGIC (CLEAN NATIVE)
+    // 4. BACK TO TOP BUTTON LOGIC
     // ==========================================
     const btnBackToTop = document.getElementById('btnBackToTop');
     if (btnBackToTop) {

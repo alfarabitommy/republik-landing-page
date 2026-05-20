@@ -1,9 +1,6 @@
 /* file: assets/js/main.js */
 document.addEventListener('DOMContentLoaded', function() {
     
-    // REVISI: Seluruh baris kode 'Custom Wheel Hijacker Engine' dihapus total.
-    // Navigasi scrolling halaman kini sepenuhnya dikendalikan secara alami oleh browser.
-
     // ==========================================
     // 1. VIDEO MODAL ENGINE
     // ==========================================
@@ -120,7 +117,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // ==========================================
-    // 4. BACK TO TOP BUTTON LOGIC (CLEAN NATIVE)
+    // 4. BACK TO TOP BUTTON LOGIC
     // ==========================================
     const btnBackToTop = document.getElementById('btnBackToTop');
     if (btnBackToTop) {
