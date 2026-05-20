@@ -1,67 +1,70 @@
 /* file: assets/js/main.js */
 document.addEventListener('DOMContentLoaded', function() {
     
+    const isMobile = window.innerWidth <= 768;
+    const sections = document.querySelectorAll('.snap-section');
+    let currentSectionIndex = 0;
+    let isScrolling = false;
+    let lastScrollTime = 0; // Buffer untuk Trackpad / Magic Mouse
+    const btnBackToTop = document.getElementById('btnBackToTop');
+
     // ==========================================
     // 1. ENGINE CUSTOM SMOOTH SCROLL (DESKTOP)
     // ==========================================
-    const isMobile = window.innerWidth <= 768;
     
-    if (!isMobile) {
-        const sections = document.querySelectorAll('.snap-section');
-        let currentSectionIndex = 0;
-        let isScrolling = false;
+    // Fungsi animasi saya keluarkan ke global scope agar Back to Top bisa meminjam animasinya
+    function smoothScrollTo(targetPosition, duration) {
+        const startPosition = window.scrollY || document.documentElement.scrollTop;
+        const distance = targetPosition - startPosition;
+        let startTime = null;
 
-        // Fungsi animasi scroll manual (Easing function)
-        function smoothScrollTo(targetPosition, duration) {
-            const startPosition = window.scrollY;
-            const distance = targetPosition - startPosition;
-            let startTime = null;
-
-            function animation(currentTime) {
-                if (startTime === null) startTime = currentTime;
-                const timeElapsed = currentTime - startPosition;
-                const run = easeInOutQuad(currentTime - startTime, startPosition, distance, duration);
-                window.scrollTo(0, run);
-                
-                if (currentTime - startTime < duration) {
-                    requestAnimationFrame(animation);
-                } else {
-                    isScrolling = false; // Buka kunci setelah selesai
-                }
+        function animation(currentTime) {
+            if (startTime === null) startTime = currentTime;
+            const timeElapsed = currentTime - startPosition;
+            const run = easeInOutQuad(currentTime - startTime, startPosition, distance, duration);
+            window.scrollTo(0, run);
+            
+            if (currentTime - startTime < duration) {
+                requestAnimationFrame(animation);
+            } else {
+                window.scrollTo(0, targetPosition); // Pastikan presisi mutlak di akhir animasi
+                isScrolling = false; 
             }
-
-            // Algoritma Easing agar gerakan melambat di akhir
-            function easeInOutQuad(t, b, c, d) {
-                t /= d / 2;
-                if (t < 1) return c / 2 * t * t + b;
-                t--;
-                return -c / 2 * (t * (t - 2) - 1) + b;
-            }
-
-            requestAnimationFrame(animation);
         }
 
-        // Event pendeteksi pergerakan mousewheel
+        function easeInOutQuad(t, b, c, d) {
+            t /= d / 2;
+            if (t < 1) return c / 2 * t * t + b;
+            t--;
+            return -c / 2 * (t * (t - 2) - 1) + b;
+        }
+
+        requestAnimationFrame(animation);
+    }
+
+    if (!isMobile) {
         window.addEventListener('wheel', function(e) {
-            // Hindari engine jika modal video terbuka
             if (document.getElementById('videoModal').style.display === 'flex') return;
             
-            e.preventDefault(); // Matikan scroll bawaan browser yang kasar
+            e.preventDefault();
 
-            if (isScrolling) return; // Kunci jika sedang beranimasi
+            const currentTime = new Date().getTime();
+            // REVISI: Cooldown 1200ms menolak sinyal sisa "Inertia" dari sentuhan Trackpad
+            if (isScrolling || (currentTime - lastScrollTime < 1200)) {
+                return; 
+            }
 
-            // Deteksi arah scroll
-            if (e.deltaY > 0) {
-                // Scroll Bawah
+            if (e.deltaY > 0) { // Scroll Bawah
                 if (currentSectionIndex < sections.length - 1) {
                     isScrolling = true;
+                    lastScrollTime = currentTime;
                     currentSectionIndex++;
-                    smoothScrollTo(sections[currentSectionIndex].offsetTop, 800); // 800ms durasi
+                    smoothScrollTo(sections[currentSectionIndex].offsetTop, 800); 
                 }
-            } else {
-                // Scroll Atas
+            } else { // Scroll Atas
                 if (currentSectionIndex > 0) {
                     isScrolling = true;
+                    lastScrollTime = currentTime;
                     currentSectionIndex--;
                     smoothScrollTo(sections[currentSectionIndex].offsetTop, 800);
                 }
@@ -70,7 +73,50 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // ==========================================
-    // 2. VIDEO MODAL ENGINE
+    // 2. SCROLL TRACKER & BACK TO TOP
+    // ==========================================
+    // Meletakkan event scroll ke global untuk men-trigger UI Button dan Tracking
+    window.addEventListener('scroll', function() {
+        let scrollPosition = window.scrollY || document.documentElement.scrollTop;
+        
+        // Memunculkan tombol Back to Top
+        if (btnBackToTop) {
+            if (scrollPosition > 300) {
+                btnBackToTop.classList.add('show');
+            } else {
+                btnBackToTop.classList.remove('show');
+            }
+        }
+
+        // REVISI: Auto-Sync Index jika user iseng menarik scrollbar (batang di pinggir layar) secara manual
+        if (!isScrolling && !isMobile) {
+            sections.forEach((sec, index) => {
+                // Deteksi section mana yang paling banyak terlihat di layar
+                if (scrollPosition >= sec.offsetTop - (window.innerHeight / 2)) {
+                    currentSectionIndex = index;
+                }
+            });
+        }
+    });
+
+    if (btnBackToTop) {
+        btnBackToTop.addEventListener('click', function(e) {
+            e.preventDefault(); 
+            
+            if (!isMobile) {
+                // REVISI: Menggunakan Custom Scroll Engine kita, bukan bawaan window
+                isScrolling = true;
+                lastScrollTime = new Date().getTime(); 
+                currentSectionIndex = 0; // Reset memori index ke 0 (Hero)
+                smoothScrollTo(0, 800);
+            } else {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        });
+    }
+
+    // ==========================================
+    // 3. VIDEO MODAL ENGINE
     // ==========================================
     const modal = document.getElementById('videoModal');
     const container = document.getElementById('videoContainer');
@@ -106,7 +152,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (overlay) overlay.addEventListener('click', closeModal);
 
     // ==========================================
-    // 3. AJAX FORM SUBMISSION
+    // 4. AJAX FORM SUBMISSION
     // ==========================================
     const briefForm = document.getElementById('briefForm');
     const btnSubmit = document.getElementById('btnSubmit');
@@ -152,7 +198,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // ==========================================
-    // 4. FLOATING ACTION BUTTON (FAB) INTERACTION
+    // 5. FLOATING ACTION BUTTON (FAB)
     // ==========================================
     const fabTrigger = document.getElementById('fabTrigger');
     const fabMenu = document.getElementById('fabMenu');
@@ -180,36 +226,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 fabMenu.classList.remove('active');
                 iconChat.style.display = 'block';
                 iconClose.style.display = 'none';
-            }
-        });
-    }
-
-    // ==========================================
-    // 5. BACK TO TOP BUTTON LOGIC
-    // ==========================================
-    const btnBackToTop = document.getElementById('btnBackToTop');
-    if (btnBackToTop) {
-        window.addEventListener('scroll', function() {
-            let scrollPosition = window.scrollY || document.documentElement.scrollTop;
-            if (scrollPosition > 300) {
-                btnBackToTop.classList.add('show');
-            } else {
-                btnBackToTop.classList.remove('show');
-            }
-        });
-
-        btnBackToTop.addEventListener('click', function(e) {
-            e.preventDefault(); 
-            
-            // Bypass JS Engine sementara
-            if (!isMobile) {
-                isScrolling = true;
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-                // Reset index tracking
-                currentSectionIndex = 0; 
-                setTimeout(() => { isScrolling = false; }, 850);
-            } else {
-                window.scrollTo({ top: 0, behavior: 'smooth' });
             }
         });
     }

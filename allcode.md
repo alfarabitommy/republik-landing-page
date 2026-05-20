@@ -1065,15 +1065,15 @@ class Leads_model extends CI_Model {
 
     <div class="fab-container">
         <div class="fab-menu" id="fabMenu">
-            <a href="https://wa.me/628123456789" target="_blank" class="fab-item" aria-label="WhatsApp">
+            <a href="https://wa.me/6285714734610" target="_blank" class="fab-item" aria-label="WhatsApp">
                 <span class="fab-tooltip">WhatsApp</span>
                 <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
             </a>
-            <a href="https://instagram.com" target="_blank" class="fab-item" aria-label="Instagram">
+            <a href="https://www.instagram.com/republik.asia/" target="_blank" class="fab-item" aria-label="Instagram">
                 <span class="fab-tooltip">Instagram</span>
                 <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
             </a>
-            <a href="https://linkedin.com" target="_blank" class="fab-item" aria-label="LinkedIn">
+            <a href="https://id.linkedin.com/company/republikasia" target="_blank" class="fab-item" aria-label="LinkedIn">
                 <span class="fab-tooltip">LinkedIn</span>
                 <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
             </a>
@@ -1314,27 +1314,27 @@ body {
     display: block;
     max-width: 700px; 
     height: auto;
-    /* REVISI DESKTOP: Tambahkan pendaran cahaya (glow) tipis agar logo semakin menonjol */
     filter: drop-shadow(0 0 25px rgba(255, 255, 255, 0.2)); 
 }
 
-/* REVISI DESKTOP: Tambahkan position relative untuk menampung pseudo-element overlay */
+/* REVISI GAP DESKTOP: height 100vh dan pecahan baris menggunakan 1fr */
 .hero-collage-grid { 
     display: grid; 
     grid-template-columns: 1.2fr 2fr 1fr 1.5fr; 
-    grid-template-rows: repeat(10, 60px); 
+    height: 100vh; 
+    grid-template-rows: repeat(10, 1fr); 
     gap: 0; 
     position: relative;
+    width: 100%;
 }
 
-/* REVISI DESKTOP: Kaca Gelap (Dark Overlay) transparansi 45% (tidak terlalu pekat) */
 .hero-collage-grid::after {
     content: '';
     position: absolute;
     top: 0; left: 0; right: 0; bottom: 0;
     background: rgba(0, 0, 0, 0.45);
-    z-index: 2; /* Menutupi gambar, tapi di bawah logo yang memiliki z-index 10 */
-    pointer-events: none; /* Agar tidak menghalangi interaksi (jika ada) */
+    z-index: 2; 
+    pointer-events: none; 
 }
 
 .collage-cell { width: 100%; height: 100%; overflow: hidden; }
@@ -1555,6 +1555,39 @@ button#btnSubmit:hover { background-color: var(--accent-blue-hover); transform: 
     transform: rotate(90deg);
 }
 
+/* --- PERBAIKAN BUG: BACK TO TOP BUTTON --- */
+.btn-back-to-top {
+    position: fixed;
+    bottom: 50px; 
+    right: 120px; 
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background-color: #111;
+    color: var(--text-color);
+    border: 1px solid #444;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.8);
+    transition: all 0.3s ease;
+    opacity: 0;
+    visibility: hidden;
+    z-index: 1001;
+}
+
+.btn-back-to-top.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+.btn-back-to-top:hover {
+    background-color: var(--accent-blue);
+    border-color: var(--accent-blue);
+    transform: translateY(-3px);
+}
+
 /* --- FOOTER --- */
 footer { text-align: center; padding: 40px 0; border-top: 1px solid #222; }
 footer p { font-size: 1rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
@@ -1568,9 +1601,11 @@ footer p { font-size: 1rem; color: var(--text-muted); font-weight: 700; text-tra
 
 /* --- TABLET BREAKPOINT (Max 1024px) --- */
 @media (max-width: 1024px) {
+    /* REVISI GAP TABLET: height 100vh dan pecahan baris menggunakan 1fr */
     .hero-collage-grid { 
         grid-template-columns: 1fr 1fr; 
-        grid-template-rows: repeat(4, 250px); 
+        height: 100vh;
+        grid-template-rows: repeat(4, 1fr); 
     }
     .item-tall { grid-column: 1 / 2; grid-row: 1 / 3; }
     .item-wide-top { grid-column: 2 / 3; grid-row: 1 / 2; }
@@ -1589,49 +1624,41 @@ footer p { font-size: 1rem; color: var(--text-muted); font-weight: 700; text-tra
         grid-column: span 1 !important;
     }
     .form-grid { gap: 20px; }
+    
+    .btn-back-to-top { bottom: 40px; right: 110px; } 
 }
 
 /* --- MOBILE BREAKPOINT (Max 768px) --- */
 @media (max-width: 768px) {
-    /* ----------------------------------------------------
-       REVISI MOBILE HERO UX: Scattered Moodboard & Dark Overlay 
-       ---------------------------------------------------- */
     .hero-collage-container {
         height: 100vh;
         background-color: var(--bg-color);
-        position: relative; /* Wadah untuk elemen acak absolute */
+        position: relative;
     }
 
     .hero-collage-grid {
-        display: block !important; /* Mematikan Grid System */
+        display: block !important; 
         position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        z-index: 1; /* Di bawah Logo */
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        z-index: 1; 
     }
 
-    /* KACA GELAP (Dark Overlay) 75% Transparansi khusus Mobile */
     .hero-collage-grid::after {
-        background: rgba(0, 0, 0, 0.75); /* Timpa nilai transparansi desktop (45%) menjadi pekat (75%) di HP */
+        background: rgba(0, 0, 0, 0.75); 
     }
 
-    /* Modifikasi setiap gambar menjadi kartu melayang (Polaroid effect) */
     .collage-cell {
         position: absolute !important;
         height: auto !important;
         z-index: 1;
-        border-radius: 8px; /* Tepi melengkung agar estetik */
+        border-radius: 8px; 
         overflow: hidden;
         box-shadow: 0 10px 30px rgba(0,0,0,0.8);
     }
     
-    .collage-img {
-        border-radius: 8px;
-    }
+    .collage-img { border-radius: 8px; }
 
-    /* Koordinat Acak & Rotasi untuk setiap gambar (Scattered Effect) */
     .item-tall            { top: 5%; left: -5%; width: 45%; height: 35% !important; transform: rotate(-8deg); }
     .item-wide-top        { top: 12%; right: -10%; width: 60%; height: 25% !important; transform: rotate(5deg); }
     .item-small-top       { top: 40%; left: -15%; width: 50%; height: 22% !important; transform: rotate(-12deg); }
@@ -1640,13 +1667,11 @@ footer p { font-size: 1rem; color: var(--text-muted); font-weight: 700; text-tra
     .item-small-bottom    { bottom: 2%; right: -5%; width: 50%; height: 24% !important; transform: rotate(10deg); }
     .item-new-bottom-right{ bottom: -10%; left: 35%; width: 40%; height: 25% !important; transform: rotate(-4deg); }
 
-    /* Fokus pada Logo di atas tumpukan gambar */
     .hero-logo-overlay {
         position: absolute;
-        top: 50%;
-        left: 50%;
+        top: 50%; left: 50%;
         transform: translate(-50%, -50%);
-        z-index: 10; /* Berada di atas Dark Overlay */
+        z-index: 10; 
         width: 85%;
     }
 
@@ -1654,11 +1679,8 @@ footer p { font-size: 1rem; color: var(--text-muted); font-weight: 700; text-tra
         max-width: 320px;
         width: 100%;
         margin: 0 auto;
-        /* Tambahan efek Glow tipis agar lebih dramatis */
         filter: drop-shadow(0 0 25px rgba(255,255,255,0.15));
     }
-
-    /* ---------------------------------------------------- */
 
     .headline-utama { 
         font-size: clamp(1.8rem, 6vw, 2.5rem); 
@@ -1677,6 +1699,7 @@ footer p { font-size: 1rem; color: var(--text-muted); font-weight: 700; text-tra
     .fab-trigger { width: 55px; height: 55px; }
     .fab-item { width: 45px; height: 45px; }
     .fab-tooltip { display: none; }
+    .btn-back-to-top { bottom: 25px; right: 90px; width: 45px; height: 45px; }
 }
 <!-- end file assets/css/style.css -->
 
@@ -1684,67 +1707,70 @@ footer p { font-size: 1rem; color: var(--text-muted); font-weight: 700; text-tra
 /* file: assets/js/main.js */
 document.addEventListener('DOMContentLoaded', function() {
     
+    const isMobile = window.innerWidth <= 768;
+    const sections = document.querySelectorAll('.snap-section');
+    let currentSectionIndex = 0;
+    let isScrolling = false;
+    let lastScrollTime = 0; // Buffer untuk Trackpad / Magic Mouse
+    const btnBackToTop = document.getElementById('btnBackToTop');
+
     // ==========================================
     // 1. ENGINE CUSTOM SMOOTH SCROLL (DESKTOP)
     // ==========================================
-    const isMobile = window.innerWidth <= 768;
     
-    if (!isMobile) {
-        const sections = document.querySelectorAll('.snap-section');
-        let currentSectionIndex = 0;
-        let isScrolling = false;
+    // Fungsi animasi saya keluarkan ke global scope agar Back to Top bisa meminjam animasinya
+    function smoothScrollTo(targetPosition, duration) {
+        const startPosition = window.scrollY || document.documentElement.scrollTop;
+        const distance = targetPosition - startPosition;
+        let startTime = null;
 
-        // Fungsi animasi scroll manual (Easing function)
-        function smoothScrollTo(targetPosition, duration) {
-            const startPosition = window.scrollY;
-            const distance = targetPosition - startPosition;
-            let startTime = null;
-
-            function animation(currentTime) {
-                if (startTime === null) startTime = currentTime;
-                const timeElapsed = currentTime - startPosition;
-                const run = easeInOutQuad(currentTime - startTime, startPosition, distance, duration);
-                window.scrollTo(0, run);
-                
-                if (currentTime - startTime < duration) {
-                    requestAnimationFrame(animation);
-                } else {
-                    isScrolling = false; // Buka kunci setelah selesai
-                }
+        function animation(currentTime) {
+            if (startTime === null) startTime = currentTime;
+            const timeElapsed = currentTime - startPosition;
+            const run = easeInOutQuad(currentTime - startTime, startPosition, distance, duration);
+            window.scrollTo(0, run);
+            
+            if (currentTime - startTime < duration) {
+                requestAnimationFrame(animation);
+            } else {
+                window.scrollTo(0, targetPosition); // Pastikan presisi mutlak di akhir animasi
+                isScrolling = false; 
             }
-
-            // Algoritma Easing agar gerakan melambat di akhir
-            function easeInOutQuad(t, b, c, d) {
-                t /= d / 2;
-                if (t < 1) return c / 2 * t * t + b;
-                t--;
-                return -c / 2 * (t * (t - 2) - 1) + b;
-            }
-
-            requestAnimationFrame(animation);
         }
 
-        // Event pendeteksi pergerakan mousewheel
+        function easeInOutQuad(t, b, c, d) {
+            t /= d / 2;
+            if (t < 1) return c / 2 * t * t + b;
+            t--;
+            return -c / 2 * (t * (t - 2) - 1) + b;
+        }
+
+        requestAnimationFrame(animation);
+    }
+
+    if (!isMobile) {
         window.addEventListener('wheel', function(e) {
-            // Hindari engine jika modal video terbuka
             if (document.getElementById('videoModal').style.display === 'flex') return;
             
-            e.preventDefault(); // Matikan scroll bawaan browser yang kasar
+            e.preventDefault();
 
-            if (isScrolling) return; // Kunci jika sedang beranimasi
+            const currentTime = new Date().getTime();
+            // REVISI: Cooldown 1200ms menolak sinyal sisa "Inertia" dari sentuhan Trackpad
+            if (isScrolling || (currentTime - lastScrollTime < 1200)) {
+                return; 
+            }
 
-            // Deteksi arah scroll
-            if (e.deltaY > 0) {
-                // Scroll Bawah
+            if (e.deltaY > 0) { // Scroll Bawah
                 if (currentSectionIndex < sections.length - 1) {
                     isScrolling = true;
+                    lastScrollTime = currentTime;
                     currentSectionIndex++;
-                    smoothScrollTo(sections[currentSectionIndex].offsetTop, 800); // 800ms durasi
+                    smoothScrollTo(sections[currentSectionIndex].offsetTop, 800); 
                 }
-            } else {
-                // Scroll Atas
+            } else { // Scroll Atas
                 if (currentSectionIndex > 0) {
                     isScrolling = true;
+                    lastScrollTime = currentTime;
                     currentSectionIndex--;
                     smoothScrollTo(sections[currentSectionIndex].offsetTop, 800);
                 }
@@ -1753,7 +1779,50 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // ==========================================
-    // 2. VIDEO MODAL ENGINE
+    // 2. SCROLL TRACKER & BACK TO TOP
+    // ==========================================
+    // Meletakkan event scroll ke global untuk men-trigger UI Button dan Tracking
+    window.addEventListener('scroll', function() {
+        let scrollPosition = window.scrollY || document.documentElement.scrollTop;
+        
+        // Memunculkan tombol Back to Top
+        if (btnBackToTop) {
+            if (scrollPosition > 300) {
+                btnBackToTop.classList.add('show');
+            } else {
+                btnBackToTop.classList.remove('show');
+            }
+        }
+
+        // REVISI: Auto-Sync Index jika user iseng menarik scrollbar (batang di pinggir layar) secara manual
+        if (!isScrolling && !isMobile) {
+            sections.forEach((sec, index) => {
+                // Deteksi section mana yang paling banyak terlihat di layar
+                if (scrollPosition >= sec.offsetTop - (window.innerHeight / 2)) {
+                    currentSectionIndex = index;
+                }
+            });
+        }
+    });
+
+    if (btnBackToTop) {
+        btnBackToTop.addEventListener('click', function(e) {
+            e.preventDefault(); 
+            
+            if (!isMobile) {
+                // REVISI: Menggunakan Custom Scroll Engine kita, bukan bawaan window
+                isScrolling = true;
+                lastScrollTime = new Date().getTime(); 
+                currentSectionIndex = 0; // Reset memori index ke 0 (Hero)
+                smoothScrollTo(0, 800);
+            } else {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        });
+    }
+
+    // ==========================================
+    // 3. VIDEO MODAL ENGINE
     // ==========================================
     const modal = document.getElementById('videoModal');
     const container = document.getElementById('videoContainer');
@@ -1789,7 +1858,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (overlay) overlay.addEventListener('click', closeModal);
 
     // ==========================================
-    // 3. AJAX FORM SUBMISSION
+    // 4. AJAX FORM SUBMISSION
     // ==========================================
     const briefForm = document.getElementById('briefForm');
     const btnSubmit = document.getElementById('btnSubmit');
@@ -1835,7 +1904,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // ==========================================
-    // 4. FLOATING ACTION BUTTON (FAB) INTERACTION
+    // 5. FLOATING ACTION BUTTON (FAB)
     // ==========================================
     const fabTrigger = document.getElementById('fabTrigger');
     const fabMenu = document.getElementById('fabMenu');
@@ -1863,36 +1932,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 fabMenu.classList.remove('active');
                 iconChat.style.display = 'block';
                 iconClose.style.display = 'none';
-            }
-        });
-    }
-
-    // ==========================================
-    // 5. BACK TO TOP BUTTON LOGIC
-    // ==========================================
-    const btnBackToTop = document.getElementById('btnBackToTop');
-    if (btnBackToTop) {
-        window.addEventListener('scroll', function() {
-            let scrollPosition = window.scrollY || document.documentElement.scrollTop;
-            if (scrollPosition > 300) {
-                btnBackToTop.classList.add('show');
-            } else {
-                btnBackToTop.classList.remove('show');
-            }
-        });
-
-        btnBackToTop.addEventListener('click', function(e) {
-            e.preventDefault(); 
-            
-            // Bypass JS Engine sementara
-            if (!isMobile) {
-                isScrolling = true;
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-                // Reset index tracking
-                currentSectionIndex = 0; 
-                setTimeout(() => { isScrolling = false; }, 850);
-            } else {
-                window.scrollTo({ top: 0, behavior: 'smooth' });
             }
         });
     }
