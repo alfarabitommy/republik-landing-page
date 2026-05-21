@@ -85,7 +85,7 @@
                 
                 <div id="portfolio-grid" class="portfolio-grid">
                     <?php for($i=1; $i<=6; $i++): ?>
-                    <div class="portfolio-item video-trigger" aria-label="Play <?= html_escape($settings['video_title_'.$i] ?? 'Video '.$i) ?>" data-video-src="<?= $settings['video_'.$i] ?? '[https://www.youtube.com/watch?v=dQw4w9WgXcQ](https://www.youtube.com/watch?v=dQw4w9WgXcQ)' ?>" style="background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.6) 100%), url('<?= !empty($settings['video_thumb_'.$i]) ? base_url($settings['video_thumb_'.$i]) : '' ?>') center/cover no-repeat #222;">
+                    <div class="portfolio-item video-trigger" aria-label="Play <?= html_escape($settings['video_title_'.$i] ?? 'Video '.$i) ?>" data-video-src="<?= $settings['video_'.$i] ?? 'https://www.youtube.com/watch?v=dQw4w9WgXcQ' ?>" style="background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.6) 100%), url('<?= !empty($settings['video_thumb_'.$i]) ? base_url($settings['video_thumb_'.$i]) : '' ?>') center/cover no-repeat #222;">
                         <div class="overlay-text"><?= html_escape($settings['video_title_'.$i] ?? 'PORTFOLIO '.$i) ?></div>
                         <div class="play-icon" aria-hidden="true">▶</div>
                     </div>
@@ -136,15 +136,15 @@
 
     <div class="fab-container">
         <div class="fab-menu" id="fabMenu">
-            <a href="[https://wa.me/6285714734610](https://wa.me/6285714734610)" target="_blank" class="fab-item" aria-label="WhatsApp">
+            <a href="https://wa.me/6285714734610" target="_blank" class="fab-item" aria-label="WhatsApp">
                 <span class="fab-tooltip">WhatsApp</span>
                 <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
             </a>
-            <a href="[https://www.instagram.com/republik.asia/](https://www.instagram.com/republik.asia/)" target="_blank" class="fab-item" aria-label="Instagram">
+            <a href="https://www.instagram.com/republik.asia/" target="_blank" class="fab-item" aria-label="Instagram">
                 <span class="fab-tooltip">Instagram</span>
                 <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
             </a>
-            <a href="[https://id.linkedin.com/company/republikasia](https://id.linkedin.com/company/republikasia)" target="_blank" class="fab-item" aria-label="LinkedIn">
+            <a href="https://id.linkedin.com/company/republikasia" target="_blank" class="fab-item" aria-label="LinkedIn">
                 <span class="fab-tooltip">LinkedIn</span>
                 <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
             </a>

@@ -110,7 +110,7 @@ body {
 }
 
 .headline-top {
-    font-size: clamp(1.6rem, 2.5vw, 2.2rem);
+    font-size: clamp(1.6rem, 4.2vw, 2.8rem);
     font-weight: 500;
     letter-spacing: -0.01em;
     color: var(--text-color);
@@ -267,56 +267,34 @@ footer p { font-size: 1rem; color: var(--text-muted); font-weight: 700; text-tra
 }
 
 @media (max-width: 768px) {
-    /* REVISI SCATTERED MOODBOARD MOBILE */
+    /* REVISI: Menghapus logika scattered acak. Membiarkan Grid 2 kolom dari tablet berjalan natural */
     .hero-collage-container {
         height: 65vh;
         background-color: var(--bg-color);
         position: relative;
     }
 
-    .hero-collage-grid {
-        display: block !important; 
-        position: absolute;
-        top: 0; left: 0;
-        width: 100%; height: 100%;
-        z-index: 1; 
-    }
-    
-    /* REVISI UTAMA: Overlay diperpanjang ke bawah dan samping untuk menutup lubang */
+    /* Overlay hitam 75% khusus HP, presisi dalam wadah grid */
     .hero-collage-grid::after {
         background: rgba(0, 0, 0, 0.75); 
-        bottom: -15% !important; /* Memanjang ke bawah melewati batas wadah */
-        left: -15% !important;   /* Memlebar ke kiri untuk rotasi gambar */
-        right: -15% !important;  /* Memlebar ke kanan untuk rotasi gambar */
-        top: -5% !important;    /* Sedikit ke atas untuk rotasi gambar */
     }
 
-    .narrative-section {
-        padding: 0px 0 0px 0;
-    }
-
-    .collage-cell { position: absolute !important; height: auto !important; z-index: 1; border-radius: 6px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.8); }
-    .collage-img { border-radius: 6px; }
-
-    .item-tall            { top: 5%; left: -5%; width: 45%; height: 35% !important; transform: rotate(-8deg); }
-    .item-wide-top        { top: 12%; right: -10%; width: 60%; height: 25% !important; transform: rotate(5deg); }
-    .item-small-top       { top: 40%; left: -15%; width: 50%; height: 22% !important; transform: rotate(-12deg); }
-    .item-new-top-right   { top: 42%; right: 2%; width: 45%; height: 28% !important; transform: rotate(7deg); }
-    .item-wide-bottom     { bottom: 15%; left: 10%; width: 55%; height: 25% !important; transform: rotate(-5deg); }
-    .item-small-bottom    { bottom: 2%; right: -5%; width: 50%; height: 24% !important; transform: rotate(10deg); }
-    
-    /* Gambar ini paling bawah dan sering bocor */
-    .item-new-bottom-right{ bottom: -10%; left: 35%; width: 40%; height: 25% !important; transform: rotate(-4deg); }
-
-    .hero-logo-overlay { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 10; width: 85%; }
-    .hero-logo-img { max-width: 260px; width: 100%; margin: 0 auto; filter: drop-shadow(0 0 25px rgba(255,255,255,0.15)); }
+    .hero-logo-overlay { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 10; width: 100%; }
+    .hero-logo-img { max-width: 90%; width: 100%; margin: 0 auto; filter: drop-shadow(0 0 25px rgba(255,255,255,0.15)); }
 
     .hero-text-wrapper {
-        padding-top: 15vh;
+        padding-top: 5vh;
         padding-bottom: 2vh;
     }
     .headline-container { gap: 6px; padding: 0 15px; }
-    .headline-top { font-size: clamp(1.4rem, 2.2vw, 1.8rem); }
+    .headline-top { 
+        font-size: clamp(2.2rem, 4.2vw, 4rem);
+        width: 80%;
+        text-align: center;
+        letter-spacing: -0.03em;
+        line-height: 1.1; 
+        margin: auto;
+    }
 
     .portfolio-grid { grid-template-columns: 1fr; }
     
