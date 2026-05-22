@@ -159,8 +159,7 @@
         <div class="container">
             <p>Idea-first. System-led. Indonesia-native. Performance-aware.</p>
             <div class="footer-logo">
-                <h2>REPUBLIK</h2>
-                <p>Creative Intelligence Agency</p>
+                <img src="<?= base_url('assets/img/re-logo-2026.png') ?>" alt="REPUBLIK Creative Intelligence Agency Logo" class="hero-logo-footer">
             </div>
         </div>
     </footer>
